@@ -1,6 +1,6 @@
 ﻿/**
-* Joy stack is simply a sequence of values also contains operators and combinators. 
-* So, strictly speaking the stack is always a quotation and contain all of the Joy types.
+* Joy stack is not simply a sequence of values but also contains operators and combinators. 
+* So, strictly speaking the stack is always a quotation and can contain all of the Joy types.
 *
 * The joylang stack list of supported operators: 
 * (Those marked "?" could implemented in Joy)
