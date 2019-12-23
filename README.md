@@ -1,6 +1,8 @@
 # joycpp
 Joy Interpreter written in C++ and Joy
 
+Please see the [Wiki](https://github.com/ifknot/joycpp/wiki)
+
 ## 23/12/19
 The most important thing to recognise about the Joy Programming Language (joylang) is that most of it can be written in Joy. 
 
