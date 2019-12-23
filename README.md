@@ -1,7 +1,7 @@
 # joycpp
 Joy Interpreter written in C++ and Joy
 
-23/12/19
+##23/12/19
 The most important thing to recognise about the Joy Programming Language (joylang) is that most of it can be written in Joy. 
 
 The Joy interpeter [original](https://github.com/ifknot/joycpp_old)
@@ -11,13 +11,13 @@ A joycpp where only the most essential parts are written in C++ and the remainde
 
 Original version repository renamed [joycpp_old](https://github.com/ifknot/joycpp_old) this is the new version.
 
-## Goals:
+### Goals:
 
 * simple fast modular
 * minimal number of joylang atomic grammar expressed in C++ 
 * remainder joylang expressed in Joy
 
-## Implementation
+### Implementation
 * joylang is a stack based string re-writing system. Therefore, and to avoid using a garbage collector (GC), use a C++ stack of type std::string but embelished with class member functions that map the joylang stack atomics.
 
 * joylang is made up of both context free and regular grammar. Therefore, modularise the C++ inbuilt atomics on this basis with a joylang top layer:
@@ -32,7 +32,7 @@ joy stack         : c++
  ↓
 input/output      : c++
 
-## ToDo:
+### ToDo:
 1. input output
 2. joy_stack_t
 3. joy stack layer
