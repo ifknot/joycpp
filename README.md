@@ -11,3 +11,28 @@ A joycpp where only the most essential parts are written in C++ and the remainde
 
 Original version repository renamed [joycpp_old](https://github.com/ifknot/joycpp_old) this is the new version.
 
+## Goals:
+
+* simple fast modular
+* minimal number of joylang atomic grammar expressed in C++ 
+* remainder joylang expressed in Joy
+
+## Implementation
+* joylang is a stack based string re-writing system. Therefore, and to avoid using a garbage collector (GC), use a C++ stack of type std::string but embelished with class member functions that map the joylang stack atomics.
+
+* joylang is made up of both context free and regular grammar. Therefore, modularise the C++ inbuilt atomics on this basis with a joylang top layer:
+
+joy langguage     : joy
+ ↓
+joy context free  : c++
+ ↓
+joy regular       : c++
+ ↓
+joy stack         : c++
+ ↓
+input/output      : c++
+
+## ToDo:
+1. input output
+2. joy_stack_t
+3. joy stack layer
