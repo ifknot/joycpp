@@ -148,9 +148,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="joycpp.cpp" />
+    <ClCompile Include="joy_stack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="catch2.h" />
+    <ClInclude Include="joy_stack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
