@@ -1,5 +1,4 @@
 #include "io_device.h"
-
 #include "colour_codes.h"
 
 namespace joy {
@@ -8,9 +7,14 @@ namespace joy {
 	
 	io_device::io_device(std::istream& input_stream, std::ostream& output_stream) :
 		input_stream(input_stream),
-		output_stream(output_stream),
-		colouring_{ false }
+		output_stream(output_stream)
 	{}
+
+	std::string io_device::readline() {
+		std::string line;
+		getline(input_stream, line);
+		return line;
+	}
 
 	void io_device::colour(std::string col) {
 		ink_colour = col;
@@ -35,14 +39,5 @@ namespace joy {
 			output_stream << ink_colour;
 		}
 	}
-	void io_device::write_line(std::string line) {
-		ink();
-		output_stream << line << "\n";
-	}
 
-	std::string io_device::read_line() const {
-		std::string line;
-		getline(input_stream, line);
-		return line;
-	}
 }

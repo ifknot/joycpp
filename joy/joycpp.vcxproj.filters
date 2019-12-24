@@ -21,6 +21,9 @@
     <ClCompile Include="joy_stack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="io_device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="catch2.h">
@@ -30,6 +33,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="joy_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="io_device.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="colour_codes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

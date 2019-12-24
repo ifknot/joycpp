@@ -16,9 +16,18 @@
 #include <fstream>
 #include <stdio.h>
 
-void run() { 
-    // exec loop
-    std::cout << "run loop\n";
+#include "io_device.h"
+
+void run() { // exec loop
+    joy::io_device io;
+    io.colouring(true);
+    std::string s;
+    std::stringstream ss(io.readline());
+    while (ss >> s) {
+        io.ok();
+        io << s;
+    }
+    
 }
 
 /**
@@ -79,8 +88,6 @@ int main(int argc, char* argv[]) {
         std::exit(-1);
         break;
     }
-
-    std::cout << "fin" << std::endl;
 
     system("pause");
 

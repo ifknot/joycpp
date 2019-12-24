@@ -9,6 +9,8 @@
 #include <fstream>
 #include <string>
 
+#include "colour_codes.h"
+
 namespace joy {
 
     class io_device {
@@ -18,6 +20,8 @@ namespace joy {
         io_device();
 
         io_device(std::istream& input_stream, std::ostream& output_stream);
+
+        std::string readline();
 
         void colour(std::string col);
 
@@ -31,23 +35,14 @@ namespace joy {
 
         void ink();
 
-        void write_line(std::string line);
-
-        std::string read_line() const;
-
-        std::string ink_colour;
+        std::string ink_colour{ BOLDWHITE };
         std::istream& input_stream;
         std::ostream& output_stream;
-        bool colouring_;
+        bool colouring_{ false };
 
         friend io_device& operator<<(io_device& d, std::string line) {
             d.ink();
             d.output_stream << line << "\n";
-            return d;
-        }
-
-        friend io_device& operator>>(io_device& d, std::string& line) {
-            d.input_stream >> line;
             return d;
         }
 

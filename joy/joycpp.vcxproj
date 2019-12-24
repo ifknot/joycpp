@@ -149,11 +149,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="io_device.cpp" />
     <ClCompile Include="joycpp.cpp" />
     <ClCompile Include="joy_stack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="catch2.h" />
+    <ClInclude Include="colour_codes.h" />
+    <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_stack.h" />
     <ClInclude Include="joy_types.h" />
   </ItemGroup>
