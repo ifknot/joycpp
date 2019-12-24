@@ -34,21 +34,10 @@ int main(int argc, char* argv[]) {
 
 #else
 
-#include "joy_stack.h"
-
-using namespace joy;
-
 //chance to try out Behaviour Driven Development
 int main(int argc, char* argv[]) {
 
     std::cout << "\ttest joy" << std::endl;
-
-    joy_stack j;
-
-    auto t = std::make_pair("1", joy_t::int_t);
-
-    j.push(t);
-    j.dump();
 
     Catch::Session().run(argc, argv);
 

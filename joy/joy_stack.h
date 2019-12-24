@@ -25,16 +25,150 @@
 * newstack	- deletes the entire stack and replaces it with a new, empty one
 * stack		- pushes onto the stack a list containing all the elements of the stack
 * unstack	- expects a quotation on the stack and makes that the new stack
+* 
 */
 #pragma once
 
+#include <utility>
+#include <string>
+#include <vector>
+#include <cassert>
+
+#ifndef NDEBUG
+#include <iostream>
+#endif
+
+#include "joy_types.h"
+
 namespace joy {
 
-	typedef joy_stack joy_stack_t;
+	/**
+	* Extending std::vector with joy stack manipulators because std::stack hides array access with [] and at ()
+	* Also get the vector member types
+	* Maintain the std::stack ADT idioms 
+	*/
+	class joy_stack : public base_stack_t {
 
-	class joy_stack {
+	public:
 
+		using vector::vector; // get all the vector constructors for free
 
+		//Joy stack member functions:
+
+		/**
+		* ..b a│stack    →    │
+		* deletes the entire stack and replaces it with a new, empty one
+		*/
+		//void newstack();
+			
+		/**
+		* ..b a│stack    →    ..b a[a b ..]│
+		* pushes onto the stack a list containing all the elements of the stack
+		*/
+		//void stack();
+
+		/**
+		* ..[a b]│unstack  →                b a│
+		* expects a quotation on the stack and makes that the new stack
+		*/
+		//void unstack();
+
+		/**
+		* a| dup ->		aa|
+		* Duplicates item atop stack
+		*/
+		void dup();
+
+		/**
+		* ba| dupd ->	bba|
+		* Duplicates an item immediately below the topmost item on the stack.
+		*/
+		void dupd();
+
+		/**
+		* ba| pop ->		b|
+		* Removes topmost item from stack
+		*/
+		void pop();
+
+		/**
+		* ba| popd ->	a|
+		* Removes the second-to-topmost item from stack
+		*/
+		void popd();
+
+		/**
+		* cba| pop2 ->	c|
+		* Removes topmost 2 items from stack
+		*/
+		void pop2();
+
+		/**
+		* ba| swap ->	ab|
+		* Swaps the two items at the top of a stack
+		*/
+		void swap();
+
+		/**
+		* cba| swapd ->	bca|
+		* Swaps the two items immediately beneath the top of a stack
+		*/
+		void swapd();
+
+		/**
+		* cba| rotate ->	abc|
+		* Permutes the order of the top three items on the stack.
+		* Swapping the 1st and 3rd items ie 'rotating' them around the 2nd item
+		*/
+		void rotate();
+
+		/**
+		* cba| rollup ->	acb|
+		* Permutes the order of the top three items on the stack.
+		* Shifting them up and moving the topmost item down below the other two.
+		* Equivalent to swap(), swapd()
+		*/
+		void rollup();
+
+		/**
+		* cba| rolldown -> bac|
+		* Permutes the order of the top 3 items on the stack.
+		* Shifting them down and carrying the deepest item up to the top of the stack.
+		* Equivalent to rotate(), swapd()
+		*/
+		void rolldown();
+
+		//debug utils
+
+#ifndef NDEBUG
+		void dump();
+#endif
+
+		/**
+		*  Const reference item at a specified position in the stack
+		*/
+		const_reference sat(int i) const;
+
+		/**
+		*  Reference item at a specified position in the stack
+		*/
+		reference sat(int i);
+
+		// expected STL stack interface
+
+		const_reference top() const;
+
+		reference top();
+
+		void push(const value_type& val);
+
+		void push(value_type&& val);
+
+		// emplace
+
+		// swap is also a Joy stack operator
+
+	private:
 
 	};
 }
