@@ -8,7 +8,7 @@
 #define CATCH_CONFIG_RUNNER
 #include "catch2.h"
 
-#define NDEBUG
+//#define NDEBUG
 
 #ifdef NDEBUG
 
@@ -27,14 +27,13 @@ void run() { // exec loop
         io.ok();
         io << s;
     }
-    
 }
 
 /**
 * 4 usage options:
 * Interactive command line interpreter
 * File input - command line output
-* Command line - file output
+* Command line input - file output
 * File input - file output
 */
 int main(int argc, char* argv[]) {

@@ -3,7 +3,7 @@
 */
 #include "catch2.h"
 
-#include "joy/joy_stack.h"
+#include "joy_stack.h"
 
 SCENARIO("joy_stack", "[joy_stack]") {
 
@@ -66,7 +66,7 @@ SCENARIO("joy_stack", "[joy_stack]") {
 
 		WHEN("dupd") {
 			s.dupd();
-			THEN("bcaa") {
+			THEN("cbba") {
 				REQUIRE(s.size() == 4);
 				REQUIRE(s.sat(0).first == "a");
 				REQUIRE(s.sat(1).first == "b");
@@ -77,7 +77,7 @@ SCENARIO("joy_stack", "[joy_stack]") {
 
 		WHEN("popd") {
 			s.popd();
-			THEN("bc") {
+			THEN("ac") {
 				REQUIRE(s.size() == 2);
 				REQUIRE(s.sat(0).first == "a");
 				REQUIRE(s.sat(1).first == "c");
@@ -86,15 +86,25 @@ SCENARIO("joy_stack", "[joy_stack]") {
 
 		WHEN("pop2") {
 			s.pop2();
-			THEN("bc") {
+			THEN("c") {
 				REQUIRE(s.size() == 1);
 				REQUIRE(s.sat(0).first == "c");
 			}
 		}
 
+		WHEN("unit") {
+			s.unit();
+			THEN("cb[a]") {
+				REQUIRE(s.size() == 3);
+				REQUIRE(s.sat(0).first == "[ a ]");
+				REQUIRE(s.sat(1).first == "b");
+				REQUIRE(s.sat(2).first == "c");
+			}
+		}
+
 		WHEN("swap") {
 			s.swap();
-			THEN("ab") {
+			THEN("cab") {
 				REQUIRE(s.size() == 3);
 				REQUIRE(s.sat(0).first == "b");
 				REQUIRE(s.sat(1).first == "a");
@@ -104,7 +114,7 @@ SCENARIO("joy_stack", "[joy_stack]") {
 
 		WHEN("swapd") {
 			s.swapd();
-			THEN("bcs") {
+			THEN("bca") {
 				REQUIRE(s.size() == 3);
 				REQUIRE(s.sat(0).first == "a");
 				REQUIRE(s.sat(1).first == "c");
@@ -139,6 +149,25 @@ SCENARIO("joy_stack", "[joy_stack]") {
 				REQUIRE(s.sat(0).first == "c");
 				REQUIRE(s.sat(1).first == "a");
 				REQUIRE(s.sat(2).first == "b");
+			}
+		}
+
+		WHEN("newstack") {
+			s.newstack();
+			THEN("empty") {
+				REQUIRE(s.size() == 0);
+				REQUIRE(s.empty());
+			}
+		}
+
+		WHEN("stack") {
+			s.stack();
+			THEN("quoted stack") {
+				REQUIRE(s.size() == 4);
+				REQUIRE(s.sat(0).first == "[ a b c ]");
+				REQUIRE(s.sat(1).first == "a");
+				REQUIRE(s.sat(2).first == "b");
+				REQUIRE(s.sat(2).first == "c");
 			}
 		}
 

@@ -5,11 +5,9 @@ namespace joy {
 #ifndef NDEBUG
 	void joy_stack::dump() {
 		std::cerr << "_\n";
-		if (size()) {
-			for (size_t i = size() - 1; i != 0; --i) {
-				const auto [pattern, joy_type] = at(i);
-				std::cerr << pattern << " " << to_string(joy_type) << "\n";
-			}
+		for (size_t i{ 0 }; i < size(); ++i) {
+			const auto [pattern, joy_type] = sat(i);
+			std::cerr << pattern << " " << to_string(joy_type) << "\n";
 		}
 	}
 #endif
@@ -30,6 +28,13 @@ namespace joy {
 
 	void joy_stack::push(value_type&& val) {
 		push_back(val);
+	}
+
+	void joy_stack::newstack() {
+		clear();
+	}
+
+	void joy_stack::stack() {
 	}
 
 	void joy_stack::dup() {
@@ -63,6 +68,10 @@ namespace joy {
 			pop();
 			pop();
 		}
+	}
+
+	void joy_stack::unit() {
+		top() = make_quoted_token(top().first);
 	}
 
 	void joy_stack::swap() {

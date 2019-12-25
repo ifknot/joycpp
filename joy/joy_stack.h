@@ -61,13 +61,13 @@ namespace joy {
 		* ..b a│stack    →    │
 		* deletes the entire stack and replaces it with a new, empty one
 		*/
-		//void newstack();
+		void newstack();
 			
 		/**
 		* ..b a│stack    →    ..b a[a b ..]│
 		* pushes onto the stack a list containing all the elements of the stack
 		*/
-		//void stack();
+		void stack();
 
 		/**
 		* ..[a b]│unstack  →                b a│
@@ -104,6 +104,12 @@ namespace joy {
 		* Removes topmost 2 items from stack
 		*/
 		void pop2();
+
+		/**
+		* a│unit ->  [a]│
+		* Quotes top 
+		*/
+		void unit();
 
 		/**
 		* ba| swap ->	ab|
@@ -152,7 +158,8 @@ namespace joy {
 		const_reference sat(int i) const;
 
 		/**
-		*  Reference item at a specified position in the stack
+		*  Reference item at a specified right to left stack position in the vector
+		* (as opposed to at() which specifies position left - right vector position)
 		*/
 		reference sat(int i);
 
