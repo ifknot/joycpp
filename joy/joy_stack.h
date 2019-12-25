@@ -33,6 +33,7 @@
 #include <string>
 #include <vector>
 #include <cassert>
+#include <sstream>
 
 #ifndef NDEBUG
 #include <iostream>
@@ -73,7 +74,7 @@ namespace joy {
 		* ..[a b]│unstack  →                b a│
 		* expects a quotation on the stack and makes that the new stack
 		*/
-		//void unstack();
+		void unstack();
 
 		/**
 		* a| dup ->		aa|
@@ -155,13 +156,13 @@ namespace joy {
 		/**
 		*  Const reference item at a specified position in the stack
 		*/
-		const_reference sat(int i) const;
+		const_reference sat(size_t i) const;
 
 		/**
 		*  Reference item at a specified right to left stack position in the vector
 		* (as opposed to at() which specifies position left - right vector position)
 		*/
-		reference sat(int i);
+		reference sat(size_t i);
 
 		// expected STL stack interface
 

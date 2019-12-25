@@ -167,7 +167,18 @@ SCENARIO("joy_stack", "[joy_stack]") {
 				REQUIRE(s.sat(0).first == "[ a b c ]");
 				REQUIRE(s.sat(1).first == "a");
 				REQUIRE(s.sat(2).first == "b");
-				REQUIRE(s.sat(2).first == "c");
+				REQUIRE(s.sat(3).first == "c");
+			}
+		}
+
+		WHEN("unstack") {
+			s.push(joy::make_quoted_token("[ d e f ]"));
+			s.unstack();
+			THEN("new stack from quote") {
+				REQUIRE(s.size() == 3);
+				REQUIRE(s.sat(0).first == "d");
+				REQUIRE(s.sat(1).first == "e");
+				REQUIRE(s.sat(2).first == "f");
 			}
 		}
 

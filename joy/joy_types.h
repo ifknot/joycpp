@@ -5,13 +5,18 @@
 * joycpp uses some internal types
 * - lexeme_t when it is known that a lexeme has parsable pattern 
 * - undef_t when it is unknown if a lexeme has a parsable pattern
+* joycpp will need 
+* - type checking: is_joy_...(joy_t)
+* - helpers: make_token_...(pattern_t) 
 */
 #pragma once
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "joy_sigils.h"
+#include "joy_tokens.h"
 
 namespace joy {
 
@@ -21,38 +26,33 @@ namespace joy {
     typedef std::pair<pattern_t, joy_t> token_t;
     typedef std::vector<token_t> base_stack_t;
 
-	inline std::string to_string(joy_t match) {
-		switch (match) {
-        case joy::joy_t::bool_t:
-            return "bool";
-        case joy::joy_t::int_t:
-            return "int";
-        case joy::joy_t::char_t:
-            return "char";
-        case joy::joy_t::double_t:
-            return "double";
-        case joy::joy_t::list_t:
-            return "list";
-        case joy::joy_t::quote_t:
-            return "quote";
-        case joy::joy_t::set_t:
-            return "set";
-        case joy::joy_t::string_t:
-            return "string";
-        case joy::joy_t::lexeme_t:
-            return "pattern";
-        case joy::joy_t::undef_t:
-        default:
-            return "undefined";
-		}
-	}
+    std::string to_string(joy_t match);
 
-    inline token_t make_token(pattern_t s, joy_t t) {
+    inline pattern_t strip_spc(pattern_t& p) {
+        if(p.back() == ' ') {
+            return p.substr(0, p.size() - 1);
+        }
+        else {
+            return p;
+        }
+    }
+
+    inline bool is_joy_bool(pattern_t& p) {
+        if ((p == TOK_TRUE ) || (p == TOK_FALSE)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+   
+    inline token_t make_token(pattern_t&& s, joy_t t) {
         return token_t(s, t);
     }
 
-    inline token_t make_quoted_token(pattern_t s) {
+    inline token_t make_quoted_token(pattern_t&& s) {
         s = QUOTE_OPEN + SPC + s;
+        s = strip_spc(s);
         if (s[s.size() - 1] == ' ') {
             return make_token(s + QUOTE_CLOSE, joy_t::quote_t);
         }
@@ -60,5 +60,7 @@ namespace joy {
             return make_token(s + SPC + QUOTE_CLOSE, joy_t::quote_t);
         }
     }
+
+    joy_t joy_type(pattern_t& p);
 
 }

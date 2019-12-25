@@ -6,18 +6,18 @@ namespace joy {
 	void joy_stack::dump() {
 		std::cerr << "_\n";
 		for (size_t i{ 0 }; i < size(); ++i) {
-			const auto [pattern, joy_type] = sat(i);
+			const auto& [pattern, joy_type] = sat(i);
 			std::cerr << pattern << " " << to_string(joy_type) << "\n";
 		}
 	}
 #endif
 
-	base_stack_t::const_reference joy_stack::sat(int i) const {
+	base_stack_t::const_reference joy_stack::sat(size_t i) const {
 		assert(i < size());
 		return at(size() - 1 - i);
 	}
 
-	base_stack_t::reference joy_stack::sat(int i) {
+	base_stack_t::reference joy_stack::sat(size_t i) {
 		assert(i < size());
 		return at(size() - 1 - i);
 	}
@@ -35,6 +35,23 @@ namespace joy {
 	}
 
 	void joy_stack::stack() {
+		pattern_t p;
+		for (size_t i{ 0 }; i < size(); ++i) {
+			const auto& [pattern, joy_type] = sat(i);
+			p += pattern + SPC;
+		}
+		push(make_quoted_token(std::move(p)));
+	}
+
+	void joy_stack::unstack() {
+		assert(top().second == joy_t::quote_t);
+		pattern_t p;
+		std::stringstream ss{ top().first };
+		pop();
+		newstack();
+		while (ss >> p) {
+			//push(make_token(p, joy_type(p)));
+		}
 	}
 
 	void joy_stack::dup() {
@@ -71,7 +88,7 @@ namespace joy {
 	}
 
 	void joy_stack::unit() {
-		top() = make_quoted_token(top().first);
+		top() = make_quoted_token(std::move(top().first));
 	}
 
 	void joy_stack::swap() {

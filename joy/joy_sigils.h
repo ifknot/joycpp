@@ -4,6 +4,8 @@
 
 namespace joy {
 
+	const char CHAR = '\'';
+
 	const std::string QUOTE_OPEN =	"[";
 	const std::string QUOTE_CLOSE =	"]";
 	const std::string LIST_OPEN = "[";
