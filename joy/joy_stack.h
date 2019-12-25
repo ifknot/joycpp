@@ -49,6 +49,8 @@ namespace joy {
 	*/
 	class joy_stack : public base_stack_t {
 
+		const std::string NULL_STACK{"pop fail empty stack"};
+
 	public:
 
 		using vector::vector; // get all the vector constructors for free

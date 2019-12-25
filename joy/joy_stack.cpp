@@ -5,8 +5,8 @@ namespace joy {
 #ifndef NDEBUG
 	void joy_stack::dump() {
 		std::cerr << "_\n";
-		if (size() != 0) {
-			for (int i = size() - 1; i >= 0; --i) {
+		if (size()) {
+			for (size_t i = size() - 1; i != 0; --i) {
 				const auto [pattern, joy_type] = at(i);
 				std::cerr << pattern << " " << to_string(joy_type) << "\n";
 			}
@@ -33,48 +33,54 @@ namespace joy {
 	}
 
 	void joy_stack::dup() {
-		if (!size() == 0) {
+		if (size()) {
 			push(top());
 		}
 	}
 
 	void joy_stack::dupd() {
-		if (!size() == 0) {
+		if (size()) {
 			dup();
 			sat(1) = sat(2);
 		}
 	}
 
 	void joy_stack::pop() {
-		if (!size() == 0) {
+		if (size()) {
 			pop_back();
 		}
 	}
 
 	void joy_stack::popd() {
-		if (size() >= 2) {
+		if (size() > 1) {
 			sat(1) = sat(0);
 			pop();
 		}
 	}
 
 	void joy_stack::pop2() {
-		if (size() >= 2) {
+		if (size() > 1) {
 			pop();
 			pop();
 		}
 	}
 
 	void joy_stack::swap() {
-		std::swap(sat(0), sat(1));
+		if (size() > 1) {
+			std::swap(sat(0), sat(1));
+		}
 	}
 
 	void joy_stack::swapd() {
-		std::swap(sat(1), sat(2));
+		if (size() > 1) {
+			std::swap(sat(1), sat(2));
+		}
 	}
 
 	void joy_stack::rotate() {
-		std::swap(sat(0), sat(2));
+		if (size() > 2) {
+			std::swap(sat(0), sat(2));
+		}
 	}
 
 	void joy_stack::rollup() {
@@ -88,14 +94,20 @@ namespace joy {
 	}
 
 	base_stack_t::reference joy_stack::top() {
-		if (!size() == 0) {
+		if (size()) {
 			return back();
+		}
+		else {
+			throw std::runtime_error(NULL_STACK);
 		}
 	}
 
 	base_stack_t::const_reference joy_stack::top() const {
-		if (!size() == 0) {
+		if (size()) {
 			return back();
+		}
+		else {
+			throw std::runtime_error(NULL_STACK);
 		}
 	}
 
