@@ -24,13 +24,9 @@ namespace joy {
         }
     }
 
-    joy_t joy_type(pattern_t& p) {
-        if (is_joy_bool(p)) {
-            return joy_t::bool_t;
-        }
-        else {
-            return joy_t::undef_t;
-        }
+    joy_t joy_type(pattern_t& match) {
+        
+        return joy_t::undef_t;
 
     }
 

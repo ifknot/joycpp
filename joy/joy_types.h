@@ -14,9 +14,11 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <regex>
 
 #include "joy_sigils.h"
 #include "joy_tokens.h"
+#include "joy_sigils.h"
 
 namespace joy {
 
@@ -25,42 +27,103 @@ namespace joy {
     typedef std::string pattern_t; 
     typedef std::pair<pattern_t, joy_t> token_t;
     typedef std::vector<token_t> base_stack_t;
+    
+    //string manglers
 
-    std::string to_string(joy_t match);
-
+    /**
+    * strip any trailing whitespace
+    * TODO: tab, mulitple space, CR, LF, etc.
+    */
     inline pattern_t strip_spc(pattern_t& p) {
-        if(p.back() == ' ') {
-            return p.substr(0, p.size() - 1);
-        }
-        else {
-            return p;
-        }
+        return(p.back() == ' ') ? p.substr(0, p.size() - 1) : p;
     }
 
-    inline bool is_joy_bool(pattern_t& p) {
-        if ((p == TOK_TRUE ) || (p == TOK_FALSE)) {
+    /**
+    * convert a joy type to its string name (bool, int, char, double, list, quote, set, string, lexeme)
+    */
+    std::string to_string(joy_t match);
+
+    //type tests
+
+    inline bool is_joy_bool(pattern_t& match) {
+        return ((match == TOK_TRUE) || (match == TOK_FALSE));
+    }
+
+    inline bool is_joy_char(pattern_t& match) {
+        return ((match.size() == 2) && (match[0] == CHAR_OPEN));
+    }
+
+    /**
+    * test if the pattern is a number (int or double)
+    * allowed: +3, 3.2e23, -4.70e+9, -.2E-4, -7.6603
+    * not allowed: +0003   (leading zeros), 37.e88  (dot before the e)
+    */
+    inline bool is_joy_number(pattern_t& match) {
+        return std::regex_match(match, std::regex("[+-]?(?=.)(?:0|[1-9]\\d*)?(?:\.\\d*)?(?:\\d[eE][+-]?\\d+)?"));
+    }
+    
+    /**
+    * test if the pattern is an integer
+    * allowed: +1, -1, 0, 10
+    * TODO: filter if leading zeros e.g +0003
+    */
+    inline bool is_joy_int(pattern_t& match) {
+        if (((match[0] == TOK_PLUS) || (match[0] == TOK_MINUS)) && (match.substr(1, match.size()).find_first_not_of("0123456789") == std::string::npos)) {
+            return true;
+        }
+        else if (match.find_first_not_of("0123456789") == std::string::npos) {
             return true;
         }
         else {
             return false;
         }
     }
+
+    inline bool is_joy_double(pattern_t& match) {
+        return is_joy_number(match) && !is_joy_int(match);
+    }
+
+    /**
+    * test if lexeme is wrapped in the sigil chars
+    */
+    inline bool is_sigils(pattern_t& match, char open_sigil, char close_sigil) {
+        return ((match[0] == open_sigil) && (match.back() == close_sigil));
+    }
+
+    inline bool is_joy_list(pattern_t& match) {
+        return is_sigils(match, LIST_OPEN, LIST_CLOSE);
+    }
+
+    inline bool is_joy_quote(pattern_t& match) {
+        return is_joy_list(match);
+    }
+
+    inline bool is_joy_set(pattern_t& match) {
+        return is_sigils(match, SET_OPEN, SET_CLOSE);
+    }
+
+    inline bool is_joy_string(pattern_t match) {
+        return is_sigils(match, STRING_OPEN, STRING_CLOSE);
+    }
+
+    // not sure if is_joy_lexeme is needed yet?
+
+
+    //make token helpers
    
     inline token_t make_token(pattern_t&& s, joy_t t) {
         return token_t(s, t);
     }
 
     inline token_t make_quoted_token(pattern_t&& s) {
-        s = QUOTE_OPEN + SPC + s;
         s = strip_spc(s);
-        if (s[s.size() - 1] == ' ') {
-            return make_token(s + QUOTE_CLOSE, joy_t::quote_t);
-        }
-        else {
-            return make_token(s + SPC + QUOTE_CLOSE, joy_t::quote_t);
-        }
+        s = QUOTE_OPEN + " " + s;
+        return make_token(s + " " + QUOTE_CLOSE, joy_t::quote_t);
     }
 
-    joy_t joy_type(pattern_t& p);
+    /**
+    * retrieve the joy type of the joy lexeme 
+    */
+    joy_t joy_type(pattern_t& match);
 
 }

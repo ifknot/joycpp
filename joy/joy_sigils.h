@@ -4,16 +4,15 @@
 
 namespace joy {
 
-	const char CHAR = '\'';
-
-	const std::string QUOTE_OPEN =	"[";
-	const std::string QUOTE_CLOSE =	"]";
-	const std::string LIST_OPEN = "[";
-	const std::string LIST_CLOSE = "]";
-	const std::string SET_OPEN = "{";
-	const std::string SET_CLOSE = "}";
-	const std::string STRING_OPEN = "[";
-	const std::string STRING_CLOSE = "]";
-	const std::string SPC = " ";
+	const char CHAR_OPEN = '\'';
+	const char QUOTE_OPEN = '[';
+	const char QUOTE_CLOSE = ']';
+	const char LIST_OPEN = '[';
+	const char LIST_CLOSE = ']';
+	const char SET_OPEN = '{';
+	const char SET_CLOSE = '}';
+	const char STRING_OPEN = '[';
+	const char STRING_CLOSE = ']';
+	const char SPC = ' ';
 	
 }
