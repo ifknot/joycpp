@@ -5,8 +5,10 @@
 * joycpp uses some internal types
 * - lexeme_t when it is known that a lexeme has parsable pattern 
 * - undef_t when it is unknown if a lexeme has a parsable pattern
+* giving joycpp 10 fundamental types
 * joycpp will need 
 * - type checking: is_joy_...(joy_t)
+* - sigil managers: add/strip/empty
 * - helpers: make_token_...(pattern_t) 
 */
 #pragma once
@@ -15,16 +17,16 @@
 #include <vector>
 #include <map>
 #include <regex>
+#include <cassert>
 
 #include "joy_sigils.h"
 #include "joy_tokens.h"
-#include "joy_sigils.h"
 
 namespace joy {
 
     enum class joy_t { bool_t, int_t, char_t, double_t, list_t, quote_t, set_t, string_t, lexeme_t, undef_t };
 
-    typedef std::string pattern_t; 
+    typedef std::string pattern_t;
     typedef std::pair<pattern_t, joy_t> token_t;
     typedef std::vector<token_t> base_stack_t;
     
@@ -85,6 +87,8 @@ namespace joy {
         return is_joy_number(match) && !is_joy_int(match);
     }
 
+    //aggreagate managers
+
     bool is_empty_aggregate(pattern_t& match, char open_sigil, char close_sigil);
 
     bool is_empty_joy_list(pattern_t match);
@@ -98,8 +102,8 @@ namespace joy {
         return ((match[0] == open_sigil) && (match.back() == close_sigil));
     }
 
-    // TODO: what if no sigils?
     inline pattern_t strip_sigils(pattern_t& match, char open_sigil, char close_sigil) {
+        assert(is_sigils(match, open_sigil, close_sigil));
         if (is_sigils(match, open_sigil, close_sigil)) {
             return match.substr(2, match.size() - 3);
         }
@@ -138,7 +142,7 @@ namespace joy {
         return is_sigils(match, STRING_OPEN, STRING_CLOSE);
     }
 
-    // not sure if is_joy_lexeme is needed yet?
+    // not sure if is_joy_lexeme is needed yet/ever?
 
 
     //make token helpers

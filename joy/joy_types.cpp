@@ -36,10 +36,21 @@ namespace joy {
         return is_empty_aggregate(match, SET_OPEN, SET_CLOSE);
     }
 
-    joy_t joy_type(pattern_t& match) {
-        
-        return joy_t::undef_t;
+    bool is_empty_joy_string(pattern_t match) {
+        return is_empty_aggregate(match, STRING_OPEN, STRING_CLOSE);
+    }
 
+    joy_t joy_type(pattern_t& match) {
+        if (is_joy_bool(match)) return joy_t::bool_t;
+        if (is_joy_char(match)) return joy_t::char_t;
+        if (is_joy_int(match)) return joy_t::int_t;
+        if (is_joy_double(match)) return joy_t::double_t;
+        if (is_joy_list(match)) return joy_t::list_t;
+        if (is_joy_quote(match)) return joy_t::quote_t;
+        if (is_joy_set(match)) return joy_t::set_t;
+        if (is_joy_string(match)) return joy_t::string_t;
+        //if (is_joy_lexeme(match)) return joy_t::lexem_t;
+        return joy_t::undef_t;
     }
 
 }

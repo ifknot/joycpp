@@ -21,6 +21,10 @@ SCENARIO("joy types", "[joy_types]") {
 		pattern_t I5 = "+003";		//should fail
 		pattern_t I6 = "+";			//should fail
 
+		pattern_t C1 = "'A";
+		pattern_t C2 = "'\'";
+		pattern_t C3 = "'\"";
+
 		pattern_t D1 = "3.0";
 		pattern_t D2 = "+3.0";
 		pattern_t D3 = "-3.0";
@@ -36,8 +40,8 @@ SCENARIO("joy types", "[joy_types]") {
 		pattern_t L1 = "[ ]";
 		pattern_t L2 = "[ [ ] ]";
 		pattern_t L3 = "[ 'A 'B 'C ]";
-		pattern_t L4 = "[ 'A 'B 'C }";
-		pattern_t L5 = "{ 'A 'B 'C ]";
+		pattern_t L4 = "[ 'A 'B 'C }";		//syntax error
+		pattern_t L5 = "{ 'A 'B 'C ]";		//syntax error
 		pattern_t L6 = "[ dup * ]";			//shoulde fail is quote
 		pattern_t L7 = "[ 'A 'B 'C ] ]";	//should fail broken nested
 		pattern_t L8 = "[ [ 'A 'B 'C ]";	//should fail broken nested
@@ -81,6 +85,12 @@ SCENARIO("joy types", "[joy_types]") {
 			REQUIRE(!is_joy_int(D7));
 			REQUIRE(!is_joy_int(D8));
 			REQUIRE(!is_joy_int(D9));
+		}
+
+		WHEN("chars") {
+			REQUIRE(is_joy_char(C1));
+			REQUIRE(is_joy_char(C2));
+			REQUIRE(is_joy_char(C3));
 		}
 
 		WHEN("doubles") {
@@ -148,6 +158,45 @@ SCENARIO("joy types", "[joy_types]") {
 		WHEN("string") {
 			REQUIRE(is_joy_string(SS1));
 			REQUIRE(is_joy_string(SS2));
+		}
+
+		WHEN("joy type") {
+			REQUIRE(joy_type(T) == joy_t::bool_t);
+			REQUIRE(joy_type(F) == joy_t::bool_t);
+
+			REQUIRE(joy_type(I1) == joy_t::int_t);
+			REQUIRE(joy_type(I2) == joy_t::int_t);
+			REQUIRE(joy_type(I3) == joy_t::int_t);
+			REQUIRE(joy_type(I4) == joy_t::int_t);
+			
+			REQUIRE(joy_type(C1) == joy_t::char_t);
+			REQUIRE(joy_type(C2) == joy_t::char_t);
+			REQUIRE(joy_type(C3) == joy_t::char_t);
+			
+			REQUIRE(joy_type(D1) == joy_t::double_t);
+			REQUIRE(joy_type(D2) == joy_t::double_t);
+			REQUIRE(joy_type(D3) == joy_t::double_t);
+			REQUIRE(joy_type(D4) == joy_t::double_t);
+			REQUIRE(joy_type(D5) == joy_t::double_t);
+			REQUIRE(joy_type(D6) == joy_t::double_t);
+			REQUIRE(joy_type(D7) == joy_t::double_t);
+			
+			REQUIRE(joy_type(L1) == joy_t::list_t);
+			REQUIRE(joy_type(L2) == joy_t::list_t);
+			REQUIRE(joy_type(L3) == joy_t::list_t);
+			REQUIRE(joy_type(L4) == joy_t::undef_t);
+			REQUIRE(joy_type(L5) == joy_t::undef_t);
+
+			REQUIRE(joy_type(Q1) == joy_t::list_t);
+			//REQUIRE(joy_type(Q2) == joy_t::undef_t);
+
+			REQUIRE(joy_type(S1) == joy_t::set_t);
+			REQUIRE(joy_type(S2) == joy_t::set_t);
+			REQUIRE(joy_type(S3) == joy_t::set_t);
+
+			REQUIRE(joy_type(SS1) == joy_t::string_t);
+			REQUIRE(joy_type(SS2) == joy_t::string_t);
+
 		}
 
 	}
