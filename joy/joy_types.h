@@ -92,12 +92,34 @@ namespace joy {
         return ((match[0] == open_sigil) && (match.back() == close_sigil));
     }
 
+    // TODO: what if no sigils?
+    inline pattern_t strip_sigils(pattern_t& match, char open_sigil, char close_sigil) {
+        if (is_sigils(match, open_sigil, close_sigil)) {
+            return match.substr(2, match.size() - 3);
+        }
+    }
+
+    inline bool sigils_contain(pattern_t& test, pattern_t& match, char open_sigil, char close_sigil) {
+        if (is_sigils(match, open_sigil, close_sigil)) {
+            return test == strip_sigils(match, open_sigil, close_sigil);
+        }
+        else {
+            //TODO: err info e.g. last_error = ERRNUM
+            return false;
+        }
+    }
+
+    /**
+    *
+    */
+
     inline bool is_joy_list(pattern_t& match) {
         return is_sigils(match, LIST_OPEN, LIST_CLOSE);
     }
 
     inline bool is_joy_quote(pattern_t& match) {
-        return is_joy_list(match);
+        //return ((is_joy_list(match)) && (!is_empty_aggregate(match));
+        return false;
     }
 
     inline bool is_joy_set(pattern_t& match) {
