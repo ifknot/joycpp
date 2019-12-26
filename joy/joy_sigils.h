@@ -11,8 +11,8 @@ namespace joy {
 	const char LIST_CLOSE = ']';
 	const char SET_OPEN = '{';
 	const char SET_CLOSE = '}';
-	const char STRING_OPEN = '[';
-	const char STRING_CLOSE = ']';
+	const char STRING_OPEN = '"';
+	const char STRING_CLOSE = '"';
 	const char SPC = ' ';
 	
 }

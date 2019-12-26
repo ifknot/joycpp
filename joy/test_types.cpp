@@ -31,7 +31,7 @@ SCENARIO("joy types", "[joy_types]") {
 		pattern_t D8 = "+0003.14";	//should fail
 		pattern_t D9 = "37.e88";	//should fail
 
-		pattern_t S1 = "'A 'B 'C ";
+		pattern_t Strip1 = "'A 'B 'C ";
 
 		pattern_t L1 = "[ ]";
 		pattern_t L2 = "[ [ ] ]";
@@ -44,6 +44,13 @@ SCENARIO("joy types", "[joy_types]") {
 
 		pattern_t Q1 = "[ dup ]";
 		pattern_t Q2 = "[ ]";				//are empty quotes permitted?
+
+		pattern_t S1 = "{ }";
+		pattern_t S2 = "{ { } }";
+		pattern_t S3 = "{ 'a 'b 'c}";
+
+		pattern_t SS1 = "\" \"";
+		pattern_t SS2 = "\"abcd\"";
 
 		WHEN("booleans") {
 			REQUIRE(is_joy_bool(T));
@@ -74,7 +81,6 @@ SCENARIO("joy types", "[joy_types]") {
 			REQUIRE(!is_joy_int(D7));
 			REQUIRE(!is_joy_int(D8));
 			REQUIRE(!is_joy_int(D9));
-			
 		}
 
 		WHEN("doubles") {
@@ -98,12 +104,14 @@ SCENARIO("joy types", "[joy_types]") {
 		}
 
 		WHEN("sigils") {
-			//REQUIRE(strip_sigils(L1, LIST_OPEN, LIST_CLOSE) == "");
-			REQUIRE(strip_sigils(L3, LIST_OPEN, LIST_CLOSE) == S1);
+			REQUIRE(strip_sigils(L1, LIST_OPEN, LIST_CLOSE) == "");
+			REQUIRE(strip_sigils(L3, LIST_OPEN, LIST_CLOSE) == Strip1);
+			REQUIRE(add_sigils(Strip1, LIST_OPEN, LIST_CLOSE) == L3); 
 		}
 
 		WHEN("lists") {
 			REQUIRE(is_joy_list(L1));
+			REQUIRE(is_empty_joy_list(L1));
 			REQUIRE(is_joy_list(L2));
 			REQUIRE(is_joy_list(L3));
 			REQUIRE(!is_joy_list(L4));
@@ -114,8 +122,32 @@ SCENARIO("joy types", "[joy_types]") {
 		}
 
 		WHEN("quotes") {
+			//at this stage not sure how far to go differentiating between lists and quotes?
+			//REQUIRE(is_joy_quote(L1));
+			//REQUIRE(is_joy_quote(L2));
+			//REQUIRE(is_joy_quote(L3));
+			//REQUIRE(!is_joy_quote(L4));
+			//REQUIRE(!is_joy_quote(L5));
 			REQUIRE(is_joy_quote(Q1));
 			REQUIRE(!is_joy_quote(Q2));
+		}
+
+		WHEN("sets") {
+			REQUIRE(is_joy_set(S1));
+			REQUIRE(is_empty_joy_set(S1));
+			REQUIRE(is_joy_set(S2));
+			REQUIRE(is_joy_set(S3));
+			REQUIRE(!is_joy_set(L1));
+			REQUIRE(!is_joy_set(L2));
+			REQUIRE(!is_joy_set(L3));
+			REQUIRE(!is_joy_set(L4));
+			REQUIRE(!is_joy_set(L5));
+			REQUIRE(!is_joy_set(Q1));
+		}
+
+		WHEN("string") {
+			REQUIRE(is_joy_string(SS1));
+			REQUIRE(is_joy_string(SS2));
 		}
 
 	}

@@ -76,7 +76,7 @@ namespace joy {
         }
     }
 
-    /**
+    /**b
     * test if the pattern is a number (int or double)
     * allowed: +3.0, 3.2e23, -4.70e+9, -.2E-4, -7.6603
     * not allowed: -1 (integer), +0003 (leading zeros), 37.e88 (dot before the e)
@@ -84,6 +84,12 @@ namespace joy {
     inline bool is_joy_double(pattern_t& match) {
         return is_joy_number(match) && !is_joy_int(match);
     }
+
+    bool is_empty_aggregate(pattern_t& match, char open_sigil, char close_sigil);
+
+    bool is_empty_joy_list(pattern_t match);
+
+    bool is_empty_joy_set(pattern_t match);
 
     /**
     * test if lexeme is wrapped in the sigil chars
@@ -99,6 +105,12 @@ namespace joy {
         }
     }
 
+    inline pattern_t add_sigils(pattern_t& match, char open_sigil, char close_sigil) {
+        std::string open{ open_sigil }, close{ close_sigil };
+        auto s = strip_spc(match);
+        return open + TOK_SPACE + s + TOK_SPACE + close;
+    }
+
     inline bool sigils_contain(pattern_t& test, pattern_t& match, char open_sigil, char close_sigil) {
         if (is_sigils(match, open_sigil, close_sigil)) {
             return test == strip_sigils(match, open_sigil, close_sigil);
@@ -109,16 +121,12 @@ namespace joy {
         }
     }
 
-    /**
-    *
-    */
-
     inline bool is_joy_list(pattern_t& match) {
         return is_sigils(match, LIST_OPEN, LIST_CLOSE);
     }
 
     inline bool is_joy_quote(pattern_t& match) {
-        //return ((is_joy_list(match)) && (!is_empty_aggregate(match));
+        return ((is_joy_list(match)) && (!is_empty_aggregate(match, QUOTE_OPEN, QUOTE_CLOSE)));
         return false;
     }
 
@@ -140,9 +148,7 @@ namespace joy {
     }
 
     inline token_t make_quoted_token(pattern_t&& s) {
-        s = strip_spc(s);
-        s = QUOTE_OPEN + TOK_SPACE + s;
-        return make_token(s + TOK_SPACE + QUOTE_CLOSE, joy_t::quote_t);
+        return make_token(add_sigils(s, QUOTE_OPEN, QUOTE_CLOSE), joy_t::quote_t);
     }
 
     /**
