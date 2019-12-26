@@ -171,6 +171,7 @@ SCENARIO("joy_stack", "[joy_stack]") {
 			}
 		}
 
+		/*
 		WHEN("unstack") {
 			s.push(joy::make_quoted_token("[ d e f ]"));
 			s.unstack();
@@ -181,8 +182,9 @@ SCENARIO("joy_stack", "[joy_stack]") {
 				REQUIRE(s.sat(2).first == "f");
 			}
 		}
+		*/
 
-		s.dump();
+		//s.dump();
 
 	}
 

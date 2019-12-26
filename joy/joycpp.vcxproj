@@ -158,6 +158,7 @@
     <ClCompile Include="joy_stack.cpp" />
     <ClCompile Include="joy_types.cpp" />
     <ClCompile Include="test_joy_stack.cpp" />
+    <ClCompile Include="test_types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="catch2.h">

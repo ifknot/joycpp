@@ -9,6 +9,7 @@ namespace joy {
 
 	const std::string TOK_TRUE = "true";
 	const std::string TOK_FALSE = "false";
+	const std::string TOK_SPACE = " ";
 	
 
 }
