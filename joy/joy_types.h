@@ -18,6 +18,7 @@
 #include <map>
 #include <regex>
 #include <cassert>
+#include <functional>
 
 #include "joy_sigils.h"
 #include "joy_tokens.h"
@@ -29,6 +30,8 @@ namespace joy {
     typedef std::string pattern_t;
     typedef std::pair<pattern_t, joy_t> token_t;
     typedef std::vector<token_t> base_stack_t;
+    typedef std::function<void()> function_t;
+    typedef std::map<pattern_t, function_t> cpp_dictionary_t;
     
     //string manglers
 

@@ -62,5 +62,11 @@
     <ClInclude Include="lexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="error_numbers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="error_messages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

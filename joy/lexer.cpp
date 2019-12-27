@@ -10,6 +10,16 @@ namespace joy {
 	{}
 
 	bool lexer::operator()(std::string&& line) {
+		std::stringstream line_stream(line);
+		std::string s;
+		while (line_stream >> s) {
+			if (try_regular(s)) {
+				//log
+			}
+			else {
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -20,5 +30,11 @@ namespace joy {
 	void lexer::exit() {
 		exit_ = true;
 	}
+
+	bool lexer::try_regular(std::string s) {
+		return false;
+	}
+
+	
 
 }

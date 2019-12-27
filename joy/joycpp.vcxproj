@@ -169,6 +169,8 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </ClInclude>
     <ClInclude Include="colour_codes.h" />
+    <ClInclude Include="error_messages.h" />
+    <ClInclude Include="error_numbers.h" />
     <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_sigils.h" />
     <ClInclude Include="joy_stack.h" />
