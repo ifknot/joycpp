@@ -158,6 +158,7 @@
     <ClCompile Include="joy_stack.cpp" />
     <ClCompile Include="joy_types.cpp" />
     <ClCompile Include="lexer.cpp" />
+    <ClCompile Include="parser.cpp" />
     <ClCompile Include="test_joy_stack.cpp" />
     <ClCompile Include="test_types.cpp" />
   </ItemGroup>
@@ -177,6 +178,7 @@
     <ClInclude Include="joy_tokens.h" />
     <ClInclude Include="joy_types.h" />
     <ClInclude Include="lexer.h" />
+    <ClInclude Include="parser.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="joy03.man" />

@@ -11,16 +11,17 @@ namespace joy {
 		load_manual(path_to_manual);
 	}
 
+
 	bool lexer::operator()(std::string&& line) {
 		std::stringstream line_stream(line);
-		std::string s;
-		while (line_stream >> s) {
-			if (s[0] != TOK_CHAR_COMMENT) {
-				if (try_regular(s)) {
+		std::string lexeme;
+		while (line_stream >> lexeme) {
+			if (lexeme[0] != TOK_CHAR_COMMENT) {
+				if (tokenize(lexeme)) {
 					//log
 				}
 				else {
-					return no_conversion(s);
+					return no_conversion(lexeme);
 				}
 			}
 		}
@@ -35,7 +36,11 @@ namespace joy {
 		exit_ = true;
 	}
 
-	bool lexer::try_regular(std::string lexeme) {
+	bool lexer::tokenize(const std::string& lexeme) {
+		return try_regular(lexeme);
+	}
+
+	bool lexer::try_regular(const std::string& lexeme) {
 		auto it = regular_translation.find(lexeme);
 		if (it != regular_translation.end()) {
 			(it->second)();
@@ -47,27 +52,27 @@ namespace joy {
 	}
 
 	//TODO: strings really belong in context free section - but ok for testing 
-	bool lexer::try_string(std::string lexeme) {
+	bool lexer::try_string(const std::string& lexeme) {
 		if (is_joy_string(lexeme)) {
-			js.push(make_token(std::move(lexeme), joy_t::string_t));
+			js.push(make_token(std::string(lexeme), joy_t::string_t));
 			return true;
 		}
 		return try_int(lexeme);
 	}
 
-	bool lexer::try_int(std::string lexeme) {
+	bool lexer::try_int(const std::string& lexeme) {
 		return false;
 	}
 
-	bool lexer::try_char(std::string lexeme) {
+	bool lexer::try_char(const std::string& lexeme) {
 		return false;
 	}
 
-	bool lexer::try_double(std::string lexeme) {
+	bool lexer::try_double(const std::string& lexeme) {
 		return false;
 	}
 
-	bool lexer::no_conversion(std::string lexeme) {
+	bool lexer::no_conversion(const std::string& lexeme) {
 		err(DNOCONVERSION);
 		return false;
 	}
@@ -117,11 +122,15 @@ namespace joy {
 	}
 
 	bool lexer::args(size_t n) {
-		if (js.size() >= n) {
+		if (js.size() == 0) {
+			err(DSTACKEMPTY);
+			return false;
+		}
+		else if (js.size() >= n) {
 			return true;
 		}
 		else {
-			err(DSTACKEMPTY);
+			err(DLESSARGS, "expected " + std::to_string(n) + " found " + std::to_string(js.size()));
 			return false;
 		}
 	}

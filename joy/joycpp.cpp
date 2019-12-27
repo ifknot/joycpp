@@ -16,18 +16,18 @@
 #include <fstream>
 #include <stdio.h>
 
-#include "lexer.h"
+#include "parser.h"
 #include "io_device.h"
 #include "joy_stack.h"
 
 void run() { // exec loop
     joy::io_device io;
     joy::joy_stack js;
-    joy::lexer lex{js, io, "joy03.man"};
+    joy::parser parse{js, io, "joy03.man"};
     io.colouring(true);
     io.ok();
-    while (!lex.is_exit()) {
-        if (lex(io.readline())) {
+    while (!parse.is_exit()) {
+        if (parse(io.readline())) {
             io.ok();
         }
         else {

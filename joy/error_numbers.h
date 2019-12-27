@@ -10,5 +10,6 @@ namespace joy {
 	const size_t DFILENOTFOUND	= 3;
 	const size_t DMANNOTFOUND	= 4;
 	const size_t DNOMATCH		= 5;
+	const size_t DLESSARGS		= 6;
 
 }

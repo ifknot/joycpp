@@ -14,7 +14,7 @@ namespace joy {
 
 		lexer(joy_stack& js, io_device& io, std::string path_to_manual);
 
-		virtual bool operator()(std::string&& line);
+		bool operator()(std::string&& line);
 
 		bool is_exit();
 
@@ -22,22 +22,24 @@ namespace joy {
 
 	protected:
 
+		virtual bool tokenize(const std::string& lexeme);
+
 		/**
 		* search the regular expression c++ dictionary for a recognised Joy command
 		* cascade down to test for simple types
 		* finally display unrecognised input if no conversion
 		*/
-		bool try_regular(std::string lexeme);
+		bool try_regular(const std::string& lexeme);
 
-		bool try_string(std::string lexeme);
+		bool try_string(const std::string& lexeme);
 
-		bool try_int(std::string lexeme);
+		bool try_int(const std::string& lexeme);
 
-		bool try_char(std::string lexeme);
+		bool try_char(const std::string& lexeme);
 
-		bool try_double(std::string lexeme);
+		bool try_double(const std::string& lexeme);
 
-		bool no_conversion(std::string lexeme);
+		bool no_conversion(const std::string& lexeme);
 
 		virtual void err(error_number_t e, std::string msg = "");
 
@@ -63,8 +65,6 @@ namespace joy {
 
 		void joy_assert(pattern_t expected, pattern_t found);
 
-		//void lex_file();
-
 		void man(std::string match);
 
 		void manual();
@@ -75,7 +75,7 @@ namespace joy {
 		std::string about_info{ "Joy Interpreter - J.S.Thornton 2019\n" };
 
 		/**
-		* Joy03 (language specs asper Manfred von Thun 16:57.51 on Mar 17 2003)
+		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
 		* translate Joy regular grammar commands into their c++ lambda equivalents
 		* only Joy grammar that either:
 		* 1. can not be expressed in Joy grammar
@@ -83,6 +83,7 @@ namespace joy {
 		*/
 		cpp_dictionary_t regular_translation {
 		//non standard commands
+		{"?", [&]() { command_dump(); }},
 		{"about", [&]() { io.colour(YELLOW);  io << about_info; }},
 		{"man", [&]() { if (expects(1, joy_t::string_t)) { man(destring(js.top().first)); js.pop(); } }},
 		{"assert", [&]() { if (args(2)) { joy_assert(js.top().first, js.sat(1).first); } }},
@@ -92,7 +93,6 @@ namespace joy {
 		//belongs in context free (later)
 		{"include", [&]() { if (expects(1, joy_t::string_t)) { joy_include(); } }},
 		{"put", [&]() { if (args(1)) { io << js.top().first; js.pop(); } }},
-		//{"include", [&]() { lex_file(); }},
 		//boolean simple types
 		{TOK_TRUE, [&]() { js.push(make_token("true", joy_t::bool_t)); }},
 		{TOK_FALSE, [&]() { js.push(make_token("false", joy_t::bool_t)); }},
@@ -112,8 +112,7 @@ namespace joy {
 		{"rotate", [&]() { if (args(3)) { js.rotate(); } }},
 		{"rollup", [&]() { if (args(3)) { js.rollup(); } }},
 		{"rolldown", [&]() { if (args(3)) { js.rolldown(); } }},
-
-		{"?", [&]() { command_dump(); }}
+		{"id", [&]() { }}
 		};
 
 		/**
