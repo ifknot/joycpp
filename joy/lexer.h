@@ -58,6 +58,8 @@ namespace joy {
 
 		void command_dump();
 
+		void joy_assert(pattern_t expected, pattern_t found);
+
 		//void lex_file();
 
 		void man(std::string match);
@@ -80,6 +82,7 @@ namespace joy {
 		//non standard commands
 		{"about", [&]() { io.colour(YELLOW);  io << about_info; }},
 		{"man", [&]() { if (expects(1, joy_t::string_t)) { man(destring(js.top().first)); js.pop(); } }},
+		{"assert", [&]() { if (args(2)) { joy_assert(js.top().first, js.sat(1).first); } }},
 		//interpreter environment 
 		{TOK_QUIT, [&]() { exit(); io << ". . ."; }},
 		{"manual", [&]() { manual(); }},
@@ -90,19 +93,19 @@ namespace joy {
 		//stack commands
 		{".s", [&]() { stack_dump(); }},
 		{"newstack", [&]() { js.newstack(); }},
-		{"stack", [&]() { js.stack(); }},
-		{"unstack", [&]() { js.unstack(); }},
-		{"dup", [&]() { js.dup(); }},
-		{"dupd", [&]() { js.dupd(); }},
-		{"pop", [&]() { js.pop(); }},
-		{"popd", [&]() { js.popd(); }},
-		{"pop2", [&]() { js.pop2(); }},
-		{"unit", [&]() { js.unit(); }},
-		{"swap", [&]() { js.swap(); }},
-		{"swapd", [&]() { js.swapd(); }},
-		{"rotate", [&]() { js.rotate(); }},
-		{"rollup", [&]() { js.rollup(); }},
-		{"rolldown", [&]() { js.rolldown(); }},
+		{"stack", [&]() { if (args(1)) { js.stack(); } }},
+		{"unstack", [&]() { if (expects(1, joy_t::quote_t)) { js.unstack(); } }},
+		{"dup", [&]() { if (args(1)) { js.dup(); } }},
+		{"dupd", [&]() { if (args(2)) { js.dupd(); } }},
+		{"pop", [&]() { if (args(1)) { js.pop(); } }},
+		{"popd", [&]() { if (args(2)) { js.popd(); } }},
+		{"pop2", [&]() { if (args(3)) { js.pop2(); } }},
+		{"unit", [&]() { if (args(1)) { js.unit(); } }},
+		{"swap", [&]() { if (args(2)) { js.swap(); } }},
+		{"swapd", [&]() { if (args(3)) { js.swapd(); } }},
+		{"rotate", [&]() { if (args(3)) { js.rotate(); } }},
+		{"rollup", [&]() { if (args(3)) { js.rollup(); } }},
+		{"rolldown", [&]() { if (args(3)) { js.rolldown(); } }},
 
 		{"?", [&]() { command_dump(); }}
 		};

@@ -141,6 +141,16 @@ namespace joy {
 		io.colour(BOLDWHITE);
 	}
 
+	void lexer::joy_assert(pattern_t expected, pattern_t found) {
+		if (expected == found) {
+			try_regular(TOK_TRUE);
+		}
+		else {
+			try_regular(TOK_FALSE);
+		}
+
+	}
+
 	void lexer::man(std::string match) {
 		io.colour(YELLOW);
 		auto it = joy_manual.find(match);
