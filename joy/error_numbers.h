@@ -8,5 +8,7 @@ namespace joy {
 	const size_t DNOCONVERSION	= 1;
 	const size_t DWRONGTYPE		= 2;
 	const size_t DFILENOTFOUND	= 3;
+	const size_t DMANNOTFOUND	= 4;
+	const size_t DNOMATCH		= 5;
 
 }

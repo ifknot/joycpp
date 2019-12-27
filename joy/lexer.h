@@ -41,6 +41,9 @@ namespace joy {
 
 		virtual void err(error_number_t e, std::string msg = "");
 
+		//belongs in context free (later)
+		virtual void joy_include();
+
 		joy_stack& js;
 		io_device& io;
 
@@ -86,6 +89,9 @@ namespace joy {
 		//interpreter environment 
 		{TOK_QUIT, [&]() { exit(); io << ". . ."; }},
 		{"manual", [&]() { manual(); }},
+		//belongs in context free (later)
+		{"include", [&]() { if (expects(1, joy_t::string_t)) { joy_include(); } }},
+		{"put", [&]() { if (args(1)) { io << js.top().first; js.pop(); } }},
 		//{"include", [&]() { lex_file(); }},
 		//boolean simple types
 		{TOK_TRUE, [&]() { js.push(make_token("true", joy_t::bool_t)); }},

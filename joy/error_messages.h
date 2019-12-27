@@ -13,6 +13,7 @@ namespace joy {
 	{DSTACKEMPTY, "empty stack"},
 	{DNOCONVERSION, "unrecognised input"},
 	{DFILENOTFOUND, "file not found"},
+	{DMANNOTFOUND, "not found in manual"},
 	{DWRONGTYPE, "wrong type expected:"}
 	};
 

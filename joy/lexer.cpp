@@ -15,11 +15,13 @@ namespace joy {
 		std::stringstream line_stream(line);
 		std::string s;
 		while (line_stream >> s) {
-			if (try_regular(s)) {
-				//log
-			}
-			else {
-				return no_conversion(s);
+			if (s[0] != TOK_CHAR_COMMENT) {
+				if (try_regular(s)) {
+					//log
+				}
+				else {
+					return no_conversion(s);
+				}
 			}
 		}
 		return true;
@@ -44,6 +46,7 @@ namespace joy {
 		}
 	}
 
+	//TODO: strings really belong in context free section - but ok for testing 
 	bool lexer::try_string(std::string lexeme) {
 		if (is_joy_string(lexeme)) {
 			js.push(make_token(std::move(lexeme), joy_t::string_t));
@@ -73,6 +76,24 @@ namespace joy {
 		io.colour(RED);
 		io << (ERR + std::to_string(e) + " : " + debug_messages[e] + " " +  msg);
 		io.colour(BOLDWHITE);
+	}
+
+	void lexer::joy_include() {
+		auto path = js.top().first;
+		js.pop();
+		std::ifstream f(destring(path));
+		if (!f) {
+			err(DFILENOTFOUND, "include " + path);
+		}
+		else {
+			std::string line;
+			while (std::getline(f, line)) {
+				if (line[0] != TOK_CHAR_COMMENT) {
+					operator()(std::move(line));
+				}
+			}
+		}
+
 	}
 
 	void lexer::load_manual(std::string path) {
@@ -146,7 +167,8 @@ namespace joy {
 			try_regular(TOK_TRUE);
 		}
 		else {
-			try_regular(TOK_FALSE);
+			err(DNOMATCH, expected + "!=" + found);
+			operator()(TOK_FALSE + " .s");
 		}
 
 	}
@@ -158,7 +180,7 @@ namespace joy {
 			io << match + joy_manual[match];
 		}
 		else {
-			err(DFILENOTFOUND, js.top().first);
+			err(DMANNOTFOUND, js.top().first);
 		}
 	}
 
@@ -167,8 +189,6 @@ namespace joy {
 		for (const auto& [cmd, info] : joy_manual) {
 			io << cmd << info;
 		}
-	}
-
-	
+	}	
 
 }

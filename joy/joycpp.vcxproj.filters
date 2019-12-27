@@ -73,5 +73,8 @@
     <None Include="joy03.man">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="test1.joy">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

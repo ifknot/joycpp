@@ -1,0 +1,4 @@
+#simple test file
+"test-assert" put
+true false assert
+"finished" put

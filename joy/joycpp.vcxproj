@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="joy03.man" />
+    <None Include="test1.joy" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
