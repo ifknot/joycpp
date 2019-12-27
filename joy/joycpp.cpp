@@ -25,6 +25,7 @@ void run() { // exec loop
     joy::joy_stack js;
     joy::lexer lex{js, io};
     io.colouring(true);
+    io.ok();
     while (!lex.is_exit()) {
         if (lex(io.readline())) {
             io.ok();

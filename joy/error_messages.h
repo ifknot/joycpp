@@ -10,7 +10,7 @@ namespace joy {
 	static const std::string ERR = "error #";
 
 	static std::map<error_number_t, std::string> debug_messages = {
-	{DNOCONVERSION, "unrecognised token"}
+	{DNOCONVERSION, "unrecognised input"}
 	};
 
 }

@@ -11,7 +11,7 @@
 * - sigil managers: add/strip/empty
 * - helpers: make_token_...(pattern_t) 
 */
-#pragma once
+#pragma onceboo
 
 #include <string>
 #include <vector>

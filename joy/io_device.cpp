@@ -36,7 +36,7 @@ namespace joy {
 
 	void io_device::ink() {
 		if (colouring()) {
-			output_stream << ink_colour;
+			output_stream << RESET << ink_colour;
 		}
 	}
 
