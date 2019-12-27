@@ -69,4 +69,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="joy03.man">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

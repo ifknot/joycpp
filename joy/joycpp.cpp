@@ -23,7 +23,7 @@
 void run() { // exec loop
     joy::io_device io;
     joy::joy_stack js;
-    joy::lexer lex{js, io};
+    joy::lexer lex{js, io, "joy03.man"};
     io.colouring(true);
     io.ok();
     while (!lex.is_exit()) {

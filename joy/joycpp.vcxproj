@@ -178,6 +178,9 @@
     <ClInclude Include="joy_types.h" />
     <ClInclude Include="lexer.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="joy03.man" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

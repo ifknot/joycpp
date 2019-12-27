@@ -20,6 +20,8 @@
 #include <cassert>
 #include <functional>
 
+#include <iostream>
+
 #include "joy_sigils.h"
 #include "joy_tokens.h"
 
@@ -102,7 +104,7 @@ namespace joy {
     * test if lexeme is wrapped in the sigil chars
     */
     inline bool is_sigils(pattern_t& match, char open_sigil, char close_sigil) {
-        return ((match[0] == open_sigil) && (match.back() == close_sigil));
+          return ((match[0] == open_sigil) && (match.back() == close_sigil));
     }
 
     inline pattern_t strip_sigils(pattern_t& match, char open_sigil, char close_sigil) {
@@ -152,6 +154,10 @@ namespace joy {
    
     inline token_t make_token(pattern_t&& s, joy_t t) {
         return token_t(s, t);
+    }
+
+    inline token_t make_string_token(pattern_t&& s) {
+        return make_token(add_sigils(s, STRING_OPEN, STRING_CLOSE), joy_t::string_t);
     }
 
     inline token_t make_quoted_token(pattern_t&& s) {

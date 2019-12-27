@@ -4,10 +4,12 @@ namespace joy {
 
 
 
-	lexer::lexer(joy_stack& js, io_device& io) :
+	lexer::lexer(joy_stack& js, io_device& io, std::string path_to_manual) :
 		js(js),
 		io(io)
-	{}
+	{
+		//load_manual(path_to_manual);
+	}
 
 	bool lexer::operator()(std::string&& line) {
 		std::stringstream line_stream(line);
@@ -38,8 +40,16 @@ namespace joy {
 			return true;
 		}
 		else {
-			return try_int(lexeme);
+			return try_string(lexeme);
 		}
+	}
+
+	bool lexer::try_string(std::string lexeme) {
+		if (is_joy_string(lexeme)) {
+			js.push(make_token(std::move(lexeme), joy_t::string_t));
+			return true;
+		}
+		return try_int(lexeme);
 	}
 
 	bool lexer::try_int(std::string lexeme) {
@@ -59,13 +69,26 @@ namespace joy {
 		return false;
 	}
 
-	void lexer::err(error_number_t e) {
+	void lexer::err(error_number_t e, std::string msg) {
 		io.colour(RED);
-		io << (ERR + std::to_string(e) + " : " + debug_messages[e]);
+		io << (ERR + std::to_string(e) + " : " + debug_messages[e] + " " +  msg);
 		io.colour(BOLDWHITE);
 	}
 
-	void lexer::stack_dump() {	
+	void lexer::man(std::string command) {
+	}
+
+	bool lexer::expects(size_t argc, joy_t argt) {
+		for (size_t i{ 0 }; i < argc; ++argc) {
+			if (argt != js.sat(i).second) {
+				err(DWRONGTYPE, to_string(argt));
+				return false;
+			}
+		}
+		return true; 
+	}
+
+	void lexer::stack_dump() {
 		io.colour(GREEN);
 		std::string dump{ "_\n" };
 		for (size_t i{ 0 }; i < js.size(); ++i) {
