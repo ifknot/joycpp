@@ -26,15 +26,26 @@ Original version repository renamed [joycpp_old](https://github.com/ifknot/joycp
 
 joy langguage     : joy
  ↓
+ 
 joy context free  : c++
  ↓
+ 
 joy regular       : c++
  ↓
+ 
 joy stack         : c++
  ↓
+ 
 input/output      : c++
 
 ### ToDo:
-1. input output
-2. joy_stack_t
-3. joy stack layer
+1. ~~input output~~
+2. ~~joy_stack_t~~
+3. ~~joy stack layer~~
+4. ~~bdd test joy_stack~~
+5. ~~joy type handling functions and make helpers~~
+6. ~~bdd test joy types and tools~~
+7. lexer layer (regular grammar)
+8. parser layer (context free)
+9. joy layer
+10. finish joycpp using joy
