@@ -202,7 +202,6 @@ SCENARIO("joy types", "[joy_types]") {
 	}
 }
 
-
 /*
 SCENARIO("portal", "[portal]") {
 	GIVEN() {

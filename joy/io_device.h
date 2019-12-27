@@ -31,9 +31,9 @@ namespace joy {
 
         void ok();
 
-    private:
-
         void ink();
+
+    private:
 
         std::string ink_colour{ BOLDWHITE };
         std::istream& input_stream;

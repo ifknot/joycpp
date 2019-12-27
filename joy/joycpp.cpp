@@ -8,7 +8,7 @@
 #define CATCH_CONFIG_RUNNER
 #include "catch2.h"
 
-//#define NDEBUG
+#define NDEBUG
 
 #ifdef NDEBUG
 
@@ -16,16 +16,22 @@
 #include <fstream>
 #include <stdio.h>
 
+#include "lexer.h"
 #include "io_device.h"
+#include "joy_stack.h"
 
 void run() { // exec loop
     joy::io_device io;
+    joy::joy_stack js;
+    joy::lexer lex{js, io};
     io.colouring(true);
-    std::string s;
-    std::stringstream ss(io.readline());
-    while (ss >> s) {
-        io.ok();
-        io << s;
+    while (!lex.is_exit()) {
+        if (lex(io.readline())) {
+            io.ok();
+        }
+        else {
+            io.ink();
+        }
     }
 }
 
