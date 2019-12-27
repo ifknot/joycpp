@@ -48,6 +48,8 @@ namespace joy {
 
 		void load_manual(std::string path);
 
+		bool args(size_t n);
+
 		bool expects(size_t argc, joy_t argt);
 
 		//Joy command translations
@@ -76,7 +78,7 @@ namespace joy {
 		*/
 		cpp_dictionary_t regular_translation {
 		//non standard commands
-		{"about", [&]() { io << about_info; }},
+		{"about", [&]() { io.colour(YELLOW);  io << about_info; }},
 		{"man", [&]() { if (expects(1, joy_t::string_t)) { man(destring(js.top().first)); js.pop(); } }},
 		//interpreter environment 
 		{TOK_QUIT, [&]() { exit(); io << ". . ."; }},

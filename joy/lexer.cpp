@@ -95,16 +95,25 @@ namespace joy {
 		}
 	}
 
+	bool lexer::args(size_t n) {
+		if (js.size() >= n) {
+			return true;
+		}
+		else {
+			err(DSTACKEMPTY);
+			return false;
+		}
+	}
+
 	bool lexer::expects(size_t argc, joy_t argt) {
 		for (size_t i{ 0 }; i < argc; ++i) {
-			if (js.size()) {
+			if (args(1)) {
 				if (argt != js.sat(i).second) {
 					err(DWRONGTYPE, to_string(argt));
 					return false;
 				}
 			}
 			else {
-				err(DSTACKEMPTY);
 				return false;
 			}
 		}
