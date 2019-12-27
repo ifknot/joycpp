@@ -18,6 +18,7 @@ namespace joy {
 
 	void io_device::colour(std::string col) {
 		ink_colour = col;
+		ink();
 	}
 
 	void io_device::colouring(bool b) {
@@ -29,9 +30,9 @@ namespace joy {
 	}
 
 	void io_device::ok() {
-		output_stream << RESET << BOLDBLACK;
+		colour(BOLDBLACK);
 		output_stream << "ok\n";
-		ink();
+		colour(BOLDWHITE);
 	}
 
 	void io_device::ink() {

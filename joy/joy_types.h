@@ -114,6 +114,14 @@ namespace joy {
         }
     }
 
+    //special case for strings as no bookend spaces
+    inline pattern_t destring(pattern_t& match) {
+        assert(is_sigils(match, STRING_OPEN, STRING_CLOSE));
+        if (is_sigils(match, STRING_OPEN, STRING_CLOSE)) {
+            return match.substr(1, match.size() - 2);
+        }
+    }
+
     inline pattern_t add_sigils(pattern_t& match, char open_sigil, char close_sigil) {
         std::string open{ open_sigil }, close{ close_sigil };
         auto s = strip_spc(match);

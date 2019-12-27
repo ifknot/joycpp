@@ -41,12 +41,12 @@ namespace joy {
 
 		virtual void err(error_number_t e, std::string msg = "");
 
-		virtual void man(std::string command);
-
 		joy_stack& js;
 		io_device& io;
 
 	private:
+
+		void load_manual(std::string path);
 
 		bool expects(size_t argc, joy_t argt);
 
@@ -56,13 +56,16 @@ namespace joy {
 
 		void command_dump();
 
-		void lex_file();
+		//void lex_file();
 
-		void man();
+		void man(std::string match);
+
+		void manual();
 
 		// vars
 
 		bool exit_{ false };
+		std::string about_info{ "Joy Interpreter - J.S.Thornton 2019\n" };
 
 		/**
 		* Joy03 (language specs asper Manfred von Thun 16:57.51 on Mar 17 2003)
@@ -73,10 +76,12 @@ namespace joy {
 		*/
 		cpp_dictionary_t regular_translation {
 		//non standard commands
-		{"man", [&]() {man(); }},
+		{"about", [&]() { io << about_info; }},
+		{"man", [&]() { if (expects(1, joy_t::string_t)) { man(destring(js.top().first)); js.pop(); } }},
 		//interpreter environment 
 		{TOK_QUIT, [&]() { exit(); io << ". . ."; }},
-		{"include", [&]() { lex_file(); }},
+		{"manual", [&]() { manual(); }},
+		//{"include", [&]() { lex_file(); }},
 		//boolean simple types
 		{TOK_TRUE, [&]() { js.push(make_token("true", joy_t::bool_t)); }},
 		{TOK_FALSE, [&]() { js.push(make_token("false", joy_t::bool_t)); }},
@@ -103,7 +108,7 @@ namespace joy {
 		/**
 		* Joy Manual loaded from file at construction
 		*/
-		std::map<std::string, std::string> manual;
+		std::map<std::string, std::string> joy_manual;
 
 	};
 

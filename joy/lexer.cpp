@@ -8,7 +8,7 @@ namespace joy {
 		js(js),
 		io(io)
 	{
-		//load_manual(path_to_manual);
+		load_manual(path_to_manual);
 	}
 
 	bool lexer::operator()(std::string&& line) {
@@ -75,17 +75,40 @@ namespace joy {
 		io.colour(BOLDWHITE);
 	}
 
-	void lexer::man(std::string command) {
+	void lexer::load_manual(std::string path) {
+		std::ifstream f(path);
+		if (!f) {
+			err(DFILENOTFOUND, "Joy manual " + path);
+		}
+		else {
+			std::string line, cmd, msg;
+			std::getline(f, line);
+			about_info += line;
+			while (std::getline(f, line)) {
+				if (line[0] != TOK_CHAR_COMMENT) {
+					cmd = line.substr(0, line.find(" "));
+					msg = line.substr(line.find(":"), line.size());
+					std::getline(f, line);
+					joy_manual[cmd] = msg + "\n" + line;
+				}
+			}
+		}
 	}
 
 	bool lexer::expects(size_t argc, joy_t argt) {
-		for (size_t i{ 0 }; i < argc; ++argc) {
-			if (argt != js.sat(i).second) {
-				err(DWRONGTYPE, to_string(argt));
+		for (size_t i{ 0 }; i < argc; ++i) {
+			if (js.size()) {
+				if (argt != js.sat(i).second) {
+					err(DWRONGTYPE, to_string(argt));
+					return false;
+				}
+			}
+			else {
+				err(DSTACKEMPTY);
 				return false;
 			}
 		}
-		return true; 
+		return true;
 	}
 
 	void lexer::stack_dump() {
@@ -107,6 +130,24 @@ namespace joy {
 		}
 		io << dump;
 		io.colour(BOLDWHITE);
+	}
+
+	void lexer::man(std::string match) {
+		io.colour(YELLOW);
+		auto it = joy_manual.find(match);
+		if (it != joy_manual.end()) {
+			io << match + joy_manual[match];
+		}
+		else {
+			err(DFILENOTFOUND, js.top().first);
+		}
+	}
+
+	void lexer::manual() {
+		io.colour(YELLOW);
+		for (const auto& [cmd, info] : joy_manual) {
+			io << cmd << info;
+		}
 	}
 
 	
