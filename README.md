@@ -15,8 +15,9 @@ The language specifications as per Manfred von Thun 16:57.51 on Mar 17 2003, hen
 
 ### TODO:
 Translate Joy regular grammar commands into their c++ lambda equivalents *but* only Joy grammar that either:
-		* 1. can not be expressed in Joy grammar
-		* 2. offers performance benefits as c++ lambda equivalents
+
+* 1. can not be expressed in Joy grammar
+* 2. offers performance benefits as c++ lambda equivalents
 
 ## 23/12/19
 The most important thing to recognise about the Joy Programming Language (joylang) is that most of it can be written in Joy. 
