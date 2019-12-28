@@ -16,8 +16,6 @@ namespace joy {
 
 		lexer(joy_stack& stack0, io_device& io, std::string path_to_manual);
 
-		bool operator()(std::string&& line);
-
 		bool is_exit();
 
 		void exit();
@@ -26,14 +24,25 @@ namespace joy {
 
 		virtual bool tokenize(const std::string& lexeme);
 
+		virtual void err(error_number_t e, std::string msg = "");
+
+		bool args(size_t n);
+
+		bool expects(size_t argc, joy_t argt);
+
+		joy_stack& s0;	//stack #0 main stack
+		io_device& io;
+
+	private:
+
+		void load_manual(std::string path);
+
 		/**
 		* search the regular expression c++ dictionary for a recognised Joy command
 		* cascade down to test for simple types
 		* finally display unrecognised input if no conversion
 		*/
 		bool try_regular(const std::string& lexeme);
-
-		bool try_string(const std::string& lexeme);
 
 		bool try_int(const std::string& lexeme);
 
@@ -43,24 +52,8 @@ namespace joy {
 
 		bool no_conversion(const std::string& lexeme);
 
-		virtual void err(error_number_t e, std::string msg = "");
-
-		//belongs in context free (later)
-		virtual void joy_include();
-
-		joy_stack& s0;	//stack #0 main stack
-		io_device& io;
-
-	private:
-
 		bool exit_{ false };
 		std::string about_info{ ABOUT_INFO };
-
-		void load_manual(std::string path);
-
-		bool args(size_t n);
-
-		bool expects(size_t argc, joy_t argt);
 
 		//Joy command translations
 
@@ -88,8 +81,6 @@ namespace joy {
 		//interpreter environment 
 		{TOK_QUIT, [&]() { exit(); io << ". . ."; }},
 		{"manual", [&]() { manual(); }},
-		//belongs in context free (later)
-		{"include", [&]() { if (expects(1, joy_t::string_t)) { joy_include(); } }},
 		{"put", [&]() { if (args(1)) { io << s0.top().first; s0.pop(); } }},
 		//boolean simple types
 		{TOK_TRUE, [&]() { s0.push(make_token("true", joy_t::bool_t)); }},

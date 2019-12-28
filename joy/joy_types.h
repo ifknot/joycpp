@@ -24,10 +24,13 @@
 
 #include "joy_sigils.h"
 #include "joy_tokens.h"
+#include "colour_codes.h"
 
 namespace joy {
 
     enum class joy_t { bool_t, int_t, char_t, double_t, list_t, quote_t, set_t, string_t, lexeme_t, undef_t };
+
+    enum class state_t { parse, quote, list, set, string };
 
     typedef std::string pattern_t;
     typedef std::pair<pattern_t, joy_t> token_t;
@@ -49,6 +52,17 @@ namespace joy {
     * convert a joy type to its string name (bool, int, char, double, list, quote, set, string, lexeme)
     */
     std::string to_string(joy_t match);
+
+    /**
+    * convert a parser state type to its string name ( parse, quote, list, set, string)
+    */
+    std::string to_string(state_t match);
+
+    /**
+    * useful for mulit line token builds
+    * convert a parser state type to a colour for io_device ( parse = BOLDWHITE, quote = BOLDCYAN, list = BOLDMAGENTA, set = BOLDGREEN, string = BOLDYELLOW)
+    */
+    std::string to_colour(state_t match);
 
     //type tests
 
@@ -162,10 +176,6 @@ namespace joy {
    
     inline token_t make_token(pattern_t&& s, joy_t t) {
         return token_t(s, t);
-    }
-
-    inline token_t make_string_token(pattern_t&& s) {
-        return make_token(add_sigils(s, STRING_OPEN, STRING_CLOSE), joy_t::string_t);
     }
 
     inline token_t make_quoted_token(pattern_t&& s) {

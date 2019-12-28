@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stack>
+#include <cassert>
 
 #include "lexer.h"
 
@@ -8,15 +9,24 @@ namespace joy {
 
 	class parser : public lexer {
 
-		enum class state_t { regular_s, quote_s, list_s, set_s, string_s, define_s };
-
 	public:
 
-		using lexer::lexer;
+		parser(joy_stack& stack0, io_device& io, std::string path_to_manual);
+
+		bool operator()(std::string&& line);
 
 	protected:
 
 		virtual bool tokenize(const std::string& lexeme) override;
+
+	private:
+
+		joy_stack s1; //stack #1 auxillary stack
+		std::stack<state_t> state_stack;
+		std::string quote_build;
+		std::string list_build;
+		std::string set_build;
+		std::string string_build;
 
 		/**
 		* search the context free expression c++ dictionary for a recognised Joy command
@@ -25,11 +35,16 @@ namespace joy {
 		*/
 		bool try_parse(const std::string& lexeme);
 
-	private:
+		bool try_context_free(const std::string& lexeme);
 
-		joy_stack s1; //stack #1 auxillary stack
-		std::stack<state_t> state_stack;
+		bool try_string(const std::string& lexeme);
 
+		bool try_build_quote(const std::string& lexeme);
+
+		bool try_build_string(const std::string& lexeme);
+
+		virtual void joy_include();
+		
 		/**
 		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
 		* translate Joy regular grammar commands into their c++ lambda equivalents
@@ -37,7 +52,11 @@ namespace joy {
 		* 1. can not be expressed in Joy grammar
 		* 2. offer performance benefit as c++ lambda equivalent
 		*/
-		//cpp_dictionary_t context_free_translation{};
+		cpp_dictionary_t context_free_translation{
+		{"include", [&]() { if (expects(1, joy_t::string_t)) { joy_include(); } }},
+		{"[", [&]() { }},
+		{"]", [&]() {}}
+		};
 
 	};
 

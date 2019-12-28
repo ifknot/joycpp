@@ -15,12 +15,46 @@ namespace joy {
         {joy_t::undef_t, "undefined"}
     };
 
+    std::map<state_t, std::string> state_to_string = {
+        {state_t::parse, " parsing"},
+        {state_t::quote, " quote build"},
+        {state_t::list, " list build"},
+        {state_t::set, " set build"},
+        {state_t::string, " string build"}
+    };
+
+    std::map<state_t, std::string> state_to_colour = {
+        {state_t::parse, BOLDWHITE},
+        {state_t::quote, BOLDCYAN},
+        {state_t::list, BOLDMAGENTA},
+        {state_t::set, BOLDGREEN},
+        {state_t::string, BOLDYELLOW}
+    };
+
     std::string to_string(joy_t match) {
         if (type_to_string.count(match)) {
             return type_to_string[match];
         }
         else {
             return "no type to string match";
+        }
+    }
+
+	std::string to_string(state_t match) {
+        if (state_to_string.count(match)) {
+            return state_to_string[match];
+        }
+        else {
+            return "no state to string match";
+        }
+	}
+
+    std::string to_colour(state_t match) {
+        if (state_to_colour.count(match)) {
+            return state_to_colour[match];
+        }
+        else {
+            return "no state to colour match";
         }
     }
 
