@@ -4,15 +4,15 @@
 
 namespace joy {
 
-	const char CHAR_OPEN = '\'';
-	const char QUOTE_OPEN = '[';
-	const char QUOTE_CLOSE = ']';
-	const char LIST_OPEN = '[';
-	const char LIST_CLOSE = ']';
-	const char SET_OPEN = '{';
-	const char SET_CLOSE = '}';
-	const char STRING_OPEN = '"';
-	const char STRING_CLOSE = '"';
-	const char SPC = ' ';
+	constexpr auto CHAR_OPEN = '\'';
+	constexpr auto QUOTE_OPEN = '[';
+	constexpr auto QUOTE_CLOSE = ']';
+	constexpr auto LIST_OPEN = '[';
+	constexpr auto LIST_CLOSE = ']';
+	constexpr auto SET_OPEN = '{';
+	constexpr auto SET_CLOSE = '}';
+	constexpr auto STRING_OPEN = '"';
+	constexpr auto STRING_CLOSE = '"';
+	constexpr auto SPC = ' ';
 	
 }

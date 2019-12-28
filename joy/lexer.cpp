@@ -4,8 +4,8 @@ namespace joy {
 
 
 
-	lexer::lexer(joy_stack& js, io_device& io, std::string path_to_manual) :
-		js(js),
+	lexer::lexer(joy_stack& stack0, io_device& io, std::string path_to_manual) :
+		s0(stack0),
 		io(io)
 	{
 		load_manual(path_to_manual);
@@ -54,7 +54,7 @@ namespace joy {
 	//TODO: strings really belong in context free section - but ok for testing 
 	bool lexer::try_string(const std::string& lexeme) {
 		if (is_joy_string(lexeme)) {
-			js.push(make_token(std::string(lexeme), joy_t::string_t));
+			s0.push(make_token(std::string(lexeme), joy_t::string_t));
 			return true;
 		}
 		return try_int(lexeme);
@@ -84,8 +84,8 @@ namespace joy {
 	}
 
 	void lexer::joy_include() {
-		auto path = js.top().first;
-		js.pop();
+		auto path = s0.top().first;
+		s0.pop();
 		std::ifstream f(destring(path));
 		if (!f) {
 			err(DFILENOTFOUND, "include " + path);
@@ -122,15 +122,15 @@ namespace joy {
 	}
 
 	bool lexer::args(size_t n) {
-		if (js.size() == 0) {
+		if (s0.size() == 0) {
 			err(DSTACKEMPTY);
 			return false;
 		}
-		else if (js.size() >= n) {
+		else if (s0.size() >= n) {
 			return true;
 		}
 		else {
-			err(DLESSARGS, "expected " + std::to_string(n) + " found " + std::to_string(js.size()));
+			err(DLESSARGS, "expected " + std::to_string(n) + " found " + std::to_string(s0.size()));
 			return false;
 		}
 	}
@@ -138,7 +138,7 @@ namespace joy {
 	bool lexer::expects(size_t argc, joy_t argt) {
 		for (size_t i{ 0 }; i < argc; ++i) {
 			if (args(1)) {
-				if (argt != js.sat(i).second) {
+				if (argt != s0.sat(i).second) {
 					err(DWRONGTYPE, to_string(argt));
 					return false;
 				}
@@ -153,8 +153,8 @@ namespace joy {
 	void lexer::stack_dump() {
 		io.colour(GREEN);
 		std::string dump{ "_\n" };
-		for (size_t i{ 0 }; i < js.size(); ++i) {
-			const auto& [pattern, joy_type] = js.sat(i);
+		for (size_t i{ 0 }; i < s0.size(); ++i) {
+			const auto& [pattern, joy_type] = s0.sat(i);
 			dump += pattern + " " + to_string(joy_type) + "\n";
 		}
 		io << dump;
@@ -169,18 +169,7 @@ namespace joy {
 		}
 		io << dump;
 		io.colour(BOLDWHITE);
-	}
-
-	void lexer::joy_assert(pattern_t expected, pattern_t found) {
-		if (expected == found) {
-			try_regular(TOK_TRUE);
-		}
-		else {
-			err(DNOMATCH, expected + "!=" + found);
-			operator()(TOK_FALSE + " .s");
-		}
-
-	}
+	} 
 
 	void lexer::man(std::string match) {
 		io.colour(YELLOW);
@@ -189,7 +178,7 @@ namespace joy {
 			io << match + joy_manual[match];
 		}
 		else {
-			err(DMANNOTFOUND, js.top().first);
+			err(DMANNOTFOUND, s0.top().first);
 		}
 	}
 

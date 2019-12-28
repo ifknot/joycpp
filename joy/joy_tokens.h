@@ -4,12 +4,12 @@
 
 namespace joy {
 
-	const std::string TOK_QUIT = "quit";
-	const std::string TOK_TRUE = "true";
-	const std::string TOK_FALSE = "false";
-	const std::string TOK_SPACE = " ";
+	constexpr auto TOK_QUIT = "quit";
+	constexpr auto TOK_TRUE = "true";
+	constexpr auto TOK_FALSE = "false";
+	constexpr auto TOK_SPACE = " ";
 	
-	const char TOK_CHAR_PLUS	= '+';
-	const char TOK_CHAR_MINUS	= '-';
-	const char TOK_CHAR_COMMENT = '#';
+	constexpr auto TOK_CHAR_PLUS	= '+';
+	constexpr auto TOK_CHAR_MINUS	= '-';
+	constexpr auto TOK_CHAR_COMMENT = '#';
 }
