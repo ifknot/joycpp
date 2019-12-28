@@ -14,7 +14,7 @@ namespace joy {
 				//log
 			}
 			else {
-				return lexer::tokenize(lexeme);
+				return false;
 			}
 		}
 		return true;
@@ -52,14 +52,21 @@ namespace joy {
 	}
 
 	bool parser::try_context_free(const std::string& lexeme) {
-		//io << __FUNCTION__;
-		return try_string(lexeme);
+		TRACE << __FUNCTION__ << "\n";
+		auto it = context_free_translation.find(lexeme);
+		if (it != context_free_translation.end()) {
+			(it->second)();
+			return true;
+		}
+		else {
+			return try_string(lexeme);
+		}
 	}
 
 	//string is a special case needing its own try 
 	//FIX: doesnt handle whitespace properly strips any thing over one space thanks to using stringstream to split line
 	bool parser::try_string(const std::string& lexeme) {
-		//io << __FUNCTION__ << lexeme << to_string(state_stack.top());
+		TRACE << __FUNCTION__ << lexeme << to_string(state_stack.top()) << "\n";
 		if (lexeme[0] == STRING_OPEN) {
 			state_stack.push(state_t::string);
 			io.colour(to_colour(state_stack.top()));
@@ -86,7 +93,7 @@ namespace joy {
 	}
 
 	bool parser::try_build_string(const std::string& lexeme) {
-		//io << __FUNCTION__ << lexeme << to_string(state_stack.top());
+		TRACE << __FUNCTION__ << lexeme << to_string(state_stack.top()) << "\n";
 		assert(state_stack.top() == state_t::string);
 		string_build += " " + lexeme;
 		if (lexeme.back() == STRING_CLOSE) {

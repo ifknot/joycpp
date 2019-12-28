@@ -24,7 +24,7 @@ namespace joy {
 	}
 
 	bool lexer::try_regular(const std::string& lexeme) {
-		//io << __FUNCTION__ << lexeme;
+		TRACE << __FUNCTION__ << lexeme << "\n";
 		auto it = regular_translation.find(lexeme);
 		if (it != regular_translation.end()) {
 			(it->second)();
@@ -35,23 +35,23 @@ namespace joy {
 		}
 	}
 
-	bool lexer::try_int(const std::string& lexeme) {
-		//io << __FUNCTION__ << lexeme;
+	bool lexer::try_int(const std::string& lexeme) { 
+		TRACE << __FUNCTION__ << lexeme << "\n";
 		return try_char(lexeme);
 	}
 
 	bool lexer::try_char(const std::string& lexeme) {
-		//io << __FUNCTION__ << lexeme;
+		TRACE << __FUNCTION__ << lexeme << "\n";
 		return try_double(lexeme);
 	}
 
 	bool lexer::try_double(const std::string& lexeme) {
-		//io << __FUNCTION__ << lexeme;
-		return false;
+		TRACE << __FUNCTION__ << lexeme << "\n";
+		return no_conversion(lexeme);
 	}
 
 	bool lexer::no_conversion(const std::string& lexeme) {
-		//io << __FUNCTION__ << lexeme;
+		TRACE << __FUNCTION__ << lexeme << "\n";
 		err(DNOCONVERSION, lexeme);
 		return false;
 	}

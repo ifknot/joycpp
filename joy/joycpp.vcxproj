@@ -179,6 +179,7 @@
     <ClInclude Include="joy_types.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="parser.h" />
+    <ClInclude Include="trace.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="joy03.man" />

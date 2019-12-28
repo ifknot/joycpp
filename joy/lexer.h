@@ -4,6 +4,8 @@ constexpr auto ABOUT_INFO = "Joy Interpreter - J.S.Thornton 2019\n" ;
 
 #include <sstream>
 
+#include "trace.h"
+
 #include "joy_stack.h"
 #include "io_device.h"
 #include "error_messages.h"
