@@ -58,23 +58,23 @@ namespace joy {
         }
     }
 
-    bool is_empty_aggregate(pattern_t& match, char open_sigil, char close_sigil) {
+    bool is_empty_aggregate(const pattern_t& match, char open_sigil, char close_sigil) {
         return((match[0] == open_sigil) && (match[2] == close_sigil) && (match[1] == ' '));
     }
 
-    bool is_empty_joy_list(pattern_t match) {
+    bool is_empty_joy_list(const pattern_t match) {
         return is_empty_aggregate(match, LIST_OPEN, LIST_CLOSE);
     }
 
-    bool is_empty_joy_set(pattern_t match) {
+    bool is_empty_joy_set(const pattern_t match) {
         return is_empty_aggregate(match, SET_OPEN, SET_CLOSE);
     }
 
-    bool is_empty_joy_string(pattern_t match) {
+    bool is_empty_joy_string(const pattern_t match) {
         return is_empty_aggregate(match, STRING_OPEN, STRING_CLOSE);
     }
 
-    joy_t joy_type(pattern_t& match) {
+    joy_t joy_type(const pattern_t& match) {
         if (is_joy_bool(match)) return joy_t::bool_t;
         if (is_joy_char(match)) return joy_t::char_t;
         if (is_joy_int(match)) return joy_t::int_t;

@@ -54,8 +54,8 @@ namespace joy {
 		*/
 		cpp_dictionary_t context_free_translation{
 		{"include", [&]() { if (expects(1, joy_t::string_t)) { joy_include(); } }},
-		{"[", [&]() { }},
-		{"]", [&]() {}}
+		{"[", [&]() { state_stack.push(state_t::quote); try_build_quote(); }},
+		{"]", [&]() { s0.push(make_quoted_token(quote_build)); state_stack.pop();  }}
 		};
 
 	};

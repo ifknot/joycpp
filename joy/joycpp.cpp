@@ -9,7 +9,6 @@
 #include "catch2.h"
 
 #define NDEBUG
-//#define NTRACE
 
 #ifdef NDEBUG
 

@@ -35,7 +35,7 @@ namespace joy {
 		{
 		case joy::state_t::parse:
 			io.colour(to_colour(state_stack.top()));
-			io << to_string(state_stack.top());
+			TRACE << to_string(state_stack.top());
 			return try_context_free(lexeme);
 		case joy::state_t::quote:
 			return try_build_quote(lexeme);
@@ -70,7 +70,7 @@ namespace joy {
 		if (lexeme[0] == STRING_OPEN) {
 			state_stack.push(state_t::string);
 			io.colour(to_colour(state_stack.top()));
-			io << to_string(state_stack.top());
+			TRACE << to_string(state_stack.top());
 			if ((lexeme.size() > 1) && (lexeme.back() == STRING_CLOSE)) { //string with no spaces
 				s0.push(make_token(lexeme.substr(0,lexeme.size()), joy_t::string_t));
 				state_stack.pop();
