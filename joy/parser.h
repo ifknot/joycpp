@@ -23,10 +23,15 @@ namespace joy {
 
 		joy_stack s1; //stack #1 auxillary stack
 		std::stack<state_t> state_stack;
-		std::string quote_build;
-		std::string list_build;
-		std::string set_build;
 		std::string string_build;
+		size_t quote_depth{ 0 };
+		size_t list_depth{ 0 };
+		size_t set_depth{ 0 };
+
+		/**
+		* test if is a recognized context free command
+		*/
+		bool is_context_free(const std::string& lexeme);
 
 		/**
 		* search the context free expression c++ dictionary for a recognised Joy command
@@ -54,8 +59,8 @@ namespace joy {
 		*/
 		cpp_dictionary_t context_free_translation{
 		{"include", [&]() { if (expects(1, joy_t::string_t)) { joy_include(); } }},
-		{"[", [&]() { state_stack.push(state_t::quote); try_build_quote(); }},
-		{"]", [&]() { s0.push(make_quoted_token(quote_build)); state_stack.pop();  }}
+		{"[", [&]() { try_build_quote("["); }},
+		{"]", [&]() { err(DAGGNOOPEN, "no opening angle bracket ["); }}
 		};
 
 	};

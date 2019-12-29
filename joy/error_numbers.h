@@ -11,5 +11,6 @@ namespace joy {
 	constexpr size_t DMANNOTFOUND	= 4;
 	constexpr size_t DNOMATCH		= 5;
 	constexpr size_t DLESSARGS		= 6;
-
+	constexpr size_t DAGGNOOPEN		= 7;
+	constexpr size_t DQUOTESET		= 8;
 }

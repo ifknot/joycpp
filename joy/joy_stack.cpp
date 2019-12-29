@@ -35,12 +35,21 @@ namespace joy {
 	}
 
 	void joy_stack::stack() {
-		pattern_t p;
+		pattern_t lexeme;
 		for (size_t i{ 0 }; i < size(); ++i) {
-			const auto& [pattern, joy_type] = sat(i);
-			p += pattern + SPC;
+			const auto& [pattern, joy_type] = at(i);
+			lexeme += pattern + SPC;
 		}
-		push(make_quoted_token(std::move(p)));
+		push(make_token(add_sigils(lexeme, QUOTE_OPEN, QUOTE_CLOSE), joy_t::quote_t));
+	}
+
+	void joy_stack::semi_stack() {
+		pattern_t lexeme;
+		for (size_t i{ 0 }; i < size(); ++i) {
+			const auto& [pattern, joy_type] = at(i);
+			lexeme += pattern + SPC;
+		}
+		push(make_token(lexeme, joy_t::quote_t));
 	}
 
 	void joy_stack::unstack() {
@@ -88,7 +97,7 @@ namespace joy {
 	}
 
 	void joy_stack::unit() {
-		top() = make_quoted_token(std::move(top().first));
+		top() = make_token(add_sigils(top().first, QUOTE_OPEN, QUOTE_CLOSE), joy_t::quote_t);
 	}
 
 	void joy_stack::swap() {

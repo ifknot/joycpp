@@ -47,7 +47,7 @@ namespace joy {
 
 	bool lexer::try_double(const std::string& lexeme) {
 		TRACE << __FUNCTION__ << lexeme << "\n";
-		return no_conversion(lexeme);
+		return false;
 	}
 
 	bool lexer::no_conversion(const std::string& lexeme) {
@@ -80,6 +80,11 @@ namespace joy {
 				}
 			}
 		}
+	}
+
+	bool lexer::is_regular(const std::string& lexeme) {
+		auto it = regular_translation.find(lexeme);
+		return it != regular_translation.end(); 
 	}
 
 	bool lexer::args(size_t n) {

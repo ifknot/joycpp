@@ -65,10 +65,15 @@ namespace joy {
 		void newstack();
 			
 		/**
-		* ..b a│stack    →    ..b a[a b ..]│
-		* pushes onto the stack a list containing all the elements of the stack
+		* ..b a│stack    →    ..b a [a b ..]│
+		* pushes onto the stack a quote containing all the elements of the stack
 		*/
 		void stack();
+
+		/**
+		* helper pushes onto the stack all the elements of the stack
+		*/
+		void semi_stack();
 
 		/**
 		* ..[a b]│unstack  →                b a│

@@ -21,13 +21,25 @@ namespace joy {
 	}
 
 	bool parser::tokenize(const std::string& lexeme) {
-		if (!try_parse(lexeme)) {
-			//unwind state stack for each depth 
-			return false;
+		if (!try_parse(lexeme)) { // tidy up s1 and nesting counters
+			std::cout << quote_depth;
+			while (quote_depth) {
+				state_stack.pop();
+				--quote_depth;
+			}
+			s1.newstack();
+			io << ("->" + std::to_string(quote_depth) + to_string(state_stack.top()));
+			io.colour(to_colour(state_stack.top()));
+			return no_conversion(lexeme);
 		}
 		else {
 			return true;
 		}
+	}
+
+	bool parser::is_context_free(const std::string& lexeme) {
+		auto it = context_free_translation.find(lexeme);
+		return it != context_free_translation.end();
 	}
 
 	bool parser::try_parse(const std::string& lexeme) {
@@ -89,7 +101,33 @@ namespace joy {
 	}
 
 	bool parser::try_build_quote(const std::string& lexeme) {
-		return false;
+		TRACE << __FUNCTION__ << lexeme << to_string(state_stack.top()) << "\n";
+		if ((state_stack.top() == state_t::quote) || (state_stack.top() == state_t::quote)){
+			err(DQUOTESET);
+		}
+		if (is_context_free(lexeme)) io << "context free";
+		else if(is_regular(lexeme)) io << "regular";
+		else io << to_string(joy_type(lexeme));
+		if (lexeme == "[") {
+			state_stack.push(state_t::quote);
+			io.colour(to_colour(state_stack.top()));
+			quote_depth++;
+		}
+		if (is_context_free(lexeme) || is_regular(lexeme) || (joy_type(lexeme) != joy_t::undef_t)) {			
+			s1.push(make_token(lexeme, joy_t::lexeme_t));
+			if (lexeme == "]") {
+				--quote_depth;
+				state_stack.pop();
+				if (quote_depth == 0) {
+					s1.semi_stack();
+					s0.push(make_token(s1.top().first, joy_t::quote_t));
+					s1.newstack();
+					io.colour(to_colour(state_stack.top()));
+				}
+			}
+			return true;
+		}
+		else return false;
 	}
 
 	bool parser::try_build_string(const std::string& lexeme) {

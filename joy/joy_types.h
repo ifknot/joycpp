@@ -80,7 +80,26 @@ namespace joy {
     * not allowed: +0003.14   (leading zeros), 37.e88  (dot before the e)
     */
     inline bool is_joy_number(const pattern_t& match) {
+        //return std::regex_match(match, std::regex(R"(?<!,)\b([\d\.]+)\b(?!,)"));
         return std::regex_match(match, std::regex("[+-]?(?=.)(?:0|[1-9]\\d*)?(?:\.\\d*)?(?:\\d[eE][+-]?\\d+)?"));
+    }
+
+    /**
+    * test if the pattern is a number (int or double)
+    * allowed: +3.0, 3.2e23, -4.70e+9, -.2E-4, -7.6603
+    * not allowed: -1 (integer), +0003 (leading zeros), 37.e88 (dot before the e)
+    */
+    inline bool is_joy_double(const pattern_t& match) {
+        try {
+            auto x = std::stod(match);
+            return true;
+        }
+        catch (std::invalid_argument) {
+            return false;
+        }
+        catch (std::out_of_range) {
+            return false;
+        }
     }
     
     /**
@@ -89,21 +108,12 @@ namespace joy {
     * not allowed: +0003   (leading zeros)
     */
     inline bool is_joy_int(const pattern_t& match) {
-        if (is_joy_number(match)) {
+        if (is_joy_double(match)) {
             return match.find_first_not_of("+-0123456789") == std::string::npos;
         }
         else {
             return false;
         }
-    }
-
-    /**b
-    * test if the pattern is a number (int or double)
-    * allowed: +3.0, 3.2e23, -4.70e+9, -.2E-4, -7.6603
-    * not allowed: -1 (integer), +0003 (leading zeros), 37.e88 (dot before the e)
-    */
-    inline bool is_joy_double(const pattern_t& match) {
-        return is_joy_number(match) && !is_joy_int(match);
     }
 
     //aggreagate managers
@@ -176,10 +186,6 @@ namespace joy {
    
     inline token_t make_token(const pattern_t& s, const joy_t t) {
         return token_t(s, t);
-    }
-
-    inline token_t make_quoted_token(const pattern_t& s) {
-        return make_token(add_sigils(s, QUOTE_OPEN, QUOTE_CLOSE), joy_t::quote_t);
     }
 
     /**

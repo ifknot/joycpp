@@ -15,6 +15,8 @@ namespace joy {
 	{DFILENOTFOUND, "file not found"},
 	{DMANNOTFOUND, "not found in manual"},
 	{DLESSARGS, "not enough arguments on stack"},
+	{DAGGNOOPEN, "aggregate error"},
+	{DQUOTESET, "no lists or quotes permitted in sets"},
 	{DWRONGTYPE, "wrong type"}
 	};
 

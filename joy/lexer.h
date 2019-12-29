@@ -26,6 +26,13 @@ namespace joy {
 
 		virtual bool tokenize(const std::string& lexeme);
 
+		/**
+		* test if is a recognized regular command
+		*/
+		bool is_regular(const std::string& lexeme);
+
+		bool no_conversion(const std::string& lexeme);
+
 		virtual void err(error_number_t e, std::string msg = "");
 
 		bool args(size_t n);
@@ -51,8 +58,6 @@ namespace joy {
 		bool try_char(const std::string& lexeme);
 
 		bool try_double(const std::string& lexeme);
-
-		bool no_conversion(const std::string& lexeme);
 
 		bool exit_{ false };
 		std::string about_info{ ABOUT_INFO };
