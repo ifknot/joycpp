@@ -75,17 +75,7 @@ namespace joy {
     }
 
     /**
-    * test if the pattern is a number (int or double)
-    * allowed: +3.0, 3.2e23, -4.70e+9, -.2E-4, -7.6603
-    * not allowed: +0003.14   (leading zeros), 37.e88  (dot before the e)
-    */
-    inline bool is_joy_number(const pattern_t& match) {
-        //return std::regex_match(match, std::regex(R"(?<!,)\b([\d\.]+)\b(?!,)"));
-        return std::regex_match(match, std::regex("[+-]?(?=.)(?:0|[1-9]\\d*)?(?:\.\\d*)?(?:\\d[eE][+-]?\\d+)?"));
-    }
-
-    /**
-    * test if the pattern is a number (int or double)
+    * test if the pattern is a double
     * allowed: +3.0, 3.2e23, -4.70e+9, -.2E-4, -7.6603
     * not allowed: -1 (integer), +0003 (leading zeros), 37.e88 (dot before the e)
     */

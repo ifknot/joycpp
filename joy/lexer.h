@@ -72,7 +72,6 @@ namespace joy {
 
 		void manual();
 
-
 		/**
 		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
 		* translate Joy regular grammar commands into their c++ lambda equivalents
@@ -89,9 +88,6 @@ namespace joy {
 		{TOK_QUIT, [&]() { exit(); io << ". . ."; }},
 		{"manual", [&]() { manual(); }},
 		{"put", [&]() { if (args(1)) { io << s0.top().first; s0.pop(); } }},
-		//boolean simple types
-		{TOK_TRUE, [&]() { s0.push(make_token("true", joy_t::bool_t)); }},
-		{TOK_FALSE, [&]() { s0.push(make_token("false", joy_t::bool_t)); }},
 		//stack commands
 		{".s", [&]() { stack_dump(); }},
 		{"newstack", [&]() { s0.newstack(); }},
@@ -108,7 +104,38 @@ namespace joy {
 		{"rotate", [&]() { if (args(3)) { s0.rotate(); } }},
 		{"rollup", [&]() { if (args(3)) { s0.rollup(); } }},
 		{"rolldown", [&]() { if (args(3)) { s0.rolldown(); } }},
-		{"id", [&]() { }}
+		//boolean
+		{"true", [&]() { s0.push(make_token("true", joy_t::bool_t)); }},
+		{"false", [&]() { s0.push(make_token("false", joy_t::bool_t)); }},
+		//char
+		{"ord", [&]() { 
+			if (expects(1, joy_t::char_t)) {
+				s0.push(make_token(std::to_string(static_cast<int>(s0.top().first[1])), joy_t::int_t));
+				s0.popd();
+			} 
+		}},
+		{"chr", [&]() { 
+			if (expects(1, joy_t::int_t)) { 
+				auto c = static_cast<char>(stoi(s0.top().first)); 
+				s0.push(make_token("'" + std::string{c}, joy_t::char_t)); 
+				s0.popd(); 
+			} 
+		}},
+		{"char", [&]() { 
+			if (args(1)) { 
+				tokenize((s0.top().second == joy_t::char_t) ? "true" : "false"); 
+			} 
+		}},
+		//math
+		{"+", [&]() { if (args(2)) { } }},
+		{"-", [&]() { if (args(2)) { } }},
+		{"*", [&]() { if (args(2)) { } }},
+		{"/", [&]() { if (args(2)) { } }},
+		{"rem", [&]() { if (args(1)) { } }},
+		{"abs", [&]() { if (args(1)) { } }},
+		{"sign", [&]() { if (args(1)) { } }},
+		//identity function, does nothing.
+		{"id", [&]() {}}
 		};
 
 		/**

@@ -37,11 +37,19 @@ namespace joy {
 
 	bool lexer::try_int(const std::string& lexeme) { 
 		TRACE << __FUNCTION__ << lexeme << "\n";
+		if (is_joy_int(lexeme)) {
+			s0.push(make_token(lexeme, joy_t::int_t));
+			return true;
+		}
 		return try_char(lexeme);
 	}
 
 	bool lexer::try_char(const std::string& lexeme) {
 		TRACE << __FUNCTION__ << lexeme << "\n";
+		if (is_joy_char(lexeme)) {
+			s0.push(make_token(lexeme, joy_t::char_t));
+			return true;
+		}
 		return try_double(lexeme);
 	}
 
@@ -153,6 +161,22 @@ namespace joy {
 		for (const auto& [cmd, info] : joy_manual) {
 			io << cmd << info;
 		}
-	}	
+	}
+
+	void lexer::add() {
+	}
+
+	void lexer::subtract() {
+
+	}
+
+	void lexer::multiply() {
+
+	}
+
+	void lexer::divided() {
+
+	}
+
 
 }

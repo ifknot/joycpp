@@ -102,9 +102,6 @@ namespace joy {
 
 	bool parser::try_build_quote(const std::string& lexeme) {
 		TRACE << __FUNCTION__ << lexeme << to_string(state_stack.top()) << "\n";
-		if ((state_stack.top() == state_t::quote) || (state_stack.top() == state_t::quote)){
-			err(DQUOTESET);
-		}
 		if (is_context_free(lexeme)) io << "context free";
 		else if(is_regular(lexeme)) io << "regular";
 		else io << to_string(joy_type(lexeme));
