@@ -79,40 +79,38 @@ namespace joy {
 				switch (t)
 				{
 				case joy::joy_t::bool_t:
-					break;
 				case joy::joy_t::int_t:
-					break;
 				case joy::joy_t::char_t:
-					break;
 				case joy::joy_t::double_t:
-					break;
 				case joy::joy_t::list_t:
-					break;
 				case joy::joy_t::quote_t:
-					break;
 				case joy::joy_t::set_t:
-					break;
 				case joy::joy_t::string_t:
+					if (jstack.sat(i).second != t) {
+						err(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
+						return false;
+					}
 					break;
 				case joy::joy_t::number_t:
-					break;
+					if ((jstack.sat(i).second == joy_t::int_t) || (jstack.sat(i).second == joy_t::double_t) || (jstack.sat(i).second == joy_t::char_t)) {
+						break;
+					}
+					return false;
 				case joy::joy_t::aggregate_t:
-					break;
+					if ((jstack.sat(i).second == joy_t::list_t) || (jstack.sat(i).second == joy_t::quote_t) || (jstack.sat(i).second == joy_t::set_t) || (jstack.sat(i).second == joy_t::set_t)) {
+						break;
+					}
+					return false;
 				case joy::joy_t::lexeme_t:
+				case joy::joy_t::any_t:
 					break;
 				case joy::joy_t::undef_t:
-					break;
 				default:
-					break;
-				}
-
-				if (jstack.sat(i).second != t) {
-					err(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
 					return false;
 				}
 				++i;
 			}
-
+			return true;
 		}
 		else {
 			err(DLESSARGS, "expected: " + std::to_string(argt.size()) + " found: " + std::to_string(jstack.size()));

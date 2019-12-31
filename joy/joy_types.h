@@ -31,10 +31,12 @@
 
 namespace joy {
 
-    enum class joy_t { bool_t, int_t, char_t, double_t,     //simple types
-                       list_t, quote_t, set_t, string_t,    //aggregate types
-                       number_t, aggregate_t,               //mixed types
-                       lexeme_t, undef_t };                 //abstract types
+    enum class joy_t {
+        bool_t, int_t, char_t, double_t,    //simple types
+        list_t, quote_t, set_t, string_t,   //aggregate types
+        number_t, aggregate_t,              //mixed types
+        lexeme_t, undef_t, any_t            //abstract types
+    };                 
 
     enum class state_t { parse, quote, list, set, string };
 
