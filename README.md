@@ -5,6 +5,8 @@ Please see the [Wiki](https://github.com/ifknot/joycpp/wiki)
 
 ## 31/12/19
 
+std::initializer_list std::function
+
 There needs to be a more structured approach to the core C++ operator translations and unify the arguement checking, the recurring pattern:
 
 * operator name string (it would be nice to do this as redefinable tokens but this a decoupling todo for later)
@@ -13,7 +15,7 @@ There needs to be a more structured approach to the core C++ operator translatio
 * arg conformance or error and stack and state unwind
 * stack reference and the c++ lamda function over that stack
 
-With an operator matching function function *match* given an operator string and map<string, function> as arguements points to a map entry for the evaluation function *f* that takes a parameter pack and the actual operator function
+With an operator matching function function *match* given an operator string and map<string, function> as arguements points to a map entry for the evaluation function *f* that takes std::initializer_list, std::function
 
 e.g. for the *+* operator 
 
@@ -23,8 +25,9 @@ map entry:
 
 {"+", [](){ f({number_t, number_t}, joy_add() } },
 
-f(parameter pack, function)
+f(std::initializer_list std::function) {
 
+}
 
 e.g. for the *and* operator has complex args can be set : set, set : bool, bool : set, or bool : bool so it needs an extra eval layer of its own that manages these combinations
 
