@@ -31,7 +31,7 @@ e.g. for the *and* operator has complex args can be set : set, set : bool, bool 
 
 regular dictionary entry:
 
-{"and", [](){ f_add(...)} },
+{"and", [](){ f_and(...)} },
 
 ## 27/12/19
 
