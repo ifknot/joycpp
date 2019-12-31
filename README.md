@@ -3,6 +3,36 @@ Joy Interpreter written in C++ and Joy
 
 Please see the [Wiki](https://github.com/ifknot/joycpp/wiki)
 
+## 31/12/19
+
+There needs to be a more structured approach to the core C++ operator translations and unify the arguement checking, the recurring pattern:
+
+* operator name string (it would be nice to do this as redefinable tokens but this a decoupling todo for later)
+* a definition map c++ lamdas (decouple and permit plurality dictionaries because some operators have more than one set of args eg boolean ops and, or, not act on both bolls and sets)
+* arguement type preconditions none {} specific {int_t, int_t, list_t} number {number_t, (int, char, double)} aggregate {aggregate_t} any{any_t} 
+* arg conformance or error and stack and state unwind
+* stack reference and the c++ lamda function over that stack
+
+With an operator matching function function *match* given an operator string and map<string, function> as arguements points to a map entry for the evaluation function *f* that takes a parameter pack and the actual operator function
+
+e.g. for the *+* operator 
+
+eval("+", regular_dictionary) 
+
+map entry:
+
+{"+", [](){ f({number_t, number_t}, joy_add() } },
+
+f(parameter pack, function)
+
+
+e.g. for the *and* operator has complex args can be set : set, set : bool, bool : set, or bool : bool so it needs an extra eval layer of its own that manages these combinations
+
+
+regular dictionary entry:
+
+{"and", [](){ f_add(...)} },
+
 ## 27/12/19
 
 Regular expression lexer v0.1 
