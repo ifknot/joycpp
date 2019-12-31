@@ -35,9 +35,10 @@ namespace joy {
 
 		virtual void err(error_number_t e, std::string msg = "");
 
-		bool args(size_t n);
-
-		bool expects(size_t argc, joy_t argt);
+		/**
+		* test stack conforms to the requirments of the initializer list
+		*/
+		bool conforms(const std::initializer_list<joy_t>& argt, const joy_stack& jstack);
 
 		joy_stack& s0;	//stack #0 main stack
 		io_device& io;
@@ -45,6 +46,8 @@ namespace joy {
 	private:
 
 		void load_manual(std::string path);
+
+		
 
 		/**
 		* search the regular expression c++ dictionary for a recognised Joy command
@@ -83,12 +86,13 @@ namespace joy {
 		//non standard commands
 		{"?", [&]() { command_dump(); }},
 		{"about", [&]() { io.colour(YELLOW);  io << about_info; }},
-		{"man", [&]() { if (expects(1, joy_t::string_t)) { man(destring(s0.top().first)); s0.pop(); } }},
+		{"man", [&]() { if (conforms({joy_t::string_t}, s0)) { man(destring(s0.top().first)); s0.pop(); } }},
 		//interpreter environment 
 		{TOK_QUIT, [&]() { exit(); io << ". . ."; }},
 		{"manual", [&]() { manual(); }},
-		{"put", [&]() { if (args(1)) { io << s0.top().first; s0.pop(); } }},
+		//{"put", [&]() { if (args(1)) { io << s0.top().first; s0.pop(); } }},
 		//stack commands
+		/*
 		{".s", [&]() { stack_dump(); }},
 		{"newstack", [&]() { s0.newstack(); }},
 		{"stack", [&]() { if (args(1)) { s0.stack(); } }},
@@ -104,10 +108,12 @@ namespace joy {
 		{"rotate", [&]() { if (args(3)) { s0.rotate(); } }},
 		{"rollup", [&]() { if (args(3)) { s0.rollup(); } }},
 		{"rolldown", [&]() { if (args(3)) { s0.rolldown(); } }},
+		*/
 		//boolean
 		{"true", [&]() { s0.push(make_token("true", joy_t::bool_t)); }},
 		{"false", [&]() { s0.push(make_token("false", joy_t::bool_t)); }},
 		//char
+		/*
 		{"ord", [&]() { 
 			if (expects(1, joy_t::char_t)) {
 				s0.push(make_token(std::to_string(static_cast<int>(s0.top().first[1])), joy_t::int_t));
@@ -134,6 +140,7 @@ namespace joy {
 		{"rem", [&]() { if (args(1)) { } }},
 		{"abs", [&]() { if (args(1)) { } }},
 		{"sign", [&]() { if (args(1)) { } }},
+		*/
 		//identity function, does nothing.
 		{"id", [&]() {}}
 		};

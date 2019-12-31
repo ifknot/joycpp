@@ -58,7 +58,7 @@ namespace joy {
 		* 2. offer performance benefit as c++ lambda equivalent
 		*/
 		cpp_dictionary_t context_free_translation{
-		{"include", [&]() { if (expects(1, joy_t::string_t)) { joy_include(); } }},
+		{"include", [&]() { if (conforms({joy_t::string_t}, s0)) { joy_include(); } }},
 		{"[", [&]() { try_build_quote("["); }},
 		{"]", [&]() { err(DAGGNOOPEN, "no opening angle bracket ["); }}
 		};

@@ -2,6 +2,9 @@
 * Joy is a typed language, there are 2 main groups:
 * - simple types: boolean, char, integer, double
 * - aggregate types: list, quote, set, string
+* Beyond that certain operators work with mixed types
+* - number_t (int, char, double)
+* - aggregate_t (list, quote, set, string)
 * joycpp uses some internal types
 * - lexeme_t when it is known that a lexeme has parsable pattern 
 * - undef_t when it is unknown if a lexeme has a parsable pattern
@@ -28,7 +31,10 @@
 
 namespace joy {
 
-    enum class joy_t { bool_t, int_t, char_t, double_t, list_t, quote_t, set_t, string_t, lexeme_t, undef_t };
+    enum class joy_t { bool_t, int_t, char_t, double_t,     //simple types
+                       list_t, quote_t, set_t, string_t,    //aggregate types
+                       number_t, aggregate_t,               //mixed types
+                       lexeme_t, undef_t };                 //abstract types
 
     enum class state_t { parse, quote, list, set, string };
 

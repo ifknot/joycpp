@@ -34,6 +34,8 @@
 #include <vector>
 #include <cassert>
 #include <sstream>
+#include <initializer_list>
+
 
 #ifndef NDEBUG
 #include <iostream>

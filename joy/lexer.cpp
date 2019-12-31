@@ -70,6 +70,56 @@ namespace joy {
 		io.colour(BOLDWHITE);
 	}
 
+	bool lexer::conforms(const std::initializer_list<joy_t>& argt, const joy_stack& jstack) {
+		if (jstack.size() >= argt.size()) {
+			size_t i{ 0 };
+			for (const auto& t : argt) {
+
+
+				switch (t)
+				{
+				case joy::joy_t::bool_t:
+					break;
+				case joy::joy_t::int_t:
+					break;
+				case joy::joy_t::char_t:
+					break;
+				case joy::joy_t::double_t:
+					break;
+				case joy::joy_t::list_t:
+					break;
+				case joy::joy_t::quote_t:
+					break;
+				case joy::joy_t::set_t:
+					break;
+				case joy::joy_t::string_t:
+					break;
+				case joy::joy_t::number_t:
+					break;
+				case joy::joy_t::aggregate_t:
+					break;
+				case joy::joy_t::lexeme_t:
+					break;
+				case joy::joy_t::undef_t:
+					break;
+				default:
+					break;
+				}
+
+				if (jstack.sat(i).second != t) {
+					err(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
+					return false;
+				}
+				++i;
+			}
+
+		}
+		else {
+			err(DLESSARGS, "expected: " + std::to_string(argt.size()) + " found: " + std::to_string(jstack.size()));
+			return false;
+		}
+	}
+
 	void lexer::load_manual(std::string path) {
 		std::ifstream f(path);
 		if (!f) {
@@ -93,35 +143,6 @@ namespace joy {
 	bool lexer::is_regular(const std::string& lexeme) {
 		auto it = regular_translation.find(lexeme);
 		return it != regular_translation.end(); 
-	}
-
-	bool lexer::args(size_t n) {
-		if (s0.size() == 0) {
-			err(DSTACKEMPTY);
-			return false;
-		}
-		else if (s0.size() >= n) {
-			return true;
-		}
-		else {
-			err(DLESSARGS, "expected " + std::to_string(n) + " found " + std::to_string(s0.size()));
-			return false;
-		}
-	}
-
-	bool lexer::expects(size_t argc, joy_t argt) {
-		for (size_t i{ 0 }; i < argc; ++i) {
-			if (args(1)) {
-				if (argt != s0.sat(i).second) {
-					err(DWRONGTYPE, "expected " + to_string(argt) + " found " + to_string(s0.sat(i).second));
-					return false;
-				}
-			}
-			else {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	void lexer::stack_dump() {
@@ -161,21 +182,6 @@ namespace joy {
 		for (const auto& [cmd, info] : joy_manual) {
 			io << cmd << info;
 		}
-	}
-
-	void lexer::add() {
-	}
-
-	void lexer::subtract() {
-
-	}
-
-	void lexer::multiply() {
-
-	}
-
-	void lexer::divided() {
-
 	}
 
 
