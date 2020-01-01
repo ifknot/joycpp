@@ -22,6 +22,7 @@
 #include <regex>
 #include <cassert>
 #include <functional>
+#include <stdexcept>
 
 #include <iostream>
 
@@ -67,7 +68,6 @@ namespace joy {
     std::string to_string(state_t match);
 
     /**
-    * useful for mulit line token builds
     * convert a parser state type to a colour for io_device ( parse = BOLDWHITE, quote = BOLDCYAN, list = BOLDMAGENTA, set = BOLDGREEN, string = BOLDYELLOW)
     */
     std::string to_colour(state_t match);
@@ -160,6 +160,24 @@ namespace joy {
         }
     }
 
+    //make token helpers
+
+    inline token_t make_token(const pattern_t& s, const joy_t t) {
+        return token_t(s, t);
+    }
+
+    inline token_t make_char(const pattern_t& s, const joy_t t) {
+        return make_token("'" + s, t);
+    }
+
+    // type handling
+
+    /**
+    * Casting joy types follows C/C++ idioms
+    * 
+    */
+    token_t joy_cast(joy_t type, const token_t& token);
+
     inline bool is_joy_list(const pattern_t& match) {
         return is_sigils(match, LIST_OPEN, LIST_CLOSE);
     }
@@ -175,15 +193,6 @@ namespace joy {
 
     inline bool is_joy_string(const pattern_t& match) {
         return is_sigils(match, STRING_OPEN, STRING_CLOSE);
-    }
-
-    // not sure if is_joy_lexeme is needed yet/ever?
-
-
-    //make token helpers
-   
-    inline token_t make_token(const pattern_t& s, const joy_t t) {
-        return token_t(s, t);
     }
 
     /**

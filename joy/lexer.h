@@ -33,12 +33,12 @@ namespace joy {
 
 		bool no_conversion(const std::string& lexeme);
 
-		virtual void err(error_number_t e, std::string msg = "");
-
 		/**
 		* test stack conforms to the requirments of the initializer list
 		*/
 		bool conforms(const std::initializer_list<joy_t>& argt, const joy_stack& jstack);
+
+		virtual void err(error_number_t e, std::string msg = "");
 
 		joy_stack& s0;	//stack #0 main stack
 		io_device& io;
@@ -75,6 +75,8 @@ namespace joy {
 
 		void manual();
 
+		void add();
+
 		/**
 		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
 		* translate Joy regular grammar commands into their c++ lambda equivalents
@@ -91,6 +93,7 @@ namespace joy {
 		{TOK_QUIT, [&]() { exit(); io << ". . ."; }},
 		{"manual", [&]() { manual(); }},
 		{"put", [&]() { if (conforms({joy_t::any_t}, s0)) { io << s0.top().first; s0.pop(); } }},
+		{".", [&]() { if (conforms({joy_t::any_t}, s0)) { io << s0.top().first; } }},
 		//stack commands
 		{".s", [&]() { stack_dump(); }},
 		{"newstack", [&]() { s0.newstack(); }},
@@ -111,27 +114,27 @@ namespace joy {
 		{"true", [&]() { s0.push(make_token("true", joy_t::bool_t)); }},
 		{"false", [&]() { s0.push(make_token("false", joy_t::bool_t)); }},
 		//char
-		/*
 		{"ord", [&]() { 
-			if (expects(1, joy_t::char_t)) {
+			if (conforms({joy_t::char_t}, s0)) {
 				s0.push(make_token(std::to_string(static_cast<int>(s0.top().first[1])), joy_t::int_t));
 				s0.popd();
 			} 
 		}},
 		{"chr", [&]() { 
-			if (expects(1, joy_t::int_t)) { 
+			if (conforms({joy_t::int_t}, s0)) {
 				auto c = static_cast<char>(stoi(s0.top().first)); 
 				s0.push(make_token("'" + std::string{c}, joy_t::char_t)); 
 				s0.popd(); 
 			} 
 		}},
 		{"char", [&]() { 
-			if (args(1)) { 
+			if (conforms({joy_t::any_t}, s0)) {
 				tokenize((s0.top().second == joy_t::char_t) ? "true" : "false"); 
 			} 
 		}},
 		//math
-		{"+", [&]() { if (args(2)) { } }},
+		{"+", [&]() { if (conforms({joy_t::number_t, joy_t::number_t}, s0)) { add(); } }},
+		/*
 		{"-", [&]() { if (args(2)) { } }},
 		{"*", [&]() { if (args(2)) { } }},
 		{"/", [&]() { if (args(2)) { } }},

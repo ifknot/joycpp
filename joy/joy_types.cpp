@@ -3,16 +3,23 @@
 namespace joy {
 
     std::map<joy_t, std::string> type_to_string = {
+        //simple types
         {joy_t::bool_t, "bool"},
         {joy_t::int_t, "int"},
         {joy_t::char_t, "char"},
         {joy_t::double_t, "double"},
+        //aggregate types
         {joy_t::list_t, "list"},
         {joy_t::quote_t, "quote"},
         {joy_t::set_t, "set"},
         {joy_t::string_t, "string"},
+        //mixed types
+        {joy_t::number_t, "number"},
+        {joy_t::aggregate_t, "aggreagte"},
+        //abstract types
         {joy_t::lexeme_t, "lexeme"},
-        {joy_t::undef_t, "undefined"}
+        {joy_t::undef_t, "undefined"},
+        {joy_t::any_t, "any"}
     };
 
     std::map<state_t, std::string> state_to_string = {
@@ -72,6 +79,74 @@ namespace joy {
 
     bool is_empty_joy_string(const pattern_t match) {
         return is_empty_aggregate(match, STRING_OPEN, STRING_CLOSE);
+    }
+
+    token_t joy_cast(joy_t type, const token_t& token) {
+        switch (type) {
+        case joy::joy_t::bool_t:
+            switch (token.second) {
+            case joy_t::int_t: //int to bool 
+                return (stoi(token.first) == 0) ? make_token("false", joy_t::bool_t) : make_token("true", joy_t::bool_t);
+            default:
+                throw std::runtime_error("no conversion for " + to_string(token.second) + " to " + to_string(type));
+            }
+            break;
+        case joy::joy_t::int_t:
+            switch (token.second) {
+            case joy_t::bool_t: //bool to int 
+                return (token.first == "true") ? make_token("1", joy_t::int_t) : make_token("0", joy_t::int_t);
+            case joy_t::double_t: //double to int
+                return make_token(std::to_string(stoi(token.first)), joy_t::int_t);
+            case joy_t::char_t: //char to int
+                return make_token(std::to_string(static_cast<int>(token.first[1])), joy_t::int_t);
+            default:
+                throw std::runtime_error("no conversion for " + to_string(token.second) + " to " + to_string(type));
+            }
+            break;
+        case joy::joy_t::char_t:
+            switch (token.second) {
+            case joy_t::int_t: { //int to char
+                auto c = static_cast<char>(stoi(token.first));
+                return make_char(std::string{ c }, joy_t::char_t);
+            }
+            default:
+                throw std::runtime_error("no conversion for " + to_string(token.second) + " to " + to_string(type));
+            }
+            break;
+        case joy::joy_t::double_t:
+            switch (token.second) {
+            case joy_t::int_t: //int to double
+                return make_token(std::to_string(stod(token.first)), joy_t::double_t);
+            default:
+                throw std::runtime_error("no conversion for " + to_string(token.second) + " to " + to_string(type));
+            }
+            break;
+        case joy::joy_t::string_t:
+            switch (token.second) {
+            case joy_t::bool_t: //bool to string 
+            case joy_t::int_t: //int to string 
+            case joy_t::double_t: //double to string
+                return make_token(add_sigils(token.first, STRING_OPEN, STRING_CLOSE), joy_t::string_t);
+            case joy_t::char_t: //char to string 
+                return make_token(add_sigils(std::string{ token.first[1] }, STRING_OPEN, STRING_CLOSE), joy_t::string_t);
+            default:
+                throw std::runtime_error("no conversion for " + to_string(token.second) + " to " + to_string(type));
+            }
+            break;
+        case joy::joy_t::quote_t:
+        case joy::joy_t::set_t:
+        case joy::joy_t::number_t:
+        case joy::joy_t::aggregate_t:
+        case joy::joy_t::lexeme_t:
+        case joy::joy_t::undef_t:
+        case joy::joy_t::any_t:
+        default:
+            switch (token.second) {
+            default:
+                throw std::runtime_error("no conversion for " + to_string(token.second) + " to " + to_string(type));
+            }
+            break;
+        }
     }
 
     joy_t joy_type(const pattern_t& match) {
