@@ -26,14 +26,16 @@ namespace joy {
 
 	protected:
 
+		/**
+		* cascade the lexeme down the regular conversion steps:
+		* regular, int, char, double, no conversion
+		*/
 		virtual bool tokenize(const std::string& lexeme);
 
 		/**
-		* test if is a recognized regular command
+		* test if is a recognized regular Joy command
 		*/
 		bool is_regular(const std::string& lexeme);
-
-		bool no_conversion(const std::string& lexeme);
 
 		/**
 		* test stack conforms to the requirments of the initializer list
@@ -41,52 +43,81 @@ namespace joy {
 		bool conforms(const std::initializer_list<joy_t>& argt, const joy_stack& jstack);
 
 		/**
-		* implicit type conversion top 2 items on the stack if needed
-		* the top item is converted to the same type as the second item
-		* if NSUPRESS is defined converting from higher to lower precision results in a warning
+		* perform result cast (if needed) casting to same number type as first item pushed ie 2nd item on stack
+		* warn if cast would be a reduction in accuracy
+		* pop arguements from stack
+		* push result
 		*/
-		void convert2(joy_stack& jstack);
+		void bin_op_result(token_t& token, joy_stack& stack);
 
-		virtual void err(error_number_t e, std::string msg = "");
+		//void un_op_result
 
-		virtual void warn(error_number_t e, std::string msg = "");
+		/**
+		* display an error message on the output device
+		*/
+		void error(error_number_t e, std::string msg = "");
+
+		/**
+		* display a warning message on the output device
+		*/
+		void warn(error_number_t e, std::string msg = "");
 
 		joy_stack& s0;	//stack #0 main stack
 		io_device& io;
 
 	private:
 
-		void load_manual(std::string path);
-
-		
-
-		/**
-		* search the regular expression c++ dictionary for a recognised Joy command
-		* cascade down to test for simple types
-		* finally display unrecognised input if no conversion
-		*/
-		bool try_regular(const std::string& lexeme);
-
-		bool try_int(const std::string& lexeme);
-
-		bool try_char(const std::string& lexeme);
-
-		bool try_double(const std::string& lexeme);
-
 		bool exit_{ false };
 		std::string about_info{ ABOUT_INFO };
 
-		//Joy command translations
+		//lexing cascade:
 
-		void stack_dump();
+		/**
+		* try and convert lexeme to a regular Joy command 
+		* by searching the regular expression c++ dictionary 
+		* return true on success
+		* return try_int if fail
+		*/
+		bool try_regular(const std::string& lexeme);
 
-		void command_dump();
+		/**
+		* try an and convert lexeme to an int
+		* return true on success
+		* return try_char if fail
+		*/
+		bool try_int(const std::string& lexeme);
+
+		/**
+		* try an and convert lexeme to a char
+		* return true on success
+		* return try_double if fail
+		*/
+		bool try_char(const std::string& lexeme);
+
+		/**
+		* try an and convert lexeme to a double
+		* return true on success
+		* return no_conversion if fail
+		*/
+		bool try_double(const std::string& lexeme);
+
+		/**
+		* display error
+		* return false
+		*/
+		bool no_conversion(const std::string& lexeme);
+
+		//Joy command translations: (where in map lambdas would be too long)
+
+		void load_manual(std::string path);
+
+		void stack_dump(); // .s
+
+		void command_dump(); // ?
 
 		void man(std::string match);
 
 		void manual();
-
-		void add();
 
 		/**
 		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
@@ -144,7 +175,7 @@ namespace joy {
 			} 
 		}},
 		//math
-		{"+", [&]() { if (conforms({joy_t::number_t, joy_t::number_t}, s0)) { convert2(s0); } }},
+		{"+", [&]() { if (conforms({joy_t::number_t, joy_t::number_t}, s0)) { } }},
 		/*
 		{"-", [&]() { if (args(2)) { } }},
 		{"*", [&]() { if (args(2)) { } }},

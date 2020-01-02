@@ -30,7 +30,7 @@ namespace joy {
 			s1.newstack();
 			io << ("->" + std::to_string(quote_depth) + to_string(state_stack.top()));
 			io.colour(to_colour(state_stack.top()));
-			return no_conversion(lexeme);
+			return false; 
 		}
 		else {
 			return true;
@@ -102,9 +102,6 @@ namespace joy {
 
 	bool parser::try_build_quote(const std::string& lexeme) {
 		TRACE << __FUNCTION__ << lexeme << to_string(state_stack.top()) << "\n";
-		if (is_context_free(lexeme)) io << "context free";
-		else if(is_regular(lexeme)) io << "regular";
-		else io << to_string(joy_type(lexeme));
 		if (lexeme == "[") {
 			state_stack.push(state_t::quote);
 			io.colour(to_colour(state_stack.top()));
@@ -140,12 +137,12 @@ namespace joy {
 		return true;
 	}
 
-	void parser::joy_include() {
+	void parser::include() {
 		auto path = s0.top().first;
 		s0.pop();
 		std::ifstream f(destring(path));
 		if (!f) {
-			err(DFILENOTFOUND, "include " + path);
+			error(DFILENOTFOUND, "include " + path);
 		}
 		else {
 			std::string line;

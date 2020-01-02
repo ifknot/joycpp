@@ -59,16 +59,24 @@ namespace joy {
 			s0.push(make_token(lexeme, joy_t::double_t));
 			return true;
 		}
-		return false;
+		return no_conversion(lexeme);
 	}
 
 	bool lexer::no_conversion(const std::string& lexeme) {
 		TRACE << __FUNCTION__ << lexeme << "\n";
-		err(DNOCONVERSION, "\"" +lexeme + "\" is not recognised");
+		error(DNOCONVERSION, "\"" +lexeme + "\" is not recognised");
 		return false;
 	}
 
-	void lexer::err(error_number_t e, std::string msg) {
+	void lexer::bin_op_result(token_t& token, joy_stack& stack) {
+#ifdef NSUPRESS
+		if (stack.sat(1).second < token.second) {
+			warn(DPRECISION, "converting " + to_string(token.second) + " to " + to_string(stack.sat(1).second));
+		}
+#endif
+	}
+
+	void lexer::error(error_number_t e, std::string msg) {
 		io.colour(RED);
 		io << (ERR + std::to_string(e) + " : " + debug_messages[e] + " " + msg);
 		io.colour(BOLDWHITE);
@@ -78,25 +86,6 @@ namespace joy {
 		io.colour(YELLOW);
 		io << ("warning : " + debug_messages[e] + " " + msg);
 		io.colour(BOLDWHITE);
-	}
-
-
-	void lexer::convert2(joy_stack& jstack) {
-		auto new_type = s0.sat(1).second;
-		auto old_type = s0.top().second;
-		if (new_type != old_type) {
-			try {
-				s0.top() = joy_cast(new_type, s0.top());
-			}
-			catch (std::runtime_error & e) {
-				err(DWRONGTYPE, e.what());
-			}
-		}
-#ifdef NSUPRESS
-		if (new_type < old_type) {
-			warn(DPRECISION, "converting " + to_string(old_type) + " to " + to_string(new_type));
-		}
-#endif
 	}
 
 	bool lexer::conforms(const std::initializer_list<joy_t>& argt, const joy_stack& jstack) {
@@ -113,7 +102,7 @@ namespace joy {
 				case joy::joy_t::set_t:
 				case joy::joy_t::string_t:
 					if (jstack.sat(i).second != t) {
-						err(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
+						error(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
 						return false;
 					}
 					break;
@@ -122,7 +111,7 @@ namespace joy {
 						break;
 					}
 					else {
-						err(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
+						error(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
 						return false;
 					}
 					return false;
@@ -131,7 +120,7 @@ namespace joy {
 						break;
 					}
 					else {
-						err(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
+						error(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
 						return false;
 					}
 					return false;
@@ -140,7 +129,7 @@ namespace joy {
 					break;
 				case joy::joy_t::undef_t:
 				default:
-					err(DNOCONVERSION, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
+					error(DNOCONVERSION, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
 					return false;
 				}
 				++i;
@@ -148,7 +137,7 @@ namespace joy {
 			return true;
 		}
 		else {
-			err(DLESSARGS, "expected: " + std::to_string(argt.size()) + " found: " + std::to_string(jstack.size()));
+			error(DLESSARGS, "expected: " + std::to_string(argt.size()) + " found: " + std::to_string(jstack.size()));
 			return false;
 		}
 	}
@@ -156,7 +145,7 @@ namespace joy {
 	void lexer::load_manual(std::string path) {
 		std::ifstream f(path);
 		if (!f) {
-			err(DFILENOTFOUND, "Joy manual " + path);
+			error(DFILENOTFOUND, "Joy manual " + path);
 		}
 		else {
 			std::string line, cmd, msg;
@@ -206,7 +195,7 @@ namespace joy {
 			io << match + joy_manual[match];
 		}
 		else {
-			err(DMANNOTFOUND, s0.top().first);
+			error(DMANNOTFOUND, s0.top().first);
 		}
 	}
 
@@ -216,10 +205,5 @@ namespace joy {
 			io << cmd << info;
 		}
 	}
-
-	void lexer::add() {
-		
-	}
-
 
 }
