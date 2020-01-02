@@ -68,12 +68,14 @@ namespace joy {
 		return false;
 	}
 
-	void lexer::bin_op_result(token_t& token, joy_stack& stack) {
+	void lexer::bin_op(const token_t& token, joy_stack& stack) {
 #ifdef NSUPRESS
-		if (stack.sat(1).second < token.second) {
-			warn(DPRECISION, "converting " + to_string(token.second) + " to " + to_string(stack.sat(1).second));
+		if (stack.sat(1).second < stack.top().second) {
+			warn(DPRECISION, "converting " + to_string(stack.top().second) + " to " + to_string(stack.sat(1).second));
 		}
 #endif
+		stack.sat(1) = joy_cast(stack.sat(1).second, token);
+		stack.pop();
 	}
 
 	void lexer::error(error_number_t e, std::string msg) {
@@ -171,8 +173,8 @@ namespace joy {
 		io.colour(GREEN);
 		std::string dump{ "_\n" };
 		for (size_t i{ 0 }; i < s0.size(); ++i) {
-			const auto& [pattern, joy_type] = s0.sat(i);
-			dump += pattern + " " + to_string(joy_type) + "\n";
+			const auto& t = s0.sat(i);
+			dump += to_string(t) + "\n";
 		}
 		io << dump;
 		io.colour(BOLDWHITE);

@@ -71,6 +71,11 @@ namespace joy {
     std::string to_string(state_t match);
 
     /**
+    * convert a token to its string representation
+    */
+    std::string to_string(const token_t& token);
+
+    /**
     * convert a parser state type to a colour for io_device ( parse = BOLDWHITE, quote = BOLDCYAN, list = BOLDMAGENTA, set = BOLDGREEN, string = BOLDYELLOW)
     */
     std::string to_colour(state_t match);
@@ -137,6 +142,7 @@ namespace joy {
         if (is_sigils(match, open_sigil, close_sigil)) {
             return match.substr(2, match.size() - 3);
         }
+        return "";
     }
 
     //special case for strings as no bookend spaces
@@ -145,6 +151,7 @@ namespace joy {
         if (is_sigils(match, STRING_OPEN, STRING_CLOSE)) {
             return match.substr(1, match.size() - 2);
         }
+        return "";
     }
 
     inline pattern_t add_sigils(const pattern_t& match, char open_sigil, char close_sigil) {
@@ -172,6 +179,8 @@ namespace joy {
     inline token_t make_char(const pattern_t& s, const joy_t t) {
         return make_token("'" + s, t);
     }
+
+    double as_double(const token_t& token);
 
     // type handling
 

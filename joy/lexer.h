@@ -48,7 +48,7 @@ namespace joy {
 		* pop arguements from stack
 		* push result
 		*/
-		void bin_op_result(token_t& token, joy_stack& stack);
+		void bin_op(const token_t& token, joy_stack& stack);
 
 		//void un_op_result
 
@@ -175,7 +175,12 @@ namespace joy {
 			} 
 		}},
 		//math
-		{"+", [&]() { if (conforms({joy_t::number_t, joy_t::number_t}, s0)) { } }},
+		{"+", [&]() { 
+			if (conforms({joy_t::number_t, joy_t::number_t}, s0)) { 
+				auto result = make_token(std::to_string(as_double(s0.top()) + as_double(s0.sat(1))), joy_t::double_t);
+				bin_op(result, s0);
+			} 
+		}},
 		/*
 		{"-", [&]() { if (args(2)) { } }},
 		{"*", [&]() { if (args(2)) { } }},

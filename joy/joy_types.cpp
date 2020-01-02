@@ -56,6 +56,12 @@ namespace joy {
         }
 	}
 
+    std::string to_string(const token_t& token) {
+        return token.first + " " + to_string(token.second);
+    }
+
+   
+
     std::string to_colour(state_t match) {
         if (state_to_colour.count(match)) {
             return state_to_colour[match];
@@ -81,7 +87,26 @@ namespace joy {
         return is_empty_aggregate(match, STRING_OPEN, STRING_CLOSE);
     }
 
+    double as_double(const token_t& token) {
+        switch (token.second) {
+        case joy::joy_t::bool_t:
+            return (token.first == "true") ? 1.0 : 0.0;
+        case joy::joy_t::char_t:
+            return token.first[1];
+        case joy::joy_t::int_t:
+        case joy::joy_t::double_t:
+            return stod(token.first);
+        default:
+            throw std::runtime_error("no conversion for " + to_string(token.second) + " to double");
+
+            break;
+        }
+    }
+
     token_t joy_cast(joy_t type, const token_t& token) {
+        if (type == token.second) {
+            return token;
+        }
         switch (type) {
         case joy::joy_t::bool_t:
             switch (token.second) {
@@ -105,6 +130,7 @@ namespace joy {
             break;
         case joy::joy_t::char_t:
             switch (token.second) {
+            case joy_t::double_t: //double to char
             case joy_t::int_t: { //int to char
                 auto c = static_cast<char>(stoi(token.first));
                 return make_char(std::string{ c }, joy_t::char_t);
