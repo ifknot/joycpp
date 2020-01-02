@@ -11,12 +11,13 @@ namespace joy {
 
 	static std::map<error_number_t, std::string> debug_messages = {
 	{DSTACKEMPTY, "empty stack"},
-	{DNOCONVERSION, "unrecognised input"},
+	{DNOCONVERSION, "no conversion"},
 	{DFILENOTFOUND, "file not found"},
 	{DMANNOTFOUND, "not found in manual"},
 	{DLESSARGS, "not enough arguments on stack"},
 	{DAGGNOOPEN, "aggregate error"},
 	{DQUOTESET, "no lists or quotes permitted in sets"},
+	{DPRECISION, "possible loss of precision"},
 	{DWRONGTYPE, "wrong type"}
 	};
 

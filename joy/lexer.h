@@ -10,6 +10,8 @@ constexpr auto ABOUT_INFO = "Joy Interpreter - J.S.Thornton 2019\n" ;
 #include "io_device.h"
 #include "error_messages.h"
 
+#define NSUPRESS
+
 namespace joy {
 
 	class lexer {
@@ -38,7 +40,16 @@ namespace joy {
 		*/
 		bool conforms(const std::initializer_list<joy_t>& argt, const joy_stack& jstack);
 
+		/**
+		* implicit type conversion top 2 items on the stack if needed
+		* the top item is converted to the same type as the second item
+		* if NSUPRESS is defined converting from higher to lower precision results in a warning
+		*/
+		void convert2(joy_stack& jstack);
+
 		virtual void err(error_number_t e, std::string msg = "");
+
+		virtual void warn(error_number_t e, std::string msg = "");
 
 		joy_stack& s0;	//stack #0 main stack
 		io_device& io;
@@ -133,7 +144,7 @@ namespace joy {
 			} 
 		}},
 		//math
-		{"+", [&]() { if (conforms({joy_t::number_t, joy_t::number_t}, s0)) { add(); } }},
+		{"+", [&]() { if (conforms({joy_t::number_t, joy_t::number_t}, s0)) { convert2(s0); } }},
 		/*
 		{"-", [&]() { if (args(2)) { } }},
 		{"*", [&]() { if (args(2)) { } }},

@@ -32,11 +32,14 @@
 
 namespace joy {
 
+    /**
+    * joycpp types in order of increasing precision
+    */
     enum class joy_t {
-        bool_t, int_t, char_t, double_t,    //simple types
-        list_t, quote_t, set_t, string_t,   //aggregate types
-        number_t, aggregate_t,              //mixed types
-        lexeme_t, undef_t, any_t            //abstract types
+        undef_t, lexeme_t, any_t,           //abstract types
+        number_t, aggregate_t ,             //mixed types
+        bool_t, char_t, int_t, double_t,    //simple types
+        string_t, set_t, list_t, quote_t    //aggregate types  
     };                 
 
     enum class state_t { parse, quote, list, set, string };

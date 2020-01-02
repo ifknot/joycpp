@@ -13,4 +13,6 @@ namespace joy {
 	constexpr size_t DLESSARGS		= 6;
 	constexpr size_t DAGGNOOPEN		= 7;
 	constexpr size_t DQUOTESET		= 8;
+	constexpr size_t DPRECISION		= 9;
+
 }

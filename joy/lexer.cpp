@@ -64,7 +64,7 @@ namespace joy {
 
 	bool lexer::no_conversion(const std::string& lexeme) {
 		TRACE << __FUNCTION__ << lexeme << "\n";
-		err(DNOCONVERSION, lexeme);
+		err(DNOCONVERSION, "\"" +lexeme + "\" is not recognised");
 		return false;
 	}
 
@@ -74,10 +74,35 @@ namespace joy {
 		io.colour(BOLDWHITE);
 	}
 
+	void lexer::warn(error_number_t e, std::string msg) {
+		io.colour(YELLOW);
+		io << ("warning : " + debug_messages[e] + " " + msg);
+		io.colour(BOLDWHITE);
+	}
+
+
+	void lexer::convert2(joy_stack& jstack) {
+		auto new_type = s0.sat(1).second;
+		auto old_type = s0.top().second;
+		if (new_type != old_type) {
+			try {
+				s0.top() = joy_cast(new_type, s0.top());
+			}
+			catch (std::runtime_error & e) {
+				err(DWRONGTYPE, e.what());
+			}
+		}
+#ifdef NSUPRESS
+		if (new_type < old_type) {
+			warn(DPRECISION, "converting " + to_string(old_type) + " to " + to_string(new_type));
+		}
+#endif
+	}
+
 	bool lexer::conforms(const std::initializer_list<joy_t>& argt, const joy_stack& jstack) {
 		if (jstack.size() >= argt.size()) {
 			size_t i{ 0 };
-			for (const auto& t : argt) {
+			for (const auto& t : argt) { //for each of the joy types in the initializer list
 				switch (t) {
 				case joy::joy_t::bool_t:
 				case joy::joy_t::int_t:
@@ -115,6 +140,7 @@ namespace joy {
 					break;
 				case joy::joy_t::undef_t:
 				default:
+					err(DNOCONVERSION, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(jstack.sat(i).second));
 					return false;
 				}
 				++i;
@@ -192,37 +218,7 @@ namespace joy {
 	}
 
 	void lexer::add() {
-		auto return_type = s0.sat(1).second;
-		if (return_type != s0.top().second) {
-			try {
-				s0.top() = joy_cast(return_type, s0.top());
-			}
-			catch(std::runtime_error& e) {
-				err(DWRONGTYPE, e.what());
-			}
-		}
-		switch (return_type) {
-		case joy_t::char_t: {
-			auto c = static_cast<char>(s0.top().first[1] + s0.sat(1).first[1]);
-			s0.pop2();
-			s0.push(make_char(std::string{ c }, return_type));
-			break;
-		}
-		case joy_t::int_t: {
-			int n = stoi(s0.top().first) + stoi(s0.sat(1).first);
-			s0.pop2();
-			s0.push(make_token(std::to_string(n), return_type));
-			break;
-		}
-		case joy_t::double_t: {
-			double n = stod(s0.top().first) + stod(s0.sat(1).first);
-			s0.pop2();
-			s0.push(make_token(std::to_string(n), return_type));
-			break;
-		}
-		default:
-			break;
-		}
+		
 	}
 
 
