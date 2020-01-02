@@ -47,6 +47,7 @@ namespace joy {
 		* warn if cast would be a reduction in accuracy
 		* pop arguements from stack
 		* push result
+		* TODO: should take a function then can wrap the bin op in try-catch
 		*/
 		void bin_op(const token_t& token, joy_stack& stack);
 
@@ -177,17 +178,32 @@ namespace joy {
 		//math
 		{"+", [&]() { 
 			if (conforms({joy_t::number_t, joy_t::number_t}, s0)) { 
-				auto result = make_token(std::to_string(as_double(s0.top()) + as_double(s0.sat(1))), joy_t::double_t);
+				auto result = make_token(std::to_string(as_double(s0.sat(1)) + as_double(s0.top())), joy_t::double_t);
 				bin_op(result, s0);
 			} 
 		}},
+		{"-", [&]() {
+			if (conforms({joy_t::number_t, joy_t::number_t}, s0)) {
+				auto result = make_token(std::to_string(as_double(s0.sat(1)) - as_double(s0.top())), joy_t::double_t);
+				bin_op(result, s0);
+			}
+		}},
+		{"*", [&]() {
+			if (conforms({joy_t::number_t, joy_t::number_t}, s0)) {
+				auto result = make_token(std::to_string(as_double(s0.sat(1)) * as_double(s0.top())), joy_t::double_t);
+				bin_op(result, s0);
+			}
+		}},
+		{"/", [&]() {
+			if (conforms({joy_t::number_t, joy_t::number_t}, s0)) {
+				auto result = make_token(std::to_string(as_double(s0.sat(1)) / as_double(s0.top())), joy_t::double_t);
+				bin_op(result, s0);
+			}
+		}},
 		/*
-		{"-", [&]() { if (args(2)) { } }},
-		{"*", [&]() { if (args(2)) { } }},
-		{"/", [&]() { if (args(2)) { } }},
-		{"rem", [&]() { if (args(1)) { } }},
-		{"abs", [&]() { if (args(1)) { } }},
-		{"sign", [&]() { if (args(1)) { } }},
+		{"rem",  }},
+		{"abs", }},
+		{"sign", }},
 		*/
 		//identity function, does nothing.
 		{"id", [&]() {}}
