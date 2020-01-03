@@ -3,9 +3,32 @@ Joy Interpreter written in C++ and Joy
 
 Please see the [Wiki](https://github.com/ifknot/joycpp/wiki)
 
-## 31/12/19
+## 03/01/20
 
-std::initializer_list std::function
+std::any
+
+There needs to be a more flexible approach to tokens rather than simply storing them as a string and doing a lot of string conversions!
+
+Maintaining the current type hierarchy:
+```cpp
+enum class joy_t {
+        undef_t, lexeme_t, any_t,           //abstract types
+        numeric_t, aggregate_t ,             //group types
+        bool_t, char_t, int_t, double_t,    //simple types
+        string_t, set_t, list_t, quote_t    //aggregate types  
+    };
+```
+Modifying the token structure:
+```cpp
+typedef std::any pattern_t;
+typedef std::pair<pattern_t, joy_t> token_t;
+```
+
+## 31/12/19
+```cpp
+std::initializer_list 
+std::function
+```
 
 There needs to be a more structured approach to the core C++ operator translations and unify the arguement checking, the recurring pattern:
 
@@ -18,24 +41,23 @@ There needs to be a more structured approach to the core C++ operator translatio
 With an operator matching function function *match* given an operator string and map<string, function> as arguements points to a map entry for the evaluation function *f* that takes std::initializer_list, std::function
 
 e.g. for the *+* operator 
-
+```cpp
 eval("+", regular_dictionary) 
-
+```
 map entry:
-
+```cpp
 {"+", [](){ f({number_t, number_t}, joy_add() } },
 
-f(std::initializer_list std::function) {
-
-}
+f(std::initializer_list std::function) {...}
+```
 
 e.g. for the *and* operator has complex args can be set : set, set : bool, bool : set, or bool : bool so it needs an extra eval layer of its own that manages these combinations
 
 
 regular dictionary entry:
-
+```cpp
 {"and", [](){ f_and(...)} },
-
+```
 ## 27/12/19
 
 Regular expression lexer v0.1 
@@ -72,21 +94,17 @@ Original version repository renamed [joycpp_old](https://github.com/ifknot/joycp
 * joylang is a stack based string re-writing system. Therefore, and to avoid using a garbage collector (GC), use a C++ stack of type std::string but embelished with class member functions that map the joylang stack atomics.
 
 * joylang is made up of both context free and regular grammar. Therefore, modularise the C++ inbuilt atomics on this basis with a joylang top layer:
-
+```cpp
 joy langguage     : joy
  ↓
- 
 joy context free  : c++
  ↓
- 
 joy regular       : c++
  ↓
- 
 joy stack         : c++
  ↓
- 
 input/output      : c++
-
+```
 ### ToDo:
 1. ~~input output~~
 2. ~~joy_stack_t~~
