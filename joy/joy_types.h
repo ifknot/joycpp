@@ -37,7 +37,7 @@ namespace joy {
     */
     enum class joy_t {
         undef_t, lexeme_t, any_t,           //abstract types
-        number_t, aggregate_t ,             //mixed types
+        numeric_t, aggregate_t ,             //mixed types
         bool_t, char_t, int_t, double_t,    //simple types
         string_t, set_t, list_t, quote_t    //aggregate types  
     };                 

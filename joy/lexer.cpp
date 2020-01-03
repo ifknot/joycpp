@@ -68,14 +68,20 @@ namespace joy {
 		return false;
 	}
 
-	void lexer::bin_op(const token_t& token, joy_stack& stack) {
+	void lexer::bin_op(std::function<token_t(joy_stack&)> f, joy_stack& stack) {
 #ifdef NSUPRESS
-		if (stack.sat(1).second < stack.top().second) {
+		if (stack.sat(1).second < stack.sat(0).second) {
 			warn(DPRECISION, "converting " + to_string(stack.top().second) + " to " + to_string(stack.sat(1).second));
 		}
 #endif
-		stack.sat(1) = joy_cast(stack.sat(1).second, token);
-		stack.pop();
+		try {
+			stack.top() = f(stack);
+			stack.top() = joy_cast(stack.sat(1).second, stack.top());
+			stack.popd();
+		}
+		catch (const std::runtime_error & e) {
+			error(DJOYERROR, e.what());
+		}
 	}
 
 	void lexer::error(error_number_t e, std::string msg) {
@@ -108,7 +114,7 @@ namespace joy {
 						return false;
 					}
 					break;
-				case joy::joy_t::number_t:
+				case joy::joy_t::numeric_t:
 					if ((jstack.sat(i).second == joy_t::int_t) || (jstack.sat(i).second == joy_t::double_t) || (jstack.sat(i).second == joy_t::char_t)) {
 						break;
 					}

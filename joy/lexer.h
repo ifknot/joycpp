@@ -49,7 +49,9 @@ namespace joy {
 		* push result
 		* TODO: should take a function then can wrap the bin op in try-catch
 		*/
-		void bin_op(const token_t& token, joy_stack& stack);
+		void bin_op(std::function<token_t(joy_stack&)> f, joy_stack& stack);
+		//void num_op(size_t argc, function_t f);
+
 
 		//void un_op_result
 
@@ -176,30 +178,44 @@ namespace joy {
 			} 
 		}},
 		//math
+		{"+", [&]() {
+			if (conforms({joy_t::numeric_t, joy_t::numeric_t}, s0)) {
+				bin_op([](joy_stack& s)->token_t{
+					return make_token(std::to_string(as_double(s.sat(1)) + as_double(s.top())), joy_t::double_t);
+				}, s0);
+			}
+		}},
+		/*
 		{"+", [&]() { 
-			if (conforms({joy_t::number_t, joy_t::number_t}, s0)) { 
+			if (conforms({joy_t::numeric_t, joy_t::numeric_t}, s0)) { 
 				auto result = make_token(std::to_string(as_double(s0.sat(1)) + as_double(s0.top())), joy_t::double_t);
 				bin_op(result, s0);
 			} 
 		}},
 		{"-", [&]() {
-			if (conforms({joy_t::number_t, joy_t::number_t}, s0)) {
+			if (conforms({joy_t::numeric_t, joy_t::numeric_t}, s0)) {
 				auto result = make_token(std::to_string(as_double(s0.sat(1)) - as_double(s0.top())), joy_t::double_t);
 				bin_op(result, s0);
 			}
 		}},
 		{"*", [&]() {
-			if (conforms({joy_t::number_t, joy_t::number_t}, s0)) {
+			if (conforms({joy_t::numeric_t, joy_t::numeric_t}, s0)) {
 				auto result = make_token(std::to_string(as_double(s0.sat(1)) * as_double(s0.top())), joy_t::double_t);
 				bin_op(result, s0);
 			}
 		}},
 		{"/", [&]() {
-			if (conforms({joy_t::number_t, joy_t::number_t}, s0)) {
+			if (conforms({joy_t::numeric_t, joy_t::numeric_t}, s0)) {
 				auto result = make_token(std::to_string(as_double(s0.sat(1)) / as_double(s0.top())), joy_t::double_t);
 				bin_op(result, s0);
 			}
 		}},
+		//relational operators
+		//{"=",		[&]() { if (nums(2, stack)) {
+		//					stack.push_back(stringify(as_double(stack) == as_double(stack)));
+		//				}
+		//else debug(DWRONGTYPES);
+}},
 		/*
 		{"rem",  }},
 		{"abs", }},

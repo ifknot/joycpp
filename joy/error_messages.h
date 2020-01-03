@@ -10,6 +10,7 @@ namespace joy {
 	static const std::string ERR = "error #";
 
 	static std::map<error_number_t, std::string> debug_messages = {
+	{DJOYERROR, "runtime exception"},
 	{DSTACKEMPTY, "empty stack"},
 	{DNOCONVERSION, "no conversion"},
 	{DFILENOTFOUND, "file not found"},

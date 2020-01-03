@@ -14,7 +14,7 @@ namespace joy {
         {joy_t::set_t, "set"},
         {joy_t::string_t, "string"},
         //mixed types
-        {joy_t::number_t, "number"},
+        {joy_t::numeric_t, "number"},
         {joy_t::aggregate_t, "aggreagte"},
         //abstract types
         {joy_t::lexeme_t, "lexeme"},
@@ -161,7 +161,7 @@ namespace joy {
             break;
         case joy::joy_t::quote_t:
         case joy::joy_t::set_t:
-        case joy::joy_t::number_t:
+        case joy::joy_t::numeric_t:
         case joy::joy_t::aggregate_t:
         case joy::joy_t::lexeme_t:
         case joy::joy_t::undef_t:
