@@ -9,7 +9,7 @@ std::any
 
 There needs to be a more flexible approach to tokens rather than simply storing them as a string and doing a lot of string conversions!
 
-Maintaining the current type hierarchy:
+Maintaining the current type hierarchy: (?add cmd_t for Joy commands)
 ```cpp
 enum class joy_t {
         undef_t, lexeme_t, any_t,           //abstract types
@@ -23,6 +23,10 @@ Modifying the token structure:
 typedef std::any pattern_t;
 typedef std::pair<pattern_t, joy_t> token_t;
 ```
+There can now be a meanigful distinction between a list (a vector of simple types) and a quote (a vector of token_t)
+tokenizing, lexing and parsing will have to be smarter so that \[ 1 2 3 \] is recognised as a vector of ints whereas \[ 1 2 3.14 \] and \[ 2.1 dup \* \] is recognised as a vector of token_t 
+
+Its also time to parse string input properly.
 
 ## 31/12/19
 ```cpp
