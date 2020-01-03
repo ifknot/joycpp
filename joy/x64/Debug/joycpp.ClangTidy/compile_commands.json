@@ -1,7 +1,0 @@
-[
-  {
-    "directory": "C:\\Users\\ifkno\\source\\repos\\joycpp\\joy",
-    "command": "\"C:\\WINDOWS\\system32\\CL.exe\" \/c \/ZI \/JMC \/nologo \/W3 \/WX- \/diagnostics:column \/Od \/D CODE_ANALYSIS \/D _DEBUG \/D _CONSOLE \/D _UNICODE \/D UNICODE \/EHsc \/RTC1 \/MDd \/GS \/fp:precise \/permissive- \/std:c++17 \/Fo\"x64\\Debug\\\\\" \/Gd \/TP   \"C:\\Users\\ifkno\\source\\repos\\joycpp\\joy\\joycpp.cpp\"",
-    "file": "C:\\Users\\ifkno\\source\\repos\\joycpp\\joy\\joycpp.cpp"
-  }
-]
