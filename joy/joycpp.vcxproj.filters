@@ -18,63 +18,9 @@
     <ClCompile Include="joycpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="joy_stack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="io_device.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test_joy_stack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="joy_types.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test_types.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lexer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="catch2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="joy_stack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="joy_types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="io_device.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="colour_codes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="joy_sigils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="joy_tokens.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lexer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="error_numbers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="error_messages.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="trace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -153,14 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="io_device.cpp" />
     <ClCompile Include="joycpp.cpp" />
-    <ClCompile Include="joy_stack.cpp" />
-    <ClCompile Include="joy_types.cpp" />
-    <ClCompile Include="lexer.cpp" />
-    <ClCompile Include="parser.cpp" />
-    <ClCompile Include="test_joy_stack.cpp" />
-    <ClCompile Include="test_types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="catch2.h">
@@ -169,17 +162,6 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </ClInclude>
-    <ClInclude Include="colour_codes.h" />
-    <ClInclude Include="error_messages.h" />
-    <ClInclude Include="error_numbers.h" />
-    <ClInclude Include="io_device.h" />
-    <ClInclude Include="joy_sigils.h" />
-    <ClInclude Include="joy_stack.h" />
-    <ClInclude Include="joy_tokens.h" />
-    <ClInclude Include="joy_types.h" />
-    <ClInclude Include="lexer.h" />
-    <ClInclude Include="parser.h" />
-    <ClInclude Include="trace.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="joy03.man" />
