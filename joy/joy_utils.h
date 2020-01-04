@@ -7,7 +7,7 @@
 
 namespace joy {
 
-    /**
+   /**
    * convert a joy type to its string name (bool, int, char, double, list, quote, set, string)
    */
     std::string to_string(joy_t match);
@@ -26,5 +26,10 @@ namespace joy {
     * convert a token to its string representation
     */
     std::string to_string(const token_t& token);
+
+    inline token_t make_token(std::any arg, joy_t type) {
+        return std::make_pair(arg, type);
+    }
+
 
 }

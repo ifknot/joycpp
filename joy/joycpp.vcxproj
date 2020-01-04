@@ -163,6 +163,7 @@
     <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_types.h" />
     <ClInclude Include="joy_utils.h" />
+    <ClInclude Include="lexer.h" />
     <ClInclude Include="tokenizer.h" />
   </ItemGroup>
   <ItemGroup>

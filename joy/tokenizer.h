@@ -1,16 +1,17 @@
+/**
+* Converts an input line string into a list (vector) of tokens <any, type> split by wrapped in quotes then split by whitespace
+*/
 #pragma once
 
 #include <sstream>
 
 #include "io_device.h"
 #include "joy_types.h"
+#include "joy_utils.h"
 
 namespace joy {
 
-	inline token_t make_token(std::any arg, joy_t type) {
-		return std::make_pair(arg, type);
-	}
-
+	
 	class tokenizer {
 	
 	public:
