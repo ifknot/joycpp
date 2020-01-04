@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sstream>
+
 #include "io_device.h"
 #include "joy_types.h"
 
