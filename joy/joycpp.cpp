@@ -5,13 +5,20 @@
 #include <iostream>
 
 #include "io_device.h"
+#include "tokenizer.h"
+#include "joy_utils.h"
 
 void run() { // exec loop
     joy::io_device io;
     io.colouring(true);
+    joy::tokenizer tokenizer(io);
     while (true) {
+        
+        auto tokens = tokenizer.tokenize(io.readline());
         io.colour(RED);
-        io << io.readline();
+        for (const auto& t : tokens) {
+            io << to_string(t);
+        }
         io.ok();
     }
     

@@ -3,6 +3,11 @@
 namespace joy {
 
     std::map<joy_t, std::string> type_to_string = {
+        //grouped types
+        {joy_t::undef_t, "undef"},
+        {joy_t::any_t, "any"},
+        {joy_t::numeric_t, "numeric"},
+        {joy_t::cmd_t, "command"},
         //simple types
         {joy_t::bool_t, "bool"},
         {joy_t::int_t, "int"},
@@ -42,7 +47,7 @@ namespace joy {
     }
 
 	std::string to_string(const token_t& token) {
-        std::string result{"< "};
+        std::string result;
         switch (token.second) {
         case joy::joy_t::quote_t:
             result += "[ " + to_string(std::any_cast<token_list_t>(token.first)) + "]";
@@ -68,10 +73,13 @@ namespace joy {
         case joy::joy_t::double_t:
             result += std::to_string(std::any_cast<double>(token.first));
             break;
+        case joy::joy_t::undef_t:
+            result += std::any_cast<std::string>(token.first);
+            break;
         default:
             break;
         }
-        return result;
+        return result + " " + to_string(token.second);
 	}
 
 }

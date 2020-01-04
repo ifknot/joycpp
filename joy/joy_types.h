@@ -32,7 +32,8 @@ namespace joy {
     * joycpp types in order of increasing precision:
     */
     enum class joy_t { 
-        //grouped types 
+        //grouped types
+        undef_t,        // an undefined lexeme
         any_t,          // any joy type
         numeric_t,      // int_t, char_t double_t
         cmd_t,          // recognised joy command  
