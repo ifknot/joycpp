@@ -18,9 +18,18 @@
     <ClCompile Include="joycpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="joy_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="catch2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="joy_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="joy_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
