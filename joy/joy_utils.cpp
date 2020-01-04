@@ -54,13 +54,13 @@ namespace joy {
             result += "{ " + to_string(std::any_cast<token_list_t>(token.first)) + "}";
             break;
         case joy::joy_t::string_t:
-            result += "\"" + std::any_cast<std::string>(token.first)) + "\"";
+            result += "\"" + std::any_cast<std::string>(token.first) + "\"";
             break;
         case joy::joy_t::bool_t:
             result += (std::any_cast<bool>(token.first)) ?"true" :"false";
             break;
         case joy::joy_t::char_t:
-            result += "'" + std::string{ std::any_cast<char>(token.first)) };
+            result += "'" + std::string{ std::any_cast<char>(token.first) };
             break;
         case joy::joy_t::int_t:
             result += std::to_string(std::any_cast<int>(token.first));

@@ -153,16 +153,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="io_device.cpp" />
     <ClCompile Include="joycpp.cpp" />
     <ClCompile Include="joy_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="catch2.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </ClInclude>
+    <ClInclude Include="colour_codes.h" />
+    <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_types.h" />
     <ClInclude Include="joy_utils.h" />
   </ItemGroup>

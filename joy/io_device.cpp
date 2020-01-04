@@ -1,0 +1,44 @@
+#include "io_device.h"
+
+namespace joy {
+
+	io_device::io_device() : io_device(std::cin, std::cout) {}
+
+	io_device::io_device(std::istream& input_stream, std::ostream& output_stream) :
+		input_stream(input_stream),
+		output_stream(output_stream)
+	{}
+
+	std::string io_device::readline() {
+		std::string line;
+		getline(input_stream, line);
+		return line;
+	}
+
+	void io_device::colour(std::string col) {
+		ink_colour = col;
+	}
+
+	void io_device::colouring(bool b) {
+		colouring_ = b;
+	}
+
+	bool io_device::colouring() const {
+		return colouring_;
+	}
+
+	void io_device::ok() {
+		colour(BOLDBLACK);
+		ink();
+		output_stream << "ok\n";
+		colour(BOLDWHITE);
+		ink();
+	}
+
+	void io_device::ink() {
+		if (colouring()) {
+			output_stream << RESET << ink_colour;
+		}
+	}
+
+}
