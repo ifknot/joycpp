@@ -24,6 +24,9 @@
     <ClCompile Include="io_device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tokenizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="joy_types.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="colour_codes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tokenizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

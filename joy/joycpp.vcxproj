@@ -156,12 +156,14 @@
     <ClCompile Include="io_device.cpp" />
     <ClCompile Include="joycpp.cpp" />
     <ClCompile Include="joy_utils.cpp" />
+    <ClCompile Include="tokenizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="colour_codes.h" />
     <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_types.h" />
     <ClInclude Include="joy_utils.h" />
+    <ClInclude Include="tokenizer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="joy03.man" />
