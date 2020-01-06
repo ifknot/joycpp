@@ -7,6 +7,7 @@
 
 #include "tokenizer.h"
 #include "joy_stack.h"
+#include "error_messages.h"
 
 
 namespace joy {
@@ -17,17 +18,29 @@ namespace joy {
 
 		lexer(joy_stack& stack, io_device& io, std::string path_to_manual);
 
-		bool is_exit();
+		void lex(std::string line);
 
-		void exit();
+		bool is_quit();
+
+		void quit();
 
 	protected:
 
 		joy_stack& s;	
 
+		bool try_regular(const token_t& token);
+
+		void error(error_number_t e, std::string msg = "");
+
 	private:
 
-		bool exit_{ false };
+		bool no_conversion(const token_t& token);
+
+		bool quit_{ false };
+
+		dictionary_t regular_translation { 
+		{"quit", [&]() { quit(); io << ". . ."; }}
+		};
 
 	};
 

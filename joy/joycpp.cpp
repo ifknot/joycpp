@@ -10,10 +10,16 @@
 #include "joy_stack.h"
 
 void run() { // exec loop
+    
     joy::io_device io;
     io.colouring(true);
     joy::joy_stack stack;
-
+    joy::lexer lexer(stack, io, "");
+    while (!lexer.is_quit()) {
+        lexer.lex(io.readline()); 
+        io.ok();
+    }
+    
     /*
     joy::tokenizer tokenizer(io);
     while (true) {
@@ -26,6 +32,7 @@ void run() { // exec loop
         io.ok();
     }
     */
+    
 }
 
 /**

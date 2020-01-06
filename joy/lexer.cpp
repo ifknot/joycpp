@@ -11,12 +11,43 @@ namespace joy {
 		//load_manual(path_to_manual);
 	}
 
-	bool lexer::is_exit() {
-		return exit_;
+	void lexer::lex(std::string line) {
+		auto tokens = tokenizer::tokenize(line);
+		for (const auto& t : tokens) {
+			if (!try_regular(t)) {
+				break;
+			}
+		}
 	}
 
-	void lexer::exit() {
-		exit_ = true;
+	bool lexer::is_quit() {
+		return quit_;
+	}
+
+	void lexer::quit() {
+		quit_ = true;
+	}
+
+	bool lexer::try_regular(const token_t& token) {
+		if (token.second == joy_t::undef_t) {			
+			auto it = regular_translation.find(std::any_cast<std::string>(token.first));
+			if (it != regular_translation.end()) {
+				(it->second)();
+				return true;
+			}
+		}
+		return no_conversion(token);
+	}
+
+	void lexer::error(error_number_t e, std::string msg) {
+		io.colour(RED);
+		io << (ERR + std::to_string(e) + " : " + error_messages[e] + " " + msg);
+		io.colour(BOLDWHITE);
+	}
+
+	bool lexer::no_conversion(const token_t& token) {
+		error(ENOCONVERSION, "< " + to_string(token) + " > is not recognised");
+		return false;
 	}
 
 }

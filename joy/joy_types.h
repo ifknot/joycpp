@@ -51,10 +51,13 @@ namespace joy {
     */
     enum class state_t { parse, quote, list, set, string };
 
+    /**
+    * global joycpp types
+    */
     typedef std::any pattern_t;
     typedef std::pair<pattern_t, joy_t> token_t;
     typedef std::vector<token_t> token_list_t;
     typedef std::function<void()> function_t;
-    typedef std::map<pattern_t, function_t> dictionary_t;
+    typedef std::map<std::string, function_t> dictionary_t;
 
 }

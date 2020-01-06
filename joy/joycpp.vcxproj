@@ -162,6 +162,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="colour_codes.h" />
+    <ClInclude Include="error_messages.h" />
+    <ClInclude Include="error_numbers.h" />
     <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_stack.h" />
     <ClInclude Include="joy_types.h" />

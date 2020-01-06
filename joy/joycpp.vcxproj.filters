@@ -56,6 +56,12 @@
     <ClInclude Include="joy_stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="error_numbers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="error_messages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="joy03.man">
