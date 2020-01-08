@@ -36,6 +36,7 @@ namespace joy {
         undef_t,        // an undefined lexeme
         any_t,          // any joy type
         numeric_t,      // int_t, char_t double_t
+        aggregate_t,    // quote, list, set string
         cmd_t,          // recognised joy command  
         //aggregate types  
         quote_t,        // aggregate of any joy type and any joy command

@@ -10,8 +10,10 @@ namespace joy {
 	static const std::string ERR = "error #";
 
 	static std::map<error_number_t, std::string> error_messages = {
-	{EJOYERROR, "runtime exception"},
-	{ENOCONVERSION, "no conversion"}
+	{DLESSARGS, "insufficent arguments"},
+	{DWRONGTYPE, "type mismatch"},
+	{DNOCONVERSION, "no conversion"},
+	{DJOYERROR, "runtime exception"}
 	};
 
 }
