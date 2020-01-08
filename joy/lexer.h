@@ -28,7 +28,10 @@ namespace joy {
 
 		joy_stack& s;	
 
-		bool try_regular(const token_t& token);
+		/**
+		* cascade the token down the try ladder
+		*/
+		bool lex(token_t token);
 
 		void error(error_number_t e, std::string msg = "");
 
@@ -41,6 +44,46 @@ namespace joy {
 
 	private:
 
+		//lexing cascade: 
+
+		/**
+		* try and execute token as a regular Joy command by searching the regular expression c++ dictionary
+		* return true on success
+		* return try_int if fail
+		*/
+		bool try_regular(const token_t& token);
+
+		/**
+		* try to push token as an int
+		* return true on success
+		* return try_char if fail
+		*/
+		//bool try_int(const token_t& token);
+
+		/**
+		* try to push token as a char
+		* return true on success
+		* return try_double if fail
+		*/
+		//bool try_char(const token_t& token);
+
+		/**
+		* try to push token as a double
+		* return true on success
+		* return try_string if fail
+		*/
+		//bool try_double(const token_t& token);
+
+		/**
+		* try to push token as a string
+		* return true on success
+		* return no_conversion if fail
+		*/
+		bool try_string(const token_t& token);
+
+		/**
+		* display error then return false
+		*/
 		bool no_conversion(const token_t& token);
 
 		bool quit_{ false };

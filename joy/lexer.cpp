@@ -14,7 +14,7 @@ namespace joy {
 	void lexer::lex(std::string line) {
 		auto tokens = tokenizer::tokenize(line);
 		for (const auto& t : tokens) {
-			if (!try_regular(t)) {
+			if (!lex(t)) {
 				break;
 			}
 		}
@@ -28,15 +28,8 @@ namespace joy {
 		quit_ = true;
 	}
 
-	bool lexer::try_regular(const token_t& token) {
-		if (token.second == joy_t::undef_t) {			
-			auto it = regular_translation.find(std::any_cast<std::string>(token.first));
-			if (it != regular_translation.end()) {
-				(it->second)();
-				return true;
-			}
-		}
-		return no_conversion(token);
+	bool lexer::lex(token_t token) {
+		return try_regular(token);
 	}
 
 	void lexer::error(error_number_t e, std::string msg) {
@@ -106,6 +99,27 @@ namespace joy {
 			error(DLESSARGS, "expected: " + std::to_string(argt.size()) + " found: " + std::to_string(stack.size()));
 			return false;
 		}
+	}
+
+	//lexing cascade:
+
+	bool lexer::try_regular(const token_t& token) {
+		if (token.second == joy_t::undef_t) {
+			auto it = regular_translation.find(std::any_cast<std::string>(token.first));
+			if (it != regular_translation.end()) {
+				(it->second)();
+				return true;
+			}
+		}
+		return try_string(token);
+	}
+
+	bool lexer::try_string(const token_t& token) {
+		if (token.second == joy_t::string_t) {
+			s.push(token);
+			return true;
+		}
+		return no_conversion(token);
 	}
 
 	bool lexer::no_conversion(const token_t& token) {
