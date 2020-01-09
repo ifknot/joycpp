@@ -8,14 +8,19 @@ namespace joy {
 		tokenizer(io),
 		s(stack)
 	{
-		//load_manual(path_to_manual);
+		load_manual(path_to_manual);
 	}
 
 	void lexer::lex(std::string line) {
 		auto tokens = tokenizer::tokenize(line);
 		for (const auto& t : tokens) {
-			if (!lex(t)) {
-				break;
+			if (t.second == joy_t::undef_t) {
+				if (!lex(t)) {
+					break;
+				}
+			}
+			else {
+				s.push(t);
 			}
 		}
 	}
@@ -36,16 +41,6 @@ namespace joy {
 		io.colour(RED);
 		io << (ERR + std::to_string(e) + " : " + error_messages[e] + " " + msg);
 		io.colour(BOLDWHITE);
-	}
-
-	void lexer::print_stack(const joy_stack& stack) {
-		io.colour(GREEN);
-		std::string dump{ "_\n" };
-		for (size_t i{ 0 }; i < stack.size(); ++i) {
-			const auto& t = stack.sat(i);
-			dump += to_string(t) + "\n";
-		}
-		io << dump;
 	}
 
 	bool lexer::has(const std::initializer_list<joy_t>& argt, const joy_stack& stack) {
@@ -103,7 +98,7 @@ namespace joy {
 
 	//lexing cascade:
 
-	bool lexer::try_regular(const token_t& token) {
+	bool lexer::try_regular(token_t& token) {
 		if (token.second == joy_t::undef_t) {
 			auto it = regular_translation.find(std::any_cast<std::string>(token.first));
 			if (it != regular_translation.end()) {
@@ -111,20 +106,49 @@ namespace joy {
 				return true;
 			}
 		}
-		return try_string(token);
-	}
-
-	bool lexer::try_string(const token_t& token) {
-		if (token.second == joy_t::string_t) {
-			s.push(token);
-			return true;
-		}
 		return no_conversion(token);
 	}
 
-	bool lexer::no_conversion(const token_t& token) {
+	bool lexer::no_conversion(token_t& token) {
 		error(DNOCONVERSION, "< " + to_string(token) + " > is not recognised");
 		return false;
+	}
+
+	//helper member functions
+
+	void lexer::print_stack(const joy_stack& stack) {
+		io.colour(GREEN);
+		std::string dump{ "_\n" };
+		for (size_t i{ 0 }; i < stack.size(); ++i) {
+			const auto& t = stack.sat(i);
+			dump += to_string(t) + "\n";
+		}
+		io << dump;
+	}
+
+	void lexer::load_manual(std::string& path_to_manual) {
+		std::ifstream f(path_to_manual);
+		if (!f) {
+			error(DFILENOTFOUND, "Joy manual " + path_to_manual);
+		}
+		else {
+			std::string line, cmd, msg;
+			while (std::getline(f, line)) {
+				if (line[0] != '#') {
+					cmd = line.substr(0, line.find(" "));
+					msg = line.substr(line.find(":"), line.size());
+					std::getline(f, line);
+					joy_manual[cmd] = msg + "\n" + line;
+				}
+			}
+		}
+	}
+
+	void lexer::print_manual() {
+		io.colour(YELLOW);
+		for (const auto& [cmd, info] : joy_manual) {
+			io << cmd << info;
+		}
 	}
 
 }

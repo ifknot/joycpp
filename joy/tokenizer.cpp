@@ -9,6 +9,30 @@ namespace joy {
 		tokens.push_back(make_token(line, joy_t::undef_t)); //entire line as a single undef token
 		tokens = split_quotes(tokens); //split out all the open-close quote sections into string tokens 
 		tokens = split_whitespace(tokens); //split remaining undef tokens up into sub tokens by white space
+		//tokenize any simple types in the fully split list
+		for (auto& [pattern, type] : tokens) {
+			auto s = std::any_cast<std::string>(pattern);
+			if (is_joy_bool(s)) {
+				pattern = (s == "true") ? true : false;
+				type = joy_t::bool_t;
+				break;
+			}
+			if (is_joy_char(s)) {
+				pattern = s[1];
+				type = joy_t::char_t;
+				break;
+			}
+			if (is_joy_int(s)) {
+				pattern = stoi(s);
+				type = joy_t::int_t;
+				break;
+			}
+			if (is_joy_double(s)) {
+				pattern = stod(s);
+				type = joy_t::double_t;
+				break;
+			}
+		}
 		return tokens;
 	}
 

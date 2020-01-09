@@ -10,6 +10,7 @@ namespace joy {
 	static const std::string ERR = "error #";
 
 	static std::map<error_number_t, std::string> error_messages = {
+	{DFILENOTFOUND, "file not found"},
 	{DLESSARGS, "insufficent arguments"},
 	{DWRONGTYPE, "type mismatch"},
 	{DNOCONVERSION, "no conversion"},

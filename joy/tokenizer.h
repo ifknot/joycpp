@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include <string>
 #include <sstream>
 
 #include "io_device.h"
@@ -40,6 +41,7 @@ namespace joy {
 		* split out all the white space separated sections into string tokens 
 		*/
 		token_list_t split_whitespace(token_list_t& tokens);
+
 
 	};
 

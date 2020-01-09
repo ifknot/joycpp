@@ -14,7 +14,7 @@ void run() { // exec loop
     joy::io_device io;
     io.colouring(true);
     joy::joy_stack stack;
-    joy::lexer lexer(stack, io, "");
+    joy::lexer lexer(stack, io, "joy03.man");
     io.ok();
     while (!lexer.is_quit()) {
         lexer.lex(io.readline()); 

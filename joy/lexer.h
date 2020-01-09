@@ -35,8 +35,6 @@ namespace joy {
 
 		void error(error_number_t e, std::string msg = "");
 
-		void print_stack(const joy_stack& stack);
-
 		/**
 		* test stack has to the requirments of the initializer list
 		*/
@@ -51,43 +49,31 @@ namespace joy {
 		* return true on success
 		* return try_int if fail
 		*/
-		bool try_regular(const token_t& token);
-
-		/**
-		* try to push token as an int
-		* return true on success
-		* return try_char if fail
-		*/
-		//bool try_int(const token_t& token);
-
-		/**
-		* try to push token as a char
-		* return true on success
-		* return try_double if fail
-		*/
-		//bool try_char(const token_t& token);
-
-		/**
-		* try to push token as a double
-		* return true on success
-		* return try_string if fail
-		*/
-		//bool try_double(const token_t& token);
-
-		/**
-		* try to push token as a string
-		* return true on success
-		* return no_conversion if fail
-		*/
-		bool try_string(const token_t& token);
+		bool try_regular(token_t& token);
 
 		/**
 		* display error then return false
 		*/
-		bool no_conversion(const token_t& token);
+		bool no_conversion(token_t& token);
+
+		//helper member functions
+
+		void print_stack(const joy_stack& stack);
+
+		void load_manual(std::string& path_to_manual);
+
+		void print_manual();
+
+		//Joy command translations: (where map lambdas would be too long)
 
 		bool quit_{ false };
 
+		/**
+		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
+		* translate Joy regular grammar commands into their c++ lambda equivalents only Joy grammar that either:
+		* 1. can not be expressed in Joy grammar
+		* 2. offer performance benefit as c++ lambda equivalent
+		*/
 		dictionary_t regular_translation { 
 		//stack commands
 		{".s", [&]() { print_stack(s); }},
@@ -109,8 +95,14 @@ namespace joy {
 		{"true", [&]() { s.push(make_token(true, joy_t::bool_t)); }},
 		{"false", [&]() { s.push(make_token(false, joy_t::bool_t)); }},
 		//environment
+		{"manual", [&]() { print_manual(); }},
 		{"quit", [&]() { quit(); io << ". . ."; }}
 		};
+
+		/**
+		* Joy Manual loaded from file at construction
+		*/
+		std::map<std::string, std::string> joy_manual;
 
 	};
 
