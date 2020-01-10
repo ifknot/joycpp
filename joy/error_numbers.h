@@ -9,6 +9,7 @@ namespace joy {
 	constexpr size_t DWRONGTYPE = 2;
 	constexpr size_t DLESSARGS = 3;
 	constexpr size_t DFILENOTFOUND = 4;
+	constexpr size_t DAGGNOOPEN = 4;
 
 
 }

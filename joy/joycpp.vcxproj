@@ -158,12 +158,14 @@
     <ClCompile Include="joy_stack.cpp" />
     <ClCompile Include="joy_utils.cpp" />
     <ClCompile Include="lexer.cpp" />
+    <ClCompile Include="parser.cpp" />
     <ClCompile Include="tokenizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="colour_codes.h" />
     <ClInclude Include="error_messages.h" />
     <ClInclude Include="error_numbers.h" />
+    <ClInclude Include="parser.h" />
     <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_stack.h" />
     <ClInclude Include="joy_types.h" />

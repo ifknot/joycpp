@@ -1,8 +1,11 @@
 /**
 * Chomsky type 3 regular grammar lexer 
+* i.e. can be decided by a finite state automaton
 * Uses a map of string operator to lamda function mapping for Joy operators
 */
 #pragma once
+
+#include <cassert>
 
 #include "tokenizer.h"
 #include "joy_stack.h"
@@ -17,23 +20,24 @@ namespace joy {
 
 		lexer(joy_stack& stack, io_device& io, std::string path_to_manual);
 
-		//testing 
-		// TODO: remove once parser implemented
-		void lex(std::string line);
-
 		bool is_quit();
 
 		void quit();
 
 	protected:
 
+		/**
+		* main interactive stack
+		*/
 		joy_stack& s;	
 
 		/**
 		* try to map token to a regular grammar C++ lamda implementation of a regular grammar Joy operator
 		* TODO: complete for all regular Joy-2003 language definition operators
 		*/
-		bool lex(token_t token);
+		bool lex(token_t& token);
+
+		bool is_regular(token_t token);
 
 		/**
 		* convert error to message send to output stream along with any additional message 
@@ -45,6 +49,11 @@ namespace joy {
 		*/
 		bool has(const std::initializer_list<joy_t>& argt, const joy_stack& stack);
 
+		/**
+		* display error then return false
+		*/
+		bool no_conversion(token_t& token);
+
 	private: 
 
 		/**
@@ -52,11 +61,6 @@ namespace joy {
 		* return true on succes or call no_conversion
 		*/
 		bool try_regular(token_t& token);
-
-		/**
-		* display error then return false
-		*/
-		bool no_conversion(token_t& token);
 
 		//helper member functions
 

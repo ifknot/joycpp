@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "joy_types.h"
+#include "joy_stack.h"
 
 namespace joy {
 
@@ -26,6 +27,11 @@ namespace joy {
     * convert a list of tokens to its string representation
     */
     std::string to_string(const token_list_t& list);
+
+    /**
+    * convert a stack of tokens to its string representation
+    */
+    std::string to_string(const joy_stack& stack);
 
     /**
     * convert a token to its string representation

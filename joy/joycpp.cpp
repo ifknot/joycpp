@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "io_device.h"
-#include "lexer.h"
+#include "parser.h"
 #include "joy_utils.h"
 #include "joy_stack.h"
 
@@ -14,10 +14,10 @@ void run() { // exec loop
     joy::io_device io;
     io.colouring(true);
     joy::joy_stack stack;
-    joy::lexer lexer(stack, io, "joy03.man");
+    joy::parser parser(stack, io, "joy03.man");
     io.ok();
-    while (!lexer.is_quit()) {
-        lexer.lex(io.readline()); 
+    while (!parser.is_quit()) {
+        parser.parse(io.readline()); 
         io.ok();
     }
     

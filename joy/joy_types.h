@@ -50,7 +50,7 @@ namespace joy {
     /**
     * joycpp context free parser states
     */
-    enum class state_t { parse, quote, list, set, string };
+    enum class state_t { parse, quote, list, set };
 
     /**
     * global joycpp types

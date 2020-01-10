@@ -24,8 +24,7 @@ namespace joy {
         {state_t::parse, " parse"},
         {state_t::quote, " quote"},
         {state_t::list, " list"},
-        {state_t::set, " set"},
-        {state_t::string, " string"}
+        {state_t::set, " set"}
     };
 
 	std::string to_string(joy_t match) {
@@ -46,17 +45,22 @@ namespace joy {
         return result;
     }
 
+    std::string to_string(const joy_stack& stack) {
+        std::string result;
+        for (const auto& token : stack) {
+            result += to_string(token) + " ";
+        }
+        return result;
+    }
+
 	std::string to_string(const token_t& token) {
         std::string result;
         switch (token.second) {
-        case joy::joy_t::quote_t:
-            result += "[ " + to_string(std::any_cast<token_list_t>(token.first)) + "]";
-            break;
         case joy::joy_t::list_t:
-            result += "[ " + to_string(std::any_cast<token_list_t>(token.first)) + "]";
+        case joy::joy_t::quote_t:
+            result += "[ " + to_string(std::any_cast<joy_stack>(token.first)) + "]";
             break;
         case joy::joy_t::set_t:
-            result += "{ " + to_string(std::any_cast<token_list_t>(token.first)) + "}";
             break;
         case joy::joy_t::string_t:
             result += "\"" + std::any_cast<std::string>(token.first) + "\"";
@@ -74,9 +78,9 @@ namespace joy {
             result += std::to_string(std::any_cast<double>(token.first));
             break;
         case joy::joy_t::undef_t:
-            result += std::any_cast<std::string>(token.first);
-            break;
+        case joy::joy_t::cmd_t:
         default:
+            result += std::any_cast<std::string>(token.first);
             break;
         }
         return result + " " + to_string(token.second);

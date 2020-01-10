@@ -1,4 +1,4 @@
-#include "lexer.h"
+﻿#include "lexer.h"
 
 namespace joy {
 
@@ -11,20 +11,6 @@ namespace joy {
 		load_manual(path_to_manual);
 	}
 
-	void lexer::lex(std::string line) {
-		auto tokens = tokenizer::tokenize(line);
-		for (const auto& t : tokens) {
-			if (t.second == joy_t::undef_t) {
-				if (!lex(t)) {
-					break;
-				}
-			}
-			else {
-				s.push(t);
-			}
-		}
-	}
-
 	bool lexer::is_quit() {
 		return quit_;
 	}
@@ -33,8 +19,19 @@ namespace joy {
 		quit_ = true;
 	}
 
-	bool lexer::lex(token_t token) {
+	bool lexer::lex(token_t& token) {
 		return try_regular(token);
+	}
+
+	bool lexer::is_regular(token_t token) {
+		assert(token.second == joy_t::undef_t);
+		auto it = regular_translation.find(std::any_cast<std::string>(token.first));
+		if (it != regular_translation.end()) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	void lexer::error(error_number_t e, std::string msg) {
@@ -116,7 +113,7 @@ namespace joy {
 
 	void lexer::print_stack(const joy_stack& stack) {
 		io.colour(GREEN);
-		std::string dump{ "_\n" };
+		std::string dump{ ">" + std::to_string(s.size()) + "<\n"};
 		for (size_t i{ 0 }; i < stack.size(); ++i) {
 			const auto& t = stack.sat(i);
 			dump += to_string(t) + "\n";
