@@ -96,8 +96,6 @@ namespace joy {
 		}
 	}
 
-	//lexing cascade:
-
 	bool lexer::try_regular(token_t& token) {
 		if (token.second == joy_t::undef_t) {
 			auto it = regular_translation.find(std::any_cast<std::string>(token.first));
@@ -144,7 +142,7 @@ namespace joy {
 		}
 	}
 
-	void lexer::print_manual() {
+	void lexer::manual() {
 		io.colour(YELLOW);
 		for (const auto& [cmd, info] : joy_manual) {
 			io << cmd << info;

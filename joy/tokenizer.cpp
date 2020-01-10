@@ -10,25 +10,26 @@ namespace joy {
 		tokens = split_quotes(tokens); //split out all the open-close quote sections into string tokens 
 		tokens = split_whitespace(tokens); //split remaining undef tokens up into sub tokens by white space
 		//tokenize any simple types in the fully split list
+		// FIX: unable to enter a space character
 		for (auto& [pattern, type] : tokens) {
-			auto s = std::any_cast<std::string>(pattern);
-			if (is_joy_bool(s)) {
-				pattern = (s == "true") ? true : false;
+			auto match = std::any_cast<std::string>(pattern);
+			if (is_joy_bool(match)) {
+				pattern = (match == "true") ? true : false;
 				type = joy_t::bool_t;
 				continue;
 			}
-			if (is_joy_char(s)) {
-				pattern = s[1];
+			if (is_joy_char(match)) {
+				pattern = match[1];
 				type = joy_t::char_t;
 				continue;
 			}
-			if (is_joy_int(s)) {
-				pattern = stoi(s);
+			if (is_joy_int(match)) {
+				pattern = stoi(match);
 				type = joy_t::int_t;
 				continue;
 			}
-			if (is_joy_double(s)) {
-				pattern = stod(s);
+			if (is_joy_double(match)) {
+				pattern = stod(match);
 				type = joy_t::double_t;
 				continue;
 			}

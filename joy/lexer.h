@@ -1,7 +1,6 @@
 /**
 * Chomsky type 3 regular grammar lexer 
 * Uses a map of string operator to lamda function mapping for Joy operators
-* Cascades down to then test for simple types terminating in unrecognised input error
 */
 #pragma once
 
@@ -18,6 +17,8 @@ namespace joy {
 
 		lexer(joy_stack& stack, io_device& io, std::string path_to_manual);
 
+		//testing 
+		// TODO: remove once parser implemented
 		void lex(std::string line);
 
 		bool is_quit();
@@ -29,25 +30,26 @@ namespace joy {
 		joy_stack& s;	
 
 		/**
-		* cascade the token down the try ladder
+		* try to map token to a regular grammar C++ lamda implementation of a regular grammar Joy operator
+		* TODO: complete for all regular Joy-2003 language definition operators
 		*/
 		bool lex(token_t token);
 
+		/**
+		* convert error to message send to output stream along with any additional message 
+		*/
 		void error(error_number_t e, std::string msg = "");
 
 		/**
-		* test stack has to the requirments of the initializer list
+		* test stack has the requirments of the initializer list
 		*/
 		bool has(const std::initializer_list<joy_t>& argt, const joy_stack& stack);
 
-	private:
-
-		//lexing cascade: 
+	private: 
 
 		/**
 		* try and execute token as a regular Joy command by searching the regular expression c++ dictionary
-		* return true on success
-		* return try_int if fail
+		* return true on succes or call no_conversion
 		*/
 		bool try_regular(token_t& token);
 
@@ -62,8 +64,17 @@ namespace joy {
 
 		void load_manual(std::string& path_to_manual);
 
-		void print_manual();
+		/**
+		* manual: ->
+		* Writes the loaded manual of all Joy primitives to output file.
+		*/
+		void manual();
 
+		/**
+		* helpdetail: [ S1 S2 .. ]
+		* Gives brief help on each symbol S in the list.
+		* FIX: work with list not just string on top stack
+		*/
 		void helpdetail(std::string match);
 
 		//vars
@@ -141,7 +152,7 @@ namespace joy {
 			}
 		}},
 		//environment
-		{"manual", [&]() { print_manual(); }},
+		{"manual", [&]() { manual(); }},
 		{"quit", [&]() { quit(); io << ". . ."; }}
 		};
 
