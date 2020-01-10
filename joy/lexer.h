@@ -37,7 +37,10 @@ namespace joy {
 		*/
 		bool lex(token_t& token);
 
-		bool is_regular(token_t token);
+		/**
+		* test if the token is Joy03 regular grammar
+		*/
+		bool is_lexable(token_t& token);
 
 		/**
 		* convert error to message send to output stream along with any additional message 
@@ -64,9 +67,13 @@ namespace joy {
 
 		//helper member functions
 
-		void print_stack(const joy_stack& stack);
-
 		void load_manual(std::string& path_to_manual);
+
+		//Joy op C++ implementations
+
+		void print_top(const joy_stack& stack);
+
+		void print_stack(const joy_stack& stack);
 
 		/**
 		* manual: ->
@@ -79,7 +86,7 @@ namespace joy {
 		* Gives brief help on each symbol S in the list.
 		* FIX: work with list not just string on top stack
 		*/
-		void helpdetail(std::string match);
+		void helpdetail(const joy_stack& stack);
 
 		//vars
 
@@ -93,10 +100,11 @@ namespace joy {
 		*/
 		dictionary_t regular_translation { 
 		//non-standard
-		{"?", [&]() { if (has({joy_t::string_t}, s)) { helpdetail(std::any_cast<std::string>(s.top().first)); } }},
+		{"?", [&]() { if (has({joy_t::list_t}, s)) { helpdetail(std::any_cast<joy_stack&>(s.top().first)); } }},
 		//stack commands
 		{".s", [&]() { print_stack(s); }},
-		//{"newstack", [&]() { s.newstack(); }},
+		{".", [&]() { if (has({joy_t::any_t}, s)) { print_top(s); } }},
+		{"newstack", [&]() { s.newstack(); }},
 		//{"stack", [&]() { if (has({joy_t::any_t}, s)) { s.stack(); } }},
 		//{"unstack", [&]() { if (has({joy_t::quote_t}, s)) { s.unstack(); } }},
 		{"dup", [&]() { if (has({joy_t::any_t}, s)) { s.dup(); } }},
@@ -153,6 +161,13 @@ namespace joy {
 			if (has({joy_t::numeric_t, joy_t::numeric_t}, s)) {
 				s.sat(1) = (s.sat(1) / s.top());
 				s.pop();
+			}
+		}},
+		//aggregates
+		// TODO:
+		{"size", [&]() { 
+			if (has({joy_t::aggregate_t}, s)) {
+				//s.push(size(s.top()));
 			}
 		}},
 		//environment

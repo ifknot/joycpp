@@ -12,8 +12,17 @@ namespace joy {
 
 	void parser::parse(std::string line) {
 		auto tokens = tokenizer::tokenize(line);
-		for (auto& t : tokens) {
-			if (!parse(t)) {
+		for (auto& token : tokens) {
+			if (!parse(token)) {
+				break;
+			}
+		}
+	}
+
+	void parser::parse(joy_stack& stack) {
+		assert(state_stack.top() == state_t::parse);
+		for (auto& token : stack) {
+			if (!parse(token)) {
 				break;
 			}
 		}
@@ -23,27 +32,20 @@ namespace joy {
 		switch (state_stack.top()) {
 		case joy::state_t::parse:
 			if (token.second == joy_t::undef_t) {
-				if (try_context_free(token)) {
-					return true;
-				}
-				else {
-					return lexer::lex(token);
-				}
-			}
+				return try_special(token) || try_context_free(token) || lexer::lex(token);
+			} 
 			s.push(token);
 			return true;
 		case joy::state_t::list:
 		case joy::state_t::quote:
-			if (try_context_free(token)) {
-				return true;
-			}
 			if (token.second == joy_t::undef_t) {
-				if (!is_regular(token)) {
+				if (try_special(token)) {
+					return true;
+				}
+				if (!is_parsable(token) && !is_lexable(token)) {
 					unwind();
 					return lexer::no_conversion(token);
 				}
-				token.second = joy_t::cmd_t;
-				modify = true;
 			}
 			nest_token(token, s, list_depth);
 			return true;
@@ -52,13 +54,33 @@ namespace joy {
 		}
 	}
 
+	bool parser::is_parsable(token_t& token) {
+		assert(token.second == joy_t::undef_t);
+		auto it = context_free_translation.find(std::any_cast<std::string>(token.first));
+		if (it != context_free_translation.end()) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	bool parser::try_special(token_t& token) {
+		assert(token.second == joy_t::undef_t);
+		auto it = special_translation.find(std::any_cast<std::string>(token.first));
+		if (it != special_translation.end()) {
+			(it->second)();
+			return true;
+		}
+		return false;
+	}
+
 	bool parser::try_context_free(token_t& token) {
-		if (token.second == joy_t::undef_t) {
-			auto it = context_free_translation.find(std::any_cast<std::string>(token.first));
-			if (it != context_free_translation.end()) {
-				(it->second)();
-				return true;
-			}
+		assert(token.second == joy_t::undef_t);
+		auto it = context_free_translation.find(std::any_cast<std::string>(token.first));
+		if (it != context_free_translation.end()) {
+			(it->second)();
+			return true;
 		}
 		return false;
 	}
@@ -80,17 +102,6 @@ namespace joy {
 		else {
 			assert(stack.top().second == joy_t::list_t);
 			nest_token(token, std::any_cast<joy_stack&>(stack.top().first), depth - 1);
-		}
-	}
-
-	void parser::nest_modify(joy_stack& stack,size_t depth) {
-		if (depth == 0) {
-			assert(stack.top().second == joy_t::list_t);
-			stack.top().second = joy_t::quote_t;
-			modify = false;
-		}
-		else {
-			nest_modify(std::any_cast<joy_stack&>(stack.top().first), depth - 1);
 		}
 	}
 

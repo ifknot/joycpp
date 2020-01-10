@@ -83,7 +83,7 @@ namespace joy {
             result += std::any_cast<std::string>(token.first);
             break;
         }
-        return result + " " + to_string(token.second);
+        return result;
 	}
 
     token_t operator+(const token_t& a, const token_t& b) { 

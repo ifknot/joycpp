@@ -26,14 +26,20 @@ namespace joy {
 
 	protected:
 
+		void parse(joy_stack& stack);
+
 		bool parse(token_t& token);
 
+		bool is_parsable(token_t& token);
+
 	private:
+
+		bool try_special(token_t& token);
 
 		bool try_context_free(token_t& token);
 
 		/**
-		* recursively descend into nested quotes to add a new one
+		* recursively descend into nested list to add a new list
 		*/
 		void nest_list(joy_stack& stack, size_t depth);
 
@@ -43,11 +49,6 @@ namespace joy {
 		void nest_token(token_t& token, joy_stack& stack, size_t depth);
 
 		/**
-		* recursively descend into nested lists to modify to quote if any cmd added
-		*/
-		void nest_modify(joy_stack& stack, size_t depth);
-
-		/**
 		* error state - unwind the state stack by depth
 		*/
 		void unwind();
@@ -55,15 +56,11 @@ namespace joy {
 		state_stack_t state_stack;
 		size_t list_depth{ 0 };
 		size_t set_depth{ 0 };
-		bool modify{ false }; //to change a list to a quote if any command added
-
+	
 		/**
-		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
-		* translate Joy context free grammar commands into their c++ lambda equivalents only Joy grammar that either:
-		* 1. can not be expressed in Joy grammar
-		* 2. offer performance benefit as c++ lambda equivalent
+		* state changing operators
 		*/
-		dictionary_t context_free_translation {
+		dictionary_t special_translation {
 		{"[", [&]() { 
 			state_stack.push(state_t::list);
 			nest_list(s, list_depth);
@@ -73,14 +70,26 @@ namespace joy {
 			if (list_depth == 0) {
 				error(DAGGNOOPEN, "no matching open angle bracket [");
 			}
-			else {
-				if (modify) {
-					nest_modify(s, list_depth - 1);
-				}
+			else { 
 				--list_depth;
 				state_stack.pop();
 			}
 		}}
+		};
+
+		/**
+		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
+		* translate Joy context free grammar commands into their c++ lambda equivalents only Joy grammar that either:
+		* 1. can not be expressed in Joy grammar
+		* 2. offer performance benefit as c++ lambda equivalent
+		*/
+		dictionary_t context_free_translation {
+		// TODO: dip and the express i in Joy as dup dip pop
+		{"i", [&]() { if (has({joy_t::list_t}, s)) {
+			auto stack = std::any_cast<joy_stack&>(s.top().first);
+			s.pop();
+			parse(stack); 
+		} }}
 		};
 
 	};

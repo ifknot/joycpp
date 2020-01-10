@@ -34,8 +34,8 @@ namespace joy {
     std::string to_string(const joy_stack& stack);
 
     /**
-    * convert a token to its string representation
-    */
+   * convert a token to its string representation
+   */
     std::string to_string(const token_t& token);
 
     /**
