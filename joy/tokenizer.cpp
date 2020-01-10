@@ -15,22 +15,22 @@ namespace joy {
 			if (is_joy_bool(s)) {
 				pattern = (s == "true") ? true : false;
 				type = joy_t::bool_t;
-				break;
+				continue;
 			}
 			if (is_joy_char(s)) {
 				pattern = s[1];
 				type = joy_t::char_t;
-				break;
+				continue;
 			}
 			if (is_joy_int(s)) {
 				pattern = stoi(s);
 				type = joy_t::int_t;
-				break;
+				continue;
 			}
 			if (is_joy_double(s)) {
 				pattern = stod(s);
 				type = joy_t::double_t;
-				break;
+				continue;
 			}
 		}
 		return tokens;

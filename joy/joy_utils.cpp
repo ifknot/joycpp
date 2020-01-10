@@ -82,4 +82,224 @@ namespace joy {
         return result + " " + to_string(token.second);
 	}
 
+    token_t operator+(const token_t& a, const token_t& b) {
+        switch (a.second) {
+        case joy::joy_t::char_t: {
+            auto c = std::any_cast<char>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t: 
+                c += std::any_cast<char>(b.first);
+                return make_token(c , joy_t::char_t);
+            case joy::joy_t::int_t:
+                c += std::any_cast<int>(b.first);
+                return make_token(c, joy_t::char_t);
+            case joy::joy_t::double_t:
+                c += std::any_cast<double>(b.first);
+                return make_token(c, joy_t::char_t);
+            default:
+                break;
+            }
+        }
+        case joy::joy_t::int_t: {
+            auto c = std::any_cast<int>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c += std::any_cast<char>(b.first);
+                return make_token(c, joy_t::int_t);
+            case joy::joy_t::int_t:
+                c += std::any_cast<int>(b.first);
+                return make_token(c, joy_t::int_t);
+            case joy::joy_t::double_t:
+                c += std::any_cast<double>(b.first);
+                return make_token(c, joy_t::int_t);
+            default:
+                break;
+            }
+        }
+        case joy::joy_t::double_t: {
+            auto c = std::any_cast<double_t>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c += std::any_cast<char>(b.first);
+                return make_token(c, joy_t::double_t);
+            case joy::joy_t::int_t:
+                c += std::any_cast<int>(b.first);
+                return make_token(c, joy_t::double_t);
+            case joy::joy_t::double_t:
+                c += std::any_cast<double>(b.first);
+                return make_token(c, joy_t::double_t);
+            default:
+                break;
+            }
+        }
+        default:
+            break;
+        }
+    }
+
+    token_t operator-(const token_t& a, const token_t& b) {
+        switch (a.second) {
+        case joy::joy_t::char_t: {
+            auto c = std::any_cast<char>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c -= std::any_cast<char>(b.first);
+                return make_token(c, joy_t::char_t);
+            case joy::joy_t::int_t:
+                c -= std::any_cast<int>(b.first);
+                return make_token(c, joy_t::char_t);
+            case joy::joy_t::double_t:
+                c -= std::any_cast<double>(b.first);
+                return make_token(c, joy_t::char_t);
+            default:
+                break;
+            }
+        }
+        case joy::joy_t::int_t: {
+            auto c = std::any_cast<int>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c -= std::any_cast<char>(b.first);
+                return make_token(c, joy_t::int_t);
+            case joy::joy_t::int_t:
+                c -= std::any_cast<int>(b.first);
+                return make_token(c, joy_t::int_t);
+            case joy::joy_t::double_t:
+                c -= std::any_cast<double>(b.first);
+                return make_token(c, joy_t::int_t);
+            default:
+                break;
+            }
+        }
+        case joy::joy_t::double_t: {
+            auto c = std::any_cast<double_t>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c -= std::any_cast<char>(b.first);
+                return make_token(c, joy_t::double_t);
+            case joy::joy_t::int_t:
+                c -= std::any_cast<int>(b.first);
+                return make_token(c, joy_t::double_t);
+            case joy::joy_t::double_t:
+                c -= std::any_cast<double>(b.first);
+                return make_token(c, joy_t::double_t);
+            default:
+                break;
+            }
+        }
+        default:
+            break;
+        }
+    }
+
+    token_t operator*(const token_t& a, const token_t& b) {
+        switch (a.second) {
+        case joy::joy_t::char_t: {
+            auto c = std::any_cast<char>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c *= std::any_cast<char>(b.first);
+                return make_token(c, joy_t::char_t);
+            case joy::joy_t::int_t:
+                c *= std::any_cast<int>(b.first);
+                return make_token(c, joy_t::char_t);
+            case joy::joy_t::double_t:
+                c *= std::any_cast<double>(b.first);
+                return make_token(c, joy_t::char_t);
+            default:
+                break;
+            }
+        }
+        case joy::joy_t::int_t: {
+            auto c = std::any_cast<int>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c *= std::any_cast<char>(b.first);
+                return make_token(c, joy_t::int_t);
+            case joy::joy_t::int_t:
+                c *= std::any_cast<int>(b.first);
+                return make_token(c, joy_t::int_t);
+            case joy::joy_t::double_t:
+                c *= std::any_cast<double>(b.first);
+                return make_token(c, joy_t::int_t);
+            default:
+                break;
+            }
+        }
+        case joy::joy_t::double_t: {
+            auto c = std::any_cast<double_t>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c *= std::any_cast<char>(b.first);
+                return make_token(c, joy_t::double_t);
+            case joy::joy_t::int_t:
+                c *= std::any_cast<int>(b.first);
+                return make_token(c, joy_t::double_t);
+            case joy::joy_t::double_t:
+                c *= std::any_cast<double>(b.first);
+                return make_token(c, joy_t::double_t);
+            default:
+                break;
+            }
+        }
+        default:
+            break;
+        }
+    }
+
+    token_t operator/(const token_t& a, const token_t& b) {
+        switch (a.second) {
+        case joy::joy_t::char_t: {
+            auto c = std::any_cast<char>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c /= std::any_cast<char>(b.first);
+                return make_token(c, joy_t::char_t);
+            case joy::joy_t::int_t:
+                c /= std::any_cast<int>(b.first);
+                return make_token(c, joy_t::char_t);
+            case joy::joy_t::double_t:
+                c /= std::any_cast<double>(b.first);
+                return make_token(c, joy_t::char_t);
+            default:
+                break;
+            }
+        }
+        case joy::joy_t::int_t: {
+            auto c = std::any_cast<int>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c /= std::any_cast<char>(b.first);
+                return make_token(c, joy_t::int_t);
+            case joy::joy_t::int_t:
+                c /= std::any_cast<int>(b.first);
+                return make_token(c, joy_t::int_t);
+            case joy::joy_t::double_t:
+                c /= std::any_cast<double>(b.first);
+                return make_token(c, joy_t::int_t);
+            default:
+                break;
+            }
+        }
+        case joy::joy_t::double_t: {
+            auto c = std::any_cast<double_t>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                c /= std::any_cast<char>(b.first);
+                return make_token(c, joy_t::double_t);
+            case joy::joy_t::int_t:
+                c /= std::any_cast<int>(b.first);
+                return make_token(c, joy_t::double_t);
+            case joy::joy_t::double_t:
+                c /= std::any_cast<double>(b.first);
+                return make_token(c, joy_t::double_t);
+            default:
+                break;
+            }
+        }
+        default:
+            break;
+        }
+    }
+
 }

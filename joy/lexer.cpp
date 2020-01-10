@@ -151,4 +151,12 @@ namespace joy {
 		}
 	}
 
+	void lexer::helpdetail(std::string match) {
+		io.colour(YELLOW);
+		auto it = joy_manual.find(match);
+		if (it != joy_manual.end()) {
+			io << match + joy_manual[match];
+		}
+	}
+
 }

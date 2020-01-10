@@ -73,4 +73,17 @@ namespace joy {
         }
     }
 
+    /**
+    * expects a numeric type or risk undefined behaviour
+    * result is always cast to match joy_t of first arguement
+    * NB there is no warning if any loss of precision
+    */
+    token_t operator+(const token_t& a, const token_t& b);
+
+    token_t operator-(const token_t& a, const token_t& b);
+
+    token_t operator*(const token_t& a, const token_t& b);
+
+    token_t operator/(const token_t& a, const token_t& b);
+
 }

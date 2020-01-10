@@ -64,7 +64,9 @@ namespace joy {
 
 		void print_manual();
 
-		//Joy command translations: (where map lambdas would be too long)
+		void helpdetail(std::string match);
+
+		//vars
 
 		bool quit_{ false };
 
@@ -75,6 +77,8 @@ namespace joy {
 		* 2. offer performance benefit as c++ lambda equivalent
 		*/
 		dictionary_t regular_translation { 
+		//non-standard
+		{"?", [&]() { if (has({joy_t::string_t}, s)) { helpdetail(std::any_cast<std::string>(s.top().first)); } }},
 		//stack commands
 		{".s", [&]() { print_stack(s); }},
 		//{"newstack", [&]() { s.newstack(); }},
@@ -91,9 +95,51 @@ namespace joy {
 		{"rotate", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, s)) { s.rotate(); } }},
 		{"rollup", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, s)) { s.rollup(); } }},
 		{"rolldown", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, s)) { s.rolldown(); } }},
-		//boolean
-		{"true", [&]() { s.push(make_token(true, joy_t::bool_t)); }},
-		{"false", [&]() { s.push(make_token(false, joy_t::bool_t)); }},
+		//char
+		{"ord", [&]() {
+			if (has({joy_t::char_t}, s)) {
+				auto c = std::any_cast<char>(s.top().first);
+				s.push(make_token(static_cast<int>(c), joy_t::int_t));
+				s.popd();
+			}
+		}},
+		{"chr", [&]() {
+			if (has({joy_t::int_t}, s)) { 
+				auto c = static_cast<char>(std::any_cast<int>(s.top().first));
+				s.push(make_token(c, joy_t::char_t));
+				s.popd();
+			}
+		}},
+		{"char", [&]() {
+			if (has({joy_t::any_t}, s)) {
+				s.push(make_token((s.top().second == joy_t::char_t) ? true : false, joy_t::bool_t));
+			}
+		}},
+		//math
+		{"+", [&]() {
+			if (has({joy_t::numeric_t, joy_t::numeric_t}, s)) {
+				s.sat(1) = (s.sat(1) + s.top());
+				s.pop();
+			}
+		}},
+		{"-", [&]() {
+			if (has({joy_t::numeric_t, joy_t::numeric_t}, s)) {
+				s.sat(1) = (s.sat(1) - s.top());
+				s.pop();
+			}
+		}},
+		{"*", [&]() {
+			if (has({joy_t::numeric_t, joy_t::numeric_t}, s)) {
+				s.sat(1) = (s.sat(1) * s.top());
+				s.pop();
+			}
+		}},
+		{"/", [&]() {
+			if (has({joy_t::numeric_t, joy_t::numeric_t}, s)) {
+				s.sat(1) = (s.sat(1) / s.top());
+				s.pop();
+			}
+		}},
 		//environment
 		{"manual", [&]() { print_manual(); }},
 		{"quit", [&]() { quit(); io << ". . ."; }}
