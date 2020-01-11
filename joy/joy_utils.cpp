@@ -62,9 +62,15 @@ namespace joy {
             break;
         case joy::joy_t::set_t:
             break;
-        case joy::joy_t::string_t:
-            result += "\"" + std::any_cast<std::string>(token.first) + "\"";
+        case joy::joy_t::string_t: {
+            result += "\"";
+            auto tokens = std::any_cast<joy_stack>(token.first);
+            for (auto t : tokens) {
+                result.push_back(std::any_cast<char>(t.first));
+            }
+            result += "\"";
             break;
+        }
         case joy::joy_t::bool_t:
             result += (std::any_cast<bool>(token.first)) ?"true" :"false";
             break;
@@ -83,7 +89,7 @@ namespace joy {
             result += std::any_cast<std::string>(token.first);
             break;
         }
-        return result;
+        return result; // +" " + to_string(token.second);
 	}
 
     token_t operator+(const token_t& a, const token_t& b) { 
