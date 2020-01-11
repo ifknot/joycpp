@@ -13,6 +13,13 @@ namespace joy {
 		// FIX: unable to enter a space character
 		for (auto& [pattern, type] : tokens) {
 			auto match = std::any_cast<std::string>(pattern);
+			if (type == joy_t::string_t) { //convert std::string into a joy_stack of char tokens
+				joy_stack s;
+				for (auto c : match) {
+					s.emplace_back(c, joy_t::char_t);
+				}
+				pattern = s;
+			}
 			if (is_joy_bool(match)) {
 				pattern = (match == "true") ? true : false;
 				type = joy_t::bool_t;

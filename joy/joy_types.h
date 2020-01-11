@@ -38,7 +38,7 @@ namespace joy {
         numeric_t,      // int_t, char_t double_t
         aggregate_t,    // quote, list, set string
         cmd_t,          // recognised joy command  
-        //aggregate types  
+        //aggregate types NB all implemented as a joy_stack
         quote_t,        // aggregate of any joy type and any joy command
         list_t,         // quotation of only literal types
         set_t,          // aggregate of unique unordered integer type 

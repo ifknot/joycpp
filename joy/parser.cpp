@@ -111,4 +111,11 @@ namespace joy {
 		}
 	}
 
+	void parser::step() {
+		auto P = std::any_cast<joy_stack&>(s.top().first);
+		auto X = s.sat(1);
+		auto A = std::any_cast<joy_stack>(X);
+
+	}
+
 }

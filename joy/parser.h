@@ -53,6 +53,16 @@ namespace joy {
 		*/
 		void unwind();
 
+		//Joy op C++ implementations
+
+		/**
+		* step: A [P] -> ...
+		* Sequentially putting members of aggregate A onto stack, executes P for each member of A.
+		*/
+		void step();
+
+		//vars
+
 		state_stack_t state_stack;
 		size_t list_depth{ 0 };
 		size_t set_depth{ 0 };
@@ -84,11 +94,19 @@ namespace joy {
 		* 2. offer performance benefit as c++ lambda equivalent
 		*/
 		dictionary_t context_free_translation {
-		// TODO: dip and the express i in Joy as dup dip pop
+		// combinators
+		{"step", [&]() { if (has({joy_t::list_t, joy_t::aggregate_t}, s)) { step(); }}},
+		{"dip", [&]() {if (has({joy_t::list_t, joy_t::any_t}, s)) {
+			auto P = std::any_cast<joy_stack&>(s.top().first);
+			const auto X = s.sat(1);
+			s.pop2();
+			parse(P);
+			s.push(X);
+		}}},
 		{"i", [&]() { if (has({joy_t::list_t}, s)) {
-			auto stack = std::any_cast<joy_stack&>(s.top().first);
+			auto P = std::any_cast<joy_stack&>(s.top().first);
 			s.pop();
-			parse(stack); 
+			parse(P); 
 		} }}
 		};
 
