@@ -64,7 +64,7 @@ namespace joy {
             break;
         case joy::joy_t::string_t: {
             result += "\"";
-            auto tokens = std::any_cast<joy_stack>(token.first);
+            const auto tokens = std::any_cast<joy_stack>(token.first);
             for (auto t : tokens) {
                 result.push_back(std::any_cast<char>(t.first));
             }

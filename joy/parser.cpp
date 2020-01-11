@@ -28,6 +28,15 @@ namespace joy {
 		}
 	}
 
+	void parser::parse(joy_stack&& stack) {
+		assert(state_stack.top() == state_t::parse);
+		for (auto& token : stack) {
+			if (!parse(token)) {
+				break;
+			}
+		}
+	}
+
 	bool parser::parse(token_t& token) {
 		switch (state_stack.top()) {
 		case joy::state_t::parse:
@@ -111,11 +120,11 @@ namespace joy {
 		}
 	}
 
-	void parser::step() {
-		auto P = std::any_cast<joy_stack&>(s.top().first);
-		auto X = s.sat(1);
-		s.pop2();
-		auto A = std::any_cast<joy_stack>(X.first);
+	joy_stack parser::step(joy_stack& stack) {
+		auto P = std::any_cast<joy_stack&>(stack.top().first);
+		auto X = stack.sat(1);
+		stack.pop2();
+		auto A = std::any_cast<joy_stack&>(X.first);
 		joy_stack S;
 		for (auto a : A) {
 			S.push(a);
@@ -123,7 +132,19 @@ namespace joy {
 				S.push(p);
 			}
 		}
-		parse(S);
+		return S;
+	}
+
+	token_t parser::map(joy_stack& stack) {
+		auto size = std::any_cast<joy_stack&>(stack.sat(1).first).size(); //aggregate size
+		auto type = stack.sat(1).second; //get the return aggregate type
+		parse(step(stack));
+		joy_stack S;
+		while (size--) {
+			S.push_back(s.top());
+			s.pop();
+		}
+		return make_token(S, type);
 	}
 
 }

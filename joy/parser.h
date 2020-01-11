@@ -28,6 +28,8 @@ namespace joy {
 
 		void parse(joy_stack& stack);
 
+		void parse(joy_stack&& stack);
+
 		bool parse(token_t& token);
 
 		bool is_parsable(token_t& token);
@@ -59,7 +61,9 @@ namespace joy {
 		* step: A [P] -> ...
 		* Sequentially putting members of aggregate A onto stack, executes P for each member of A.
 		*/
-		void step();
+		joy_stack step(joy_stack& stack);
+
+		token_t map(joy_stack& stack);
 
 		//vars
 
@@ -95,7 +99,8 @@ namespace joy {
 		*/
 		dictionary_t context_free_translation {
 		// combinators
-		{"step", [&]() { if (has({joy_t::list_t, joy_t::aggregate_t}, s)) { step(); }}},
+		{"map", [&]() { if (has({joy_t::list_t, joy_t::aggregate_t}, s)) { s.push(map(s)); } }},
+		{"step", [&]() { if (has({joy_t::list_t, joy_t::aggregate_t}, s)) { parse(step(s)); } }},
 		{"dip", [&]() {if (has({joy_t::list_t, joy_t::any_t}, s)) {
 			auto P = std::any_cast<joy_stack&>(s.top().first);
 			const auto X = s.sat(1);
