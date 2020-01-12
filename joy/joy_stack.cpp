@@ -25,28 +25,13 @@ namespace joy {
 	}
 
 	void joy_stack::stack() {
-		/*
-		pattern_t lexeme;
-		for (size_t i{ 0 }; i < size(); ++i) {
-			const auto& [pattern, joy_type] = at(i);
-			lexeme += pattern + SPC;
-		}
-		push(make_token(add_sigils(lexeme, QUOTE_OPEN, QUOTE_CLOSE), joy_t::quote_t));
-		*/
-		
+		joy_stack S = *this;
+		push(make_token(S, joy_t::quote_t));
 	}
 
 	void joy_stack::unstack() {
-		/*
-		assert(top().second == joy_t::quote_t);
-		pattern_t p;
-		std::stringstream ss{ top().first };
-		pop();
-		newstack();
-		while (ss >> p) {
-			//push(make_token(p, joy_type(p)));
-		}
-		*/
+		auto S = std::any_cast<joy_stack>(top().first);
+		*this = S;
 	}
 
 	void joy_stack::dup() {

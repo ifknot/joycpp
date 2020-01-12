@@ -50,10 +50,15 @@ namespace joy {
 				case joy::joy_t::char_t:
 				case joy::joy_t::double_t:
 				case joy::joy_t::list_t:
-				case joy::joy_t::quote_t:
 				case joy::joy_t::set_t:
 				case joy::joy_t::string_t:
 					if (stack.sat(i).second != t) {
+						error(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
+						return false;
+					}
+					break;
+				case joy::joy_t::quote_t: // TODO: implement conversion list to quote if contains a cmd_t 
+					if (stack.sat(i).second != joy_t::list_t) {
 						error(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
 						return false;
 					}

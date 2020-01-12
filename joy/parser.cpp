@@ -135,16 +135,36 @@ namespace joy {
 		return S;
 	}
 
+	void parser::reverse(joy_stack& stack) {
+		auto& A = std::any_cast<joy_stack&>(stack.top().first);
+		std::reverse(A.begin(), A.end());
+	}
+
 	token_t parser::map(joy_stack& stack) {
 		auto size = std::any_cast<joy_stack&>(stack.sat(1).first).size(); //aggregate size
 		auto type = stack.sat(1).second; //get the return aggregate type
 		parse(step(stack));
 		joy_stack S;
 		while (size--) {
-			S.push_back(s.top());
+			S.push(s.top());
 			s.pop();
 		}
+		std::reverse(S.begin(), S.end()); 
 		return make_token(S, type);
+	}
+
+	void parser::dip(joy_stack& stack) {
+		auto P = std::any_cast<joy_stack&>(stack.top().first);
+		const auto X = s.sat(1);
+		s.pop2();
+		parse(P);
+		stack.push(X);
+	}
+
+	void parser::i(joy_stack& stack) {
+		auto P = std::any_cast<joy_stack&>(stack.top().first);
+		stack.pop();
+		parse(P);
 	}
 
 }

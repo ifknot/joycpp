@@ -39,13 +39,6 @@ namespace joy {
     std::string to_string(const token_t& token);
 
     /**
-    * Constructs a token object 
-    */
-    inline token_t make_token(std::any arg, joy_t type) {
-        return std::make_pair(arg, type);
-    }
-
-    /**
     * test if the string is a recognized Joy03 boolean pattern
     */
     inline bool is_joy_bool(const std::string& match) {

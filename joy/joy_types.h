@@ -61,4 +61,11 @@ namespace joy {
     typedef std::function<void()> function_t;
     typedef std::map<std::string, function_t> dictionary_t;
 
+    /**
+    * Constructs a token object
+    */
+    inline token_t make_token(std::any arg, joy_t type) {
+        return std::make_pair(arg, type);
+    }
+
 }

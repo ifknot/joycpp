@@ -1,4 +1,4 @@
-/**
+﻿/**
 * Chomsky type 2 context free grammar parser
 * i.e. can be decided by a push down automaton
 * Uses a state stack and a map of string operator to lamda function mapping for CF Joy operators
@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stack>
+#include <algorithm>
 #include <cassert>
 
 #include "lexer.h"
@@ -63,7 +64,28 @@ namespace joy {
 		*/
 		joy_stack step(joy_stack& stack);
 
+		/**
+		* [a b c]│reverse  →            [c b a]│
+		*/
+		void reverse(joy_stack& stack);
+
+		/**
+		* map: A [P] -> B
+		* Executes P on each member of aggregate A, collects results in sametype aggregate B.
+		*/
 		token_t map(joy_stack& stack);
+
+		/**
+		* dip: X [P] -> ... X
+		* Saves X, executes P, pushes X back onto stack.
+		*/
+		void dip(joy_stack& stack);
+
+		/**
+		* i: [P] -> ...
+		* Executes P. So, [P] i == P.
+		*/
+		void i(joy_stack& stack);
 
 		//vars
 
@@ -99,20 +121,11 @@ namespace joy {
 		*/
 		dictionary_t context_free_translation {
 		// combinators
-		{"map", [&]() { if (has({joy_t::list_t, joy_t::aggregate_t}, s)) { s.push(map(s)); } }},
-		{"step", [&]() { if (has({joy_t::list_t, joy_t::aggregate_t}, s)) { parse(step(s)); } }},
-		{"dip", [&]() {if (has({joy_t::list_t, joy_t::any_t}, s)) {
-			auto P = std::any_cast<joy_stack&>(s.top().first);
-			const auto X = s.sat(1);
-			s.pop2();
-			parse(P);
-			s.push(X);
-		}}},
-		{"i", [&]() { if (has({joy_t::list_t}, s)) {
-			auto P = std::any_cast<joy_stack&>(s.top().first);
-			s.pop();
-			parse(P); 
-		} }}
+		{"map", [&]() { if (has({joy_t::quote_t, joy_t::aggregate_t}, s)) { s.push(map(s)); } }},
+		{"reverse", [&]() { if (has({joy_t::aggregate_t}, s)) { reverse(s); } }},
+		{"step", [&]() { if (has({joy_t::quote_t, joy_t::aggregate_t}, s)) { parse(step(s)); } }},
+		{"dip", [&]() {if (has({joy_t::quote_t, joy_t::any_t}, s)) { dip(s); }}},
+		{"i", [&]() { if (has({joy_t::quote_t}, s)) { i(s); } }}
 		};
 
 	};
