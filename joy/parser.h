@@ -37,8 +37,14 @@ namespace joy {
 
 	private:
 
+		/**
+		* try an execute token as a state changing operator
+		*/
 		bool try_special(token_t& token);
 
+		/**
+		* try to map token to a context free grammar C++ lamda implementation of a Joy operator
+		*/
 		bool try_context_free(token_t& token);
 
 		/**

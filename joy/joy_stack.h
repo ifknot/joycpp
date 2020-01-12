@@ -29,12 +29,8 @@
 */
 #pragma once
 
-#include <utility>
-#include <string>
 #include <vector>
 #include <cassert>
-#include <sstream>
-#include <initializer_list>
 
 #include "joy_types.h"
 
@@ -160,10 +156,6 @@ namespace joy {
 		void push(const value_type& val);
 
 		void push(value_type&& val);
-
-		// emplace
-
-		// swap is also a Joy stack operator
 
 	};
 }

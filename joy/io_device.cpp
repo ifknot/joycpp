@@ -41,4 +41,10 @@ namespace joy {
 		}
 	}
 
+	io_device& operator<<(io_device& d, std::string line) {
+		d.ink();
+		d.output_stream << line << "\n";
+		return d;
+	}
+
 }

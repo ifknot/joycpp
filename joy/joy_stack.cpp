@@ -35,58 +35,52 @@ namespace joy {
 	}
 
 	void joy_stack::dup() {
-		if (size()) {
-			push(top());
-		}
+		assert(size());
+		push(top());
 	}
 
 	void joy_stack::dupd() {
-		if (size()) {
-			dup();
-			sat(1) = sat(2);
-		}
+		assert(size() > 1);
+		dup();
+		sat(1) = sat(2);
 	}
 
 	void joy_stack::pop() {
-		if (size()) {
-			pop_back();
-		}
+		assert(size());
+		pop_back();
 	}
 
 	void joy_stack::popd() {
-		if (size() > 1) {
-			sat(1) = sat(0);
-			pop();
-		}
+		assert(size() > 1);
+		sat(1) = sat(0);
+		pop();
 	}
 
 	void joy_stack::pop2() {
-		if (size() > 1) {
-			pop();
-			pop();
-		}
+		assert(size() > 1);
+		pop();
+		pop();
 	}
 
 	void joy_stack::unit() {
-		
+		joy_stack S;
+		S.push(top());
+		top() = make_token(S, joy_t::quote_t);
 	}
 
 	void joy_stack::swap() {
-		if (size() > 1) {
-			std::swap(sat(0), sat(1));
-		}
+		assert(size() > 1);
+		std::swap(sat(0), sat(1));
 	}
 
 	void joy_stack::swapd() {
-		if (size() > 1) {
-			std::swap(sat(1), sat(2));
-		}
+		assert(size() > 1);
+		std::swap(sat(1), sat(2));
 	}
 
 	void joy_stack::rotate() {
-		if (size() > 2) {
-			std::swap(sat(0), sat(2));
-		}
+		assert(size() > 2);
+		std::swap(sat(0), sat(2));
 	}
 
 	void joy_stack::rollup() {
@@ -100,22 +94,13 @@ namespace joy {
 	}
 
 	joy_stack::reference joy_stack::top() {
-		if (size()) {
-			return back();
-		}
-		else {
-			throw std::runtime_error("");
-		}
+		assert(size());
+		return back();
 	}
 
 	joy_stack::const_reference joy_stack::top() const {
-		if (size()) {
-			return back();
-		}
-		else {
-			throw std::runtime_error("");
-		}
+		assert(size());
+		return back();
 	}
-
 
 }

@@ -33,7 +33,6 @@ namespace joy {
 
 		/**
 		* try to map token to a regular grammar C++ lamda implementation of a regular grammar Joy operator
-		* TODO: complete for all regular Joy-2003 language definition operators
 		*/
 		bool lex(token_t& token);
 

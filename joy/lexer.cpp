@@ -2,8 +2,6 @@
 
 namespace joy {
 
-
-
 	lexer::lexer(joy_stack& stack, io_device& io, std::string path_to_manual) :
 		tokenizer(io),
 		s(stack)
@@ -26,12 +24,7 @@ namespace joy {
 	bool lexer::is_lexable(token_t& token) {
 		assert(token.second == joy_t::undef_t);
 		auto it = regular_translation.find(std::any_cast<std::string>(token.first));
-		if (it != regular_translation.end()) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return it != regular_translation.end();
 	}
 
 	void lexer::error(error_number_t e, std::string msg) {

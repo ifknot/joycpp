@@ -59,6 +59,8 @@ namespace joy {
 			nest_token(token, s, list_depth);
 			return true;
 		case joy::state_t::set:
+			// TODO:
+			return false;
 			break;
 		}
 	}

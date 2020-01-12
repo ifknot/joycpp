@@ -17,18 +17,30 @@ namespace joy {
 
     public:
 
+        /**
+        * default to std::cin and std::cout 
+        */
         io_device();
 
         io_device(std::istream& input_stream, std::ostream& output_stream);
 
         std::string readline();
 
+        /**
+        * set the text colour to an ANSI escape code for terminal colours
+        */
         void colour(std::string col);
 
+        /**
+        * switch ANSI terminal colouring on and off
+        */
         void colouring(bool b);
 
         bool colouring() const;
 
+        /**
+        * send light gray "ok" message and CR to the output stream
+        */
         void ok();
 
     private:
@@ -38,13 +50,15 @@ namespace joy {
         std::ostream& output_stream;
         bool colouring_{ false };
 
+        /**
+        * inject ANSI terminal colour codes in the output stream if colouring enabled
+        */
         void ink();
 
-        friend io_device& operator<<(io_device& d, std::string line) {
-            d.ink();
-            d.output_stream << line << "\n";
-            return d;
-        }
+        /**
+        * maintain C++ idioms for output
+        */
+        friend io_device& operator<<(io_device& d, std::string line);
 
     };
 

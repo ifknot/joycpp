@@ -2,6 +2,9 @@
 
 namespace joy {
 
+    /**
+    * map joy types to text
+    */
     std::map<joy_t, std::string> type_to_string = {
         //grouped types
         {joy_t::undef_t, "undef"},
@@ -20,6 +23,9 @@ namespace joy {
         {joy_t::string_t, "string"},
     };
     
+    /**
+    * map parser states to text
+    */
     std::map<state_t, std::string> state_to_string = {
         {state_t::parse, " parse"},
         {state_t::quote, " quote"},
@@ -107,6 +113,7 @@ namespace joy {
                 c += std::any_cast<double>(b.first);
                 return make_token(c, joy_t::char_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         } //and so on...
@@ -123,6 +130,7 @@ namespace joy {
                 c += std::any_cast<double>(b.first);
                 return make_token(c, joy_t::int_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         }
@@ -139,10 +147,12 @@ namespace joy {
                 c += std::any_cast<double>(b.first);
                 return make_token(c, joy_t::double_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         }
         default:
+            return make_token("", joy_t::undef_t);
             break;
         }
     }
@@ -162,6 +172,7 @@ namespace joy {
                 c -= std::any_cast<double>(b.first);
                 return make_token(c, joy_t::char_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         } 
@@ -178,6 +189,7 @@ namespace joy {
                 c -= std::any_cast<double>(b.first);
                 return make_token(c, joy_t::int_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         }
@@ -194,10 +206,12 @@ namespace joy {
                 c -= std::any_cast<double>(b.first);
                 return make_token(c, joy_t::double_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         }
         default:
+            return make_token("", joy_t::undef_t);
             break;
         }
     }
@@ -217,6 +231,7 @@ namespace joy {
                 c *= std::any_cast<double>(b.first);
                 return make_token(c, joy_t::char_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         }
@@ -233,6 +248,7 @@ namespace joy {
                 c *= std::any_cast<double>(b.first);
                 return make_token(c, joy_t::int_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         }
@@ -249,10 +265,12 @@ namespace joy {
                 c *= std::any_cast<double>(b.first);
                 return make_token(c, joy_t::double_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         }
         default:
+            return make_token("", joy_t::undef_t);
             break;
         }
     }
@@ -272,6 +290,7 @@ namespace joy {
                 c /= std::any_cast<double>(b.first);
                 return make_token(c, joy_t::char_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         }
@@ -288,6 +307,7 @@ namespace joy {
                 c /= std::any_cast<double>(b.first);
                 return make_token(c, joy_t::int_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         }
@@ -304,10 +324,12 @@ namespace joy {
                 c /= std::any_cast<double>(b.first);
                 return make_token(c, joy_t::double_t);
             default:
+                return make_token("", joy_t::undef_t);
                 break;
             }
         }
         default:
+            return make_token("", joy_t::undef_t);
             break;
         }
     }
