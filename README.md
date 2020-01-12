@@ -3,6 +3,24 @@ Joy Interpreter written in C++ and Joy
 
 Please see the [Wiki](https://github.com/ifknot/joycpp/wiki)
 
+## 12/01/20
+
+Nested map works!
+
+map a quoted cube function quote to a list of lists:
+
+```
+ok
+[ [ 1 2 3 ] [ 4 5 6 ] ] [ [ dup dup * * ] map ] map
+ok
+.
+[ [ 1 8 27 ] [ 64 125 216 ] ]
+ok
+```
+Next...
+
+Joy commands written in Joy
+
 ## 03/01/20
 
 std::any
