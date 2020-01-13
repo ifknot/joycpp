@@ -2,8 +2,8 @@
 * Joy stack is not simply a sequence of values but also contains operators and combinators.
 * So, strictly speaking the stack is always a quotation and can contain all of the Joy types.
 *
-* The joylang stack list of supported operators:
-* (Those marked "?" could implemented in Joy)
+* The joycpp stack list of supported operators:
+* (Those marked "?" could implemented in Joy but for performance and convenience are implemented as joy stack memeber functions)
 *
 * supported operators ──┐
 *     top of stack ───┐ │
@@ -20,7 +20,7 @@
 * ?               c b a│rollup   →              a c b│
 * ?               c b a│rolldown →              b a c│
 *
-* 3 further stack operators seem central to how Joy works:
+* 3 further stack operators are central to how Joy works:
 *
 * newstack	- deletes the entire stack and replaces it with a new, empty one
 * stack		- pushes onto the stack a list containing all the elements of the stack

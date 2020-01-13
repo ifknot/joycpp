@@ -7,6 +7,8 @@
 
 #include <cassert>
 
+#include "joy_to_string.h"
+
 #include "tokenizer.h"
 #include "joy_stack.h"
 #include "error_messages.h"

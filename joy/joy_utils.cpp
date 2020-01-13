@@ -5,7 +5,7 @@ namespace joy {
     /**
     * map joy types to text
     */
-    std::map<joy_t, std::string> type_to_string = {
+/*    std::map<joy_t, std::string> type_to_string = {
         //grouped types
         {joy_t::undef_t, "undef"},
         {joy_t::any_t, "any"},
@@ -21,18 +21,18 @@ namespace joy {
         {joy_t::quote_t, "quote"},
         {joy_t::set_t, "set"},
         {joy_t::string_t, "string"},
-    };
+    };*/
     
     /**
     * map parser states to text
     */
-    std::map<state_t, std::string> state_to_string = {
+/*    std::map<state_t, std::string> state_to_string = {
         {state_t::parse, " parse"},
         {state_t::quote, " quote"},
         {state_t::list, " list"},
         {state_t::set, " set"}
-    };
-
+    };*/
+/*
 	std::string to_string(joy_t match) {
         assert(type_to_string.count(match));
         return type_to_string[match];
@@ -97,7 +97,7 @@ namespace joy {
         }
         return result; // +" " + to_string(token.second);
 	}
-
+*/
     token_t operator+(const token_t& a, const token_t& b) { 
         switch (a.second) { //switch through all of the Joy03 numeric types for the first arguement
         case joy::joy_t::char_t: {

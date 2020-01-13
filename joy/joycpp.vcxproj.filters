@@ -39,6 +39,9 @@
     <ClCompile Include="parse_joy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="joy_to_string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="joy_types.h">
@@ -72,6 +75,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="parse_joy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="joy_to_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="joy_primitives_minimal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="joy_error_messages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="joy_primitives_performance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
