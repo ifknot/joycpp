@@ -138,8 +138,19 @@ namespace joy {
     }
 
     inline bool jquote(const token_t& token) {
-        // FIX: when able to differentiate quote_t at parsing
-        return token.second == joy_t::list_t;
+        return token.second == joy_t::quote_t;
+    }
+
+    inline bool jundef(const token_t& token) {
+        return token.second == joy_t::undef_t;
+    }
+
+    inline bool jcmd(const token_t& token) {
+        return token.second == joy_t::cmd_t;
+    }
+
+    inline bool jstack(const token_t& token) {
+        return jlist(token) || jquote(token);
     }
 
     inline bool jsequence(const token_t& token) {

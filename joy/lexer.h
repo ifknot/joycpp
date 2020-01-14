@@ -14,6 +14,7 @@
 #include "error_messages.h"
 #include "joy_utils.h"
 
+#include "joy_primitives_minimal.h"
 
 namespace joy {
 
@@ -30,9 +31,14 @@ namespace joy {
 	protected:
 
 		/**
-		* main interactive stack
+		* root stack
 		*/
-		joy_stack& s;	
+		joy_stack& root_stack;	
+
+		/**
+		* root type
+		*/
+		joy_t root_type{ joy_t::quote_t };
 
 		/**
 		* try to map token to a regular grammar C++ lamda implementation of a regular grammar Joy operator
@@ -102,73 +108,73 @@ namespace joy {
 		*/
 		dictionary_t regular_translation { 
 		//non-standard
-		{"?", [&]() { if (has({joy_t::list_t}, s)) { helpdetail(std::any_cast<joy_stack&>(s.top().first)); } }},
+		{"?", [&]() { if (has({joy_t::list_t}, root_stack)) { helpdetail(std::any_cast<joy_stack&>(root_stack.top().first)); } }},
 		//stack commands
-		{".s", [&]() { print_stack(s); }},
-		{".", [&]() { if (has({joy_t::any_t}, s)) { print_top(s); } }},
-		{"newstack", [&]() { s.newstack(); }},
-		{"stack", [&]() { s.stack(); }},
-		{"unstack", [&]() { if (has({joy_t::quote_t}, s)) { s.unstack(); } }},
-		{"dup", [&]() { if (has({joy_t::any_t}, s)) { s.dup(); } }},
-		{"dupd", [&]() { if (has({joy_t::any_t, joy_t::any_t}, s)) { s.dupd(); } }},
-		{"pop", [&]() { if (has({joy_t::any_t}, s)) { s.pop(); } }},
-		{"popd", [&]() { if (has({joy_t::any_t, joy_t::any_t}, s)) { s.popd(); } }},
-		{"pop2", [&]() { if (has({joy_t::any_t, joy_t::any_t}, s)) { s.pop2(); } }},
-		{"unit", [&]() { if (has({joy_t::any_t}, s)) { s.unit(); } }},
-		{"swap", [&]() { if (has({joy_t::any_t, joy_t::any_t}, s)) { s.swap(); } }},
-		{"swapd", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, s)) { s.swapd(); } }},
-		{"rotate", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, s)) { s.rotate(); } }},
-		{"rollup", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, s)) { s.rollup(); } }},
-		{"rolldown", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, s)) { s.rolldown(); } }},
+		{".s", [&]() { print_stack(root_stack); }},
+		{".", [&]() { if (has({joy_t::any_t}, root_stack)) { print_top(root_stack); } }},
+		{"newstack", [&]() { root_stack.newstack(); }},
+		{"stack", [&]() { root_stack.stack(); }},
+		{"unstack", [&]() { if (has({joy_t::quote_t}, root_stack)) { root_stack.unstack(); } }},
+		{"dup", [&]() { if (has({joy_t::any_t}, root_stack)) { root_stack.dup(); } }},
+		{"dupd", [&]() { if (has({joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.dupd(); } }},
+		{"pop", [&]() { if (has({joy_t::any_t}, root_stack)) { root_stack.pop(); } }},
+		{"popd", [&]() { if (has({joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.popd(); } }},
+		{"pop2", [&]() { if (has({joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.pop2(); } }},
+		{"unit", [&]() { if (has({joy_t::any_t}, root_stack)) { root_stack.unit(); } }},
+		{"swap", [&]() { if (has({joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.swap(); } }},
+		{"swapd", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.swapd(); } }},
+		{"rotate", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.rotate(); } }},
+		{"rollup", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.rollup(); } }},
+		{"rolldown", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.rolldown(); } }},
 		//char
 		{"ord", [&]() {
-			if (has({joy_t::char_t}, s)) {
-				auto c = std::any_cast<char>(s.top().first);
-				s.push(make_token(static_cast<int>(c), joy_t::int_t));
-				s.popd();
+			if (has({joy_t::char_t}, root_stack)) {
+				auto c = std::any_cast<char>(root_stack.top().first);
+				root_stack.push(make_token(static_cast<int>(c), joy_t::int_t));
+				root_stack.popd();
 			}
 		}},
 		{"chr", [&]() {
-			if (has({joy_t::int_t}, s)) { 
-				auto c = static_cast<char>(std::any_cast<int>(s.top().first));
-				s.push(make_token(c, joy_t::char_t));
-				s.popd();
+			if (has({joy_t::int_t}, root_stack)) { 
+				auto c = static_cast<char>(std::any_cast<int>(root_stack.top().first));
+				root_stack.push(make_token(c, joy_t::char_t));
+				root_stack.popd();
 			}
 		}},
 		{"char", [&]() {
-			if (has({joy_t::any_t}, s)) {
-				s.push(make_token((s.top().second == joy_t::char_t) ? true : false, joy_t::bool_t));
+			if (has({joy_t::any_t}, root_stack)) {
+				root_stack.push(make_token((root_stack.top().second == joy_t::char_t) ? true : false, joy_t::bool_t));
 			}
 		}},
 		//math
 		{"+", [&]() {
-			if (has({joy_t::numeric_t, joy_t::numeric_t}, s)) {
-				s.sat(1) = (s.sat(1) + s.top());
-				s.pop();
+			if (has({joy_t::numeric_t, joy_t::numeric_t}, root_stack)) {
+				root_stack.sat(1) = (root_stack.sat(1) + root_stack.top());
+				root_stack.pop();
 			}
 		}},
 		{"-", [&]() {
-			if (has({joy_t::numeric_t, joy_t::numeric_t}, s)) {
-				s.sat(1) = (s.sat(1) - s.top());
-				s.pop();
+			if (has({joy_t::numeric_t, joy_t::numeric_t}, root_stack)) {
+				root_stack.sat(1) = (root_stack.sat(1) - root_stack.top());
+				root_stack.pop();
 			}
 		}},
 		{"*", [&]() {
-			if (has({joy_t::numeric_t, joy_t::numeric_t}, s)) {
-				s.sat(1) = (s.sat(1) * s.top());
-				s.pop();
+			if (has({joy_t::numeric_t, joy_t::numeric_t}, root_stack)) {
+				root_stack.sat(1) = (root_stack.sat(1) * root_stack.top());
+				root_stack.pop();
 			}
 		}},
 		{"/", [&]() {
-			if (has({joy_t::numeric_t, joy_t::numeric_t}, s)) {
-				s.sat(1) = (s.sat(1) / s.top());
-				s.pop();
+			if (has({joy_t::numeric_t, joy_t::numeric_t}, root_stack)) {
+				root_stack.sat(1) = (root_stack.sat(1) / root_stack.top());
+				root_stack.pop();
 			}
 		}},
 		//aggregates
 		// TODO:
 		{"size", [&]() { 
-			if (has({joy_t::aggregate_t}, s)) {
+			if (has({joy_t::aggregate_t}, root_stack)) {
 				//s.push(size(s.top()));
 			}
 		}},

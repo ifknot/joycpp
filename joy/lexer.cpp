@@ -4,7 +4,7 @@ namespace joy {
 
 	lexer::lexer(joy_stack& stack, io_device& io, std::string path_to_manual) :
 		tokenizer(io),
-		s(stack)
+		root_stack(stack)
 	{
 		load_manual(path_to_manual);
 	}
@@ -42,16 +42,11 @@ namespace joy {
 				case joy::joy_t::int_t:
 				case joy::joy_t::char_t:
 				case joy::joy_t::double_t:
+				case joy::joy_t::quote_t:
 				case joy::joy_t::list_t:
 				case joy::joy_t::set_t:
 				case joy::joy_t::string_t:
 					if (stack.sat(i).second != t) {
-						error(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
-						return false;
-					}
-					break;
-				case joy::joy_t::quote_t: // TODO: implement conversion list to quote if contains a cmd_t 
-					if (stack.sat(i).second != joy_t::list_t) {
 						error(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
 						return false;
 					}
@@ -134,7 +129,7 @@ namespace joy {
 
 	void lexer::print_stack(const joy_stack& stack) {
 		io.colour(GREEN);
-		std::string dump{ ">" + std::to_string(s.size()) + "<\n"};
+		std::string dump{ ">" + std::to_string(root_stack.size()) + "<\n"};
 		for (size_t i{ 0 }; i < stack.size(); ++i) {
 			const auto& t = stack.sat(i);
 			dump += to_string(t) + "\n";

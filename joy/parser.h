@@ -11,6 +11,8 @@
 
 #include "lexer.h"
 
+// [ [ 1 2 3 ] [ 4 5 6 ] ] [ [ dup dup * * ] map ] map
+
 namespace joy {
 
 	class parser : public lexer {
@@ -55,7 +57,7 @@ namespace joy {
 		/**
 		* recursively descend into nested lists to add token
 		*/
-		void nest_token(token_t& token, joy_stack& stack, size_t depth);
+		void nest_token(token_t& token, joy_stack& stack, joy_t& type, size_t depth);
 
 		/**
 		* error state - unwind the state stack by depth
@@ -105,7 +107,7 @@ namespace joy {
 		dictionary_t special_translation {
 		{"[", [&]() { 
 			state_stack.push(state_t::list);
-			nest_list(s, list_depth);
+			nest_list(root_stack, list_depth);
 			++list_depth;
 		}},
 		{"]", [&]() { 
@@ -127,11 +129,11 @@ namespace joy {
 		*/
 		dictionary_t context_free_translation {
 		// combinators
-		{"map", [&]() { if (has({joy_t::quote_t, joy_t::aggregate_t}, s)) { s.push(map(s)); } }},
-		{"reverse", [&]() { if (has({joy_t::aggregate_t}, s)) { reverse(s); } }},
-		{"step", [&]() { if (has({joy_t::quote_t, joy_t::aggregate_t}, s)) { parse(step(s)); } }},
-		{"dip", [&]() {if (has({joy_t::quote_t, joy_t::any_t}, s)) { dip(s); }}},
-		{"i", [&]() { if (has({joy_t::quote_t}, s)) { i(s); } }}
+		{"map", [&]() { if (has({joy_t::quote_t, joy_t::aggregate_t}, root_stack)) { root_stack.push(map(root_stack)); } }},
+		{"reverse", [&]() { if (has({joy_t::aggregate_t}, root_stack)) { reverse(root_stack); } }},
+		{"step", [&]() { if (has({joy_t::quote_t, joy_t::aggregate_t}, root_stack)) { parse(step(root_stack)); } }},
+		{"dip", [&]() {if (has({joy_t::quote_t, joy_t::any_t}, root_stack)) { dip(root_stack); }}},
+		{"i", [&]() { if (has({joy_t::quote_t}, root_stack)) { i(root_stack); } }}
 		};
 
 	};

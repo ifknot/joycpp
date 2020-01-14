@@ -12,11 +12,7 @@ namespace joy {
 
 	void parser::parse(std::string line) {
 		auto tokens = tokenizer::tokenize(line);
-		for (auto& token : tokens) {
-			if (!parse(token)) {
-				break;
-			}
-		}
+		parse(tokens);
 	}
 
 	void parser::parse(joy_stack& stack) {
@@ -38,25 +34,28 @@ namespace joy {
 	}
 
 	bool parser::parse(token_t& token) {
+		if (jundef(token)) {
+			if (try_special(token)) {
+				return true;
+			}
+			if (is_parsable(token) || is_lexable(token)) {
+				token.second = joy_t::cmd_t;
+			}
+			else {
+				unwind();
+				return lexer::no_conversion(token);
+			}
+		}
 		switch (state_stack.top()) {
 		case joy::state_t::parse:
-			if (token.second == joy_t::undef_t) {
+			if (jcmd(token)) {
 				return try_special(token) || try_context_free(token) || lexer::lex(token);
 			} 
-			s.push(token);
+			root_stack.push(token);
 			return true;
 		case joy::state_t::list:
 		case joy::state_t::quote:
-			if (token.second == joy_t::undef_t) {
-				if (try_special(token)) {
-					return true;
-				}
-				if (!is_parsable(token) && !is_lexable(token)) {
-					unwind();
-					return lexer::no_conversion(token);
-				}
-			}
-			nest_token(token, s, list_depth);
+			nest_token(token, root_stack, root_type, list_depth);
 			return true;
 		case joy::state_t::set:
 			// TODO:
@@ -77,7 +76,6 @@ namespace joy {
 	}
 
 	bool parser::try_special(token_t& token) {
-		assert(token.second == joy_t::undef_t);
 		auto it = special_translation.find(std::any_cast<std::string>(token.first));
 		if (it != special_translation.end()) {
 			(it->second)();
@@ -87,7 +85,6 @@ namespace joy {
 	}
 
 	bool parser::try_context_free(token_t& token) {
-		assert(token.second == joy_t::undef_t);
 		auto it = context_free_translation.find(std::any_cast<std::string>(token.first));
 		if (it != context_free_translation.end()) {
 			(it->second)();
@@ -98,21 +95,26 @@ namespace joy {
 
 	void parser::nest_list(joy_stack& stack, size_t depth) {
 		if (depth == 0) {
-			stack.emplace_back(joy_stack{}, joy_t::list_t);
+			stack.emplace_back(joy_stack{}, joy_t::list_t); //default to a list type...
 		}
 		else {
-			assert(s.top().second == joy_t::list_t);
+			// FIX: use tsequence
+			assert((root_stack.top().second == joy_t::list_t) || (root_stack.top().second == joy_t::quote_t));
 			nest_list(std::any_cast<joy_stack&>(stack.top().first), depth - 1);
 		}
 	}
 
-	void parser::nest_token(token_t& token, joy_stack& stack, size_t depth) {
+	void parser::nest_token(token_t& token, joy_stack& stack, joy_t& type, size_t depth) {
 		if (depth == 0) {
 			stack.push(token);
+			if (token.second == joy_t::cmd_t) {
+				type = joy_t::quote_t; //...unless a joy command is added
+			}
 		}
 		else {
-			assert(stack.top().second == joy_t::list_t);
-			nest_token(token, std::any_cast<joy_stack&>(stack.top().first), depth - 1);
+			// FIX: use tsequence
+			assert((root_stack.top().second == joy_t::list_t) || (root_stack.top().second == joy_t::quote_t));
+			nest_token(token, std::any_cast<joy_stack&>(stack.top().first), stack.top().second, depth - 1);
 		}
 	}
 
@@ -148,8 +150,8 @@ namespace joy {
 		parse(step(stack));
 		joy_stack S;
 		while (size--) {
-			S.push(s.top());
-			s.pop();
+			S.push(root_stack.top());
+			root_stack.pop();
 		}
 		std::reverse(S.begin(), S.end()); 
 		return make_token(S, type);
@@ -157,8 +159,8 @@ namespace joy {
 
 	void parser::dip(joy_stack& stack) {
 		auto P = std::any_cast<joy_stack&>(stack.top().first);
-		const auto X = s.sat(1);
-		s.pop2();
+		const auto X = root_stack.sat(1);
+		root_stack.pop2();
 		parse(P);
 		stack.push(X);
 	}
