@@ -4,15 +4,24 @@ namespace joy {
 
 	tokenizer::tokenizer(io_device& io) : io(io) {}
 
-	token_list_t tokenizer::tokenize(std::string line) {
-		token_list_t tokens;
+	joy_stack tokenizer::tokenize(std::string line) {
+		joy_stack tokens;
+		trim(line); //trim leading spaces and any single line comments
+		if (line.empty()) { //ignore empty line 
+			return tokens;
+		}
 		tokens.push_back(make_token(line, joy_t::undef_t)); //entire line as a single undef token
-		tokens = split_quotes(tokens); //split out all the open-close quote sections into string tokens 
+		tokens = split_strings(tokens); //split out all the open-close quote sections into string_t tokens 
 		tokens = split_whitespace(tokens); //split remaining undef tokens up into sub tokens by white space
 		//tokenize any simple types in the fully split list
-		// FIX: unable to enter a space character
 		for (auto& [pattern, type] : tokens) {
 			auto match = std::any_cast<std::string>(pattern);
+			if (match == "*)") {
+				if (!commenting) {
+					run_error(XNOOPENSIGIL, "*)");
+					return joy_stack{};
+				}
+			}
 			if (type == joy_t::string_t) { //convert std::string into a joy_stack of char tokens
 				joy_stack s;
 				for (auto c : match) {
@@ -20,22 +29,52 @@ namespace joy {
 				}
 				pattern = s;
 			}
-			if (is_joy_bool(match)) {
+			if (jlogical(match)) {
 				pattern = (match == "true") ? true : false;
 				type = joy_t::bool_t;
 				continue;
 			}
-			if (is_joy_char(match)) {
+			if (jchar_space(match)) {
+				pattern = ' ';
+				type = joy_t::char_t;
+				continue;
+			}
+			/* FIX: this breaks chr ord . and .s
+			if (jchar_escape(match)) {
+				switch (match[3]) {
+				case 'n':
+					pattern = '\n';
+					break;
+				case 't':
+					pattern = '\t';
+					break;
+				case 'b':
+					pattern = '\b';
+					break;
+				case 'r':
+					pattern = '\r';
+					break;
+				case 'f':
+					pattern = '\f';
+					break;
+				default:
+					break;
+				}
+				type = joy_t::char_t;
+				continue;
+			}
+			*/
+			if (jchar(match)) {
 				pattern = match[1];
 				type = joy_t::char_t;
 				continue;
 			}
-			if (is_joy_int(match)) {
+			if (jinteger(match)) {
 				pattern = stoi(match);
 				type = joy_t::int_t;
 				continue;
 			}
-			if (is_joy_double(match)) {
+			if (jdouble(match)) {
 				pattern = stod(match);
 				type = joy_t::double_t;
 				continue;
@@ -44,15 +83,21 @@ namespace joy {
 		return tokens;
 	}
 
-	token_list_t tokenizer::split_quotes(token_list_t& tokens) {
-		token_list_t result;
+	void tokenizer::run_error(size_t message, std::string name) {
+		io.colour(RED);
+		io << (joy_error_messages[1] + joy_error_messages[message] + joy_error_messages[0] + name);
+		io.colour(BOLDWHITE);
+	}
+
+	joy_stack tokenizer::split_strings(joy_stack& tokens) {
+		joy_stack result;
 		for (const auto& token : tokens) {  //examine all the tokens
-			rec_sigil_split(token, result, '\"', '\"'); //recursively find and split out open-close quotes into tokens
+			rec_sigil_split(token, result, '\"', '\"', joy_t::string_t); //recursively find and split out open-close quotes into tokens
 		}
 		return result;
 	}
 
-	void tokenizer::rec_sigil_split(token_t token, token_list_t& tokens, char open_sigil, char close_sigil) {
+	void tokenizer::rec_sigil_split(token_t token, joy_stack& tokens, char open_sigil, char close_sigil, joy_t sigil_type) {
 		if (token.second == joy_t::undef_t) {
 			auto lexeme = std::any_cast<std::string>(token.first);
 			auto i = lexeme.find(open_sigil);
@@ -61,22 +106,22 @@ namespace joy {
 				if (j < lexeme.size()) { //found a closing sigil
 					//split the token up into first sigil enclosed section (s) and any undefs (a) before (s) and recurse on any undefs (b) after (s)
 					if ((i == 0) && (j == lexeme.size() - 1)) { // "s"
-						tokens.push_back(make_token(lexeme.substr(i + 1, j - i - 1), joy_t::string_t));
+						tokens.push_back(make_token(lexeme.substr(i + 1, j - i - 1), sigil_type));
 					}
 					if ((i == 0) && (j < lexeme.size() - 1)) { // "s" b
-						tokens.push_back(make_token(lexeme.substr(1, j - i - 1), joy_t::string_t));
+						tokens.push_back(make_token(lexeme.substr(1, j - i - 1), sigil_type));
 						//recursively examine the b section after the closing sigil
-						rec_sigil_split(make_token(lexeme.substr(j + 1, lexeme.size() - j + 1), joy_t::undef_t), tokens, '\"', '\"');
+						rec_sigil_split(make_token(lexeme.substr(j + 1, lexeme.size() - j + 1), joy_t::undef_t), tokens, open_sigil, close_sigil, sigil_type);
 					}
 					if ((i > 0) && (j == lexeme.size() - 1)) { // a "s"
 						tokens.push_back(make_token(lexeme.substr(0, i - 1), joy_t::undef_t));
-						tokens.push_back(make_token(lexeme.substr(i + 1, j - i - 1), joy_t::string_t));
+						tokens.push_back(make_token(lexeme.substr(i + 1, j - i - 1), sigil_type));
 					}
 					if ((i > 0) && (j < lexeme.size() - 1)) { // a "s" b
 						tokens.push_back(make_token(lexeme.substr(0, i - 1), joy_t::undef_t));
-						tokens.push_back(make_token(lexeme.substr(i + 1, j - i - 1), joy_t::string_t));
+						tokens.push_back(make_token(lexeme.substr(i + 1, j - i - 1), sigil_type));
 						//recursively examine the b section after the closing sigil
-						rec_sigil_split(make_token(lexeme.substr(j + 1, lexeme.size() - j + 1), joy_t::undef_t), tokens, '\"', '\"');
+						rec_sigil_split(make_token(lexeme.substr(j + 1, lexeme.size() - j + 1), joy_t::undef_t), tokens, open_sigil, close_sigil, sigil_type);
 					}
 				}
 				else { //no closing sigil push unmodified token
@@ -92,8 +137,8 @@ namespace joy {
 		}
 	}
 
-	token_list_t tokenizer::split_whitespace(token_list_t& tokens) {
-		token_list_t result;
+	joy_stack tokenizer::split_whitespace(joy_stack& tokens) {
+		joy_stack result;
 		for (const auto& t : tokens) { //examine all the tokens
 			if (t.second == joy_t::undef_t) { //check only undef tokens 
 				std::stringstream ss(std::any_cast<std::string>(t.first));
@@ -107,6 +152,11 @@ namespace joy {
 			}
 		}
 		return result;
+	}
+
+	void tokenizer::trim(std::string& line) {
+		line = std::regex_replace(line, std::regex("^ +"), "");
+		line = line.substr(0, line.find_first_of('#'));
 	}
 
 }

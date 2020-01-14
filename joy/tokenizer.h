@@ -5,10 +5,14 @@
 
 #include <string>
 #include <sstream>
+#include <regex>
 
 #include "io_device.h"
 #include "joy_types.h"
-#include "joy_utils.h"
+#include "joy_primitives_minimal.h"
+#include "joy_stack.h"
+#include "joy_error_numbers.h"
+#include "joy_error_messages.h"
 
 namespace joy {
 
@@ -19,30 +23,37 @@ namespace joy {
 	
 		tokenizer(io_device& io);
 
-		token_list_t tokenize(std::string line);
+		joy_stack tokenize(std::string line);
 
 	protected:
 
 		io_device& io;
 
+		void run_error(size_t message, std::string name);
+
 	private:
+
+		bool commenting{ false };
 
 		/**
 		* split out all the open-close quote sections into string tokens 
 		*/
-		token_list_t split_quotes(token_list_t& tokens);
+		static joy_stack split_strings(joy_stack& tokens);
 
 		/**
 		* recursively find and split out sigil enclosed sections into tokens	
 		*/
-		void rec_sigil_split(token_t token, token_list_t& tokens, char open_sigil, char close_sigil);
+		static void rec_sigil_split(token_t token, joy_stack& tokens, char open_sigil, char close_sigil, joy_t sigil_type);
 
 		/**
 		* split out all the white space separated sections into string tokens 
 		*/
-		token_list_t split_whitespace(token_list_t& tokens);
+		static joy_stack split_whitespace(joy_stack& tokens);
 
-
+		/**
+		*  removing any leading spaces and/or trailing single line comment
+		*/
+		static void trim(std::string& line);
 	};
 
 }

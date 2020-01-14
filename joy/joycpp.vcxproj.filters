@@ -89,6 +89,9 @@
     <ClInclude Include="joy_primitives_performance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="joy_error_numbers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="joy03.man">

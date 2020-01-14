@@ -2,12 +2,12 @@
 
 namespace joy {
 
-	token_list_t::const_reference joy_stack::sat(size_t i) const {
+	joy_stack::const_reference joy_stack::sat(size_t i) const {
 		assert(i < size());
 		return at(size() - 1 - i);
 	}
 
-	token_list_t::reference joy_stack::sat(size_t i) {
+	joy_stack::reference joy_stack::sat(size_t i) {
 		assert(i < size());
 		return at(size() - 1 - i);
 	}

@@ -36,7 +36,8 @@ namespace joy {
         undef_t,        // an undefined lexeme
         any_t,          // any joy type
         numeric_t,      // int_t, char_t double_t
-        aggregate_t,    // quote, list, set string
+        sequence_t,     // quote, list, string
+        aggregate_t,    // quote, list, string & set
         cmd_t,          // recognised joy command  
         //aggregate types NB all implemented as a joy_stack
         quote_t,        // aggregate of any joy type and any joy command
@@ -57,7 +58,6 @@ namespace joy {
     */
     typedef std::any pattern_t;
     typedef std::pair<pattern_t, joy_t> token_t;
-    typedef std::vector<token_t> token_list_t;
     typedef std::function<void()> function_t;
     typedef std::map<std::string, function_t> dictionary_t;
 

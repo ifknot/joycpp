@@ -25,18 +25,14 @@
 #include <string>
 #include <map>
 
-#include "error_numbers.h"
+#include "joy_error_numbers.h"
 
 namespace joy {
 
-	static const std::string ERR = "run time error";
-
-	static std::map<error_number_t, std::string> joy_error_messages = {
-		{DAGGNOOPEN, "aggregate error"},
-		{DFILENOTFOUND, "file not found"},
-		{DLESSARGS, "insufficent arguments"},
-		{DWRONGTYPE, "type mismatch"},
-		{DNOCONVERSION, "no conversion"}//,
+	static std::map<size_t, std::string> joy_error_messages = {
+		{XNOOPENSIGIL, "opening sigil "},
+		{XJOYERROR, "run time error: "},
+		{0, "needed for "}
 		/*
 		{D, "one parameter" },
 		{D,"two parameters" },

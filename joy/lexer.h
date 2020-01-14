@@ -12,6 +12,7 @@
 #include "tokenizer.h"
 #include "joy_stack.h"
 #include "error_messages.h"
+#include "joy_utils.h"
 
 
 namespace joy {

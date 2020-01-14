@@ -17,18 +17,28 @@
 *			   [a] [f]│infra    →                  [│a f]
 * 
 *	2. joy type enquiry take a token X as an argument and return a boolean (extended minimal):
-*		integer		tests whether X is an integer.
-*		char		tests whether X is a character.
-*		logical		tests whether X is a logical.
-*		set			tests whether X is a set.
-*		string		tests whether X is a string.
-*		list		tests whether X is a list.
-*		leaf		tests whether X is -not- a list.
-*		float		tests whether X is a float.
+*		
+*		jlogical	tests whether X is a logical
+*       jchar	    tests whether X is a character
+*       jdouble		tests whether X is a double
+*		jinteger	tests whether X is an integer
+*		jset		tests whether X is a set
+*		jstring		tests whether X is a string
+*		jlist		tests whether X is a list
+*		jleaf		tests whether X is -not- a list
+* (extended)
+*       jnumeric    tests whether X is int/char/double
+*       jsequence   tests whether X is quote/list/string
+*       jaggregate  tests whether X is quote/list/string/set
 *
 * NB argument conformability checking is not done at the primitive level but, in preference, a parser class role
 */
 #pragma once
+
+#include <string>
+#include <stdexcept>
+
+#include "joy_types.h"
 
 namespace joy {
 
@@ -51,21 +61,98 @@ namespace joy {
 	*/
 	//void uncons(joy_stack& S);
 
-	
-	//bool integer
+    //string joy primitive matching:
 
-	//bool char
+    inline bool jlogical(const std::string& match) {
+        return ((match == "true") || (match == "false"));
+    }
 
-	//bool logical
+    inline bool jchar(const std::string& match) {
+        return ((match.size() == 2) && (match[0] == '\''));
+    }
 
-	//bool set
+    //char special cases:
 
-	//bool string
+    inline bool jchar_space(const std::string& match) {
+        return ((match.size() == 1) && (match[0] == '\''));
+    }
 
-	//bool list
+    inline bool jchar_escape(const std::string& match) {
+        return ((match.size() == 3) && (match[0] == '\'') && (match[1] == '\\'));
+    }
 
-	//bool leaf
+    inline bool jdouble(const std::string& match) {
+        try {
+            auto x = std::stod(match);
+            return true;
+        }
+        catch (std::invalid_argument) {
+            return false;
+        }
+        catch (std::out_of_range) {
+            return false;
+        }
+    }
 
-	//bool float
+    inline bool jinteger(const std::string& match) {
+        if (jdouble(match)) {
+            return match.find_first_not_of("+-0123456789") == std::string::npos;
+        }
+        else {
+            return false;
+        }
+    }
+
+    //token joy type matching
+
+    inline bool jlogical(const token_t& token) {
+        return token.second == joy_t::bool_t;
+    }
+
+    inline bool jchar(const token_t& token) {
+        return token.second == joy_t::char_t;
+    }
+
+    inline bool jdouble(const token_t& token) {
+        return token.second == joy_t::double_t;
+    }
+
+    inline bool jinteger(const token_t& token) {
+        return token.second == joy_t::int_t;
+    }
+
+    inline bool jnumeric(const token_t& token) {
+        return jchar(token) || jdouble(token) || jinteger(token);
+    }
+
+    inline bool jset(const token_t& token) {
+        return token.second == joy_t::set_t;
+    }
+
+    inline bool jstring(const token_t& token) {
+        return token.second == joy_t::string_t;
+    }
+
+    inline bool jlist(const token_t& token) {
+        return token.second == joy_t::list_t;
+    }
+
+    inline bool jquote(const token_t& token) {
+        // FIX: when able to differentiate quote_t at parsing
+        return token.second == joy_t::list_t;
+    }
+
+    inline bool jsequence(const token_t& token) {
+        return jlist(token) || jquote(token) || jstring(token);
+    }
+
+    inline bool jaggregate(const token_t& token) {
+        return jsequence(token) || jset(token);
+    }
+
+    inline bool jleaf(const token_t& token) {
+        return !jaggregate(token);
+    }
+
 
 }

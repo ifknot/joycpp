@@ -41,7 +41,7 @@ namespace joy {
 	* Also get the vector member types
 	* Maintain the std::stack ADT idioms
 	*/
-	struct joy_stack : public token_list_t {
+	struct joy_stack : public  std::vector<token_t> {
 
 		using vector::vector; // get all the vector constructors for free
 
