@@ -112,7 +112,8 @@ namespace joy {
 		}},
 		{"]", [&]() { 
 			if (list_depth == 0) {
-				error(DAGGNOOPEN, "no matching open angle bracket [");
+				//error(DAGGNOOPEN, "no matching open angle bracket [");
+				run_error(XAGGSIGIL, "]");
 			}
 			else { 
 				--list_depth;

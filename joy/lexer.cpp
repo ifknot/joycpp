@@ -27,12 +27,6 @@ namespace joy {
 		return it != regular_translation.end();
 	}
 
-	void lexer::error(error_number_t e, std::string msg) {
-		io.colour(RED);
-		io << (ERR + std::to_string(e) + " : " + error_messages[e] + " " + msg);
-		io.colour(BOLDWHITE);
-	}
-
 	bool lexer::has(const std::initializer_list<joy_t>& argt, const joy_stack& stack) {
 		if (stack.size() >= argt.size()) {
 			size_t i{ 0 };
@@ -47,8 +41,7 @@ namespace joy {
 				case joy::joy_t::set_t:
 				case joy::joy_t::string_t:
 					if (stack.sat(i).second != t) {
-						error(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
-						return false;
+						return run_error(XTYPEMISMATCH, "arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
 					}
 					break;
 				case joy::joy_t::numeric_t:
@@ -56,8 +49,7 @@ namespace joy {
 						break;
 					}
 					else {
-						error(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
-						return false;
+						return run_error(XTYPEMISMATCH, "arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
 					}
 					return false;
 				case joy::joy_t::aggregate_t:
@@ -65,15 +57,14 @@ namespace joy {
 						break;
 					}
 					else {
-						error(DWRONGTYPE, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
-						return false;
+						return run_error(XTYPEMISMATCH, "arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
 					}
 					return false;
 				case joy::joy_t::any_t:
 					break;
 				case joy::joy_t::undef_t:
 				default:
-					error(DNOCONVERSION, "stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
+					run_error(XNOCONVERSION, "argument conformability checking");
 					return false;
 				}
 				++i;
@@ -81,8 +72,7 @@ namespace joy {
 			return true;
 		}
 		else {
-			error(DLESSARGS, "expected: " + std::to_string(argt.size()) + " found: " + std::to_string(stack.size()));
-			return false;
+			return run_error(XARGC, "expected: " + std::to_string(argt.size()) + " found: " + std::to_string(stack.size()));
 		}
 	}
 
@@ -96,8 +86,7 @@ namespace joy {
 	}
 
 	bool lexer::no_conversion(token_t& token) {
-		error(DNOCONVERSION, ">" + to_string(token) + "< " + to_string(token.second) + " is not recognised");
-		return false;
+		return run_error(XNOCONVERSION, "command lookup >" + to_string(token) + "< " + to_string(token.second) + " is not recognised");
 	}
 
 	//helper member functions
@@ -105,7 +94,7 @@ namespace joy {
 	void lexer::load_manual(std::string& path_to_manual) {
 		std::ifstream f(path_to_manual);
 		if (!f) {
-			error(DFILENOTFOUND, "Joy manual " + path_to_manual);
+			run_error(XNOFILE, "load_manual " + path_to_manual + " not found");
 		}
 		else {
 			std::string line, cmd, msg;

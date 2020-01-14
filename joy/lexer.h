@@ -11,9 +11,6 @@
 
 #include "tokenizer.h"
 #include "joy_stack.h"
-#include "error_messages.h"
-#include "joy_utils.h"
-
 #include "joy_primitives_minimal.h"
 
 namespace joy {
@@ -49,11 +46,6 @@ namespace joy {
 		* test if the token is Joy03 regular grammar
 		*/
 		bool is_lexable(token_t& token);
-
-		/**
-		* convert error to message send to output stream along with any additional message 
-		*/
-		void error(error_number_t e, std::string msg = "");
 
 		/**
 		* test stack has the requirments of the initializer list

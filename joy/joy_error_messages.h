@@ -30,6 +30,11 @@
 namespace joy {
 
 	static std::map<size_t, std::string> joy_error_messages = {
+		{XNOFILE, "valid file "},
+		{XAGGSIGIL, "opening bracket "},
+		{XARGC, "more arguements "},
+		{XTYPEMISMATCH, "correct type "},
+		{XNOCONVERSION, "Joy03 "},
 		{XNOOPENSIGIL, "opening sigil "},
 		{XJOYERROR, "run time error: "},
 		{0, "needed for "}

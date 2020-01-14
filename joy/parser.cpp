@@ -120,8 +120,9 @@ namespace joy {
 	}
 
 	void parser::unwind() {
-		while (list_depth--) {
+		while (list_depth) {
 			state_stack.pop();
+			--list_depth;
 		}
 	}
 

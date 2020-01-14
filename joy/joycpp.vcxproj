@@ -158,7 +158,6 @@
     <ClCompile Include="joy_primitives_minimal.cpp" />
     <ClCompile Include="joy_stack.cpp" />
     <ClCompile Include="joy_to_string.cpp" />
-    <ClCompile Include="joy_utils.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="parse_joy.cpp" />
@@ -166,8 +165,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="colour_codes.h" />
-    <ClInclude Include="error_messages.h" />
-    <ClInclude Include="error_numbers.h" />
     <ClInclude Include="joy_error_messages.h" />
     <ClInclude Include="joy_error_numbers.h" />
     <ClInclude Include="joy_primitives_minimal.h" />
@@ -177,7 +174,6 @@
     <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_stack.h" />
     <ClInclude Include="joy_types.h" />
-    <ClInclude Include="joy_utils.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="parse_joy.h" />
     <ClInclude Include="tokenizer.h" />

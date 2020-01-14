@@ -6,7 +6,6 @@
 
 #include "io_device.h"
 #include "parser.h"
-#include "joy_utils.h"
 #include "joy_stack.h"
 
 void run() { // exec loop

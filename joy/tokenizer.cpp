@@ -83,10 +83,11 @@ namespace joy {
 		return tokens;
 	}
 
-	void tokenizer::run_error(size_t message, std::string name) {
+	bool tokenizer::run_error(size_t message, std::string name) {
 		io.colour(RED);
 		io << (joy_error_messages[1] + joy_error_messages[message] + joy_error_messages[0] + name);
 		io.colour(BOLDWHITE);
+		return false;
 	}
 
 	joy_stack tokenizer::split_strings(joy_stack& tokens) {

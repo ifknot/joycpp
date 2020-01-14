@@ -29,7 +29,7 @@ namespace joy {
 
 		io_device& io;
 
-		void run_error(size_t message, std::string name);
+		bool run_error(size_t message, std::string name);
 
 	private:
 
