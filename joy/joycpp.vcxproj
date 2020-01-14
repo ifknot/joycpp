@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="io_device.cpp" />
     <ClCompile Include="joycpp.cpp" />
+    <ClCompile Include="joy_primitives_minimal.cpp" />
     <ClCompile Include="joy_stack.cpp" />
     <ClCompile Include="joy_to_string.cpp" />
     <ClCompile Include="joy_utils.cpp" />

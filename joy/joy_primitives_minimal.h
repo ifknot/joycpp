@@ -61,6 +61,19 @@ namespace joy {
 	*/
 	//void uncons(joy_stack& S);
 
+    /**
+    * expects 2 numeric types atop the stack or risk undefined behaviour
+    * result is always cast to match joy_t of first arguement
+    * NB there is no warning if any loss of precision
+    */
+    token_t operator+(const token_t& a, const token_t& b);
+
+    token_t operator-(const token_t& a, const token_t& b);
+
+    token_t operator*(const token_t& a, const token_t& b);
+
+    token_t operator/(const token_t& a, const token_t& b);
+
     //string joy primitive matching:
 
     inline bool jlogical(const std::string& match) {

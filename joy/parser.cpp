@@ -49,10 +49,13 @@ namespace joy {
 		switch (state_stack.top()) {
 		case joy::state_t::parse:
 			if (jcmd(token)) {
+				// FIX: special || context_free || regular
 				return try_special(token) || try_context_free(token) || lexer::lex(token);
 			} 
-			root_stack.push(token);
-			return true;
+			else {
+				root_stack.push(token);
+				return true;
+			}
 		case joy::state_t::list:
 		case joy::state_t::quote:
 			nest_token(token, root_stack, root_type, list_depth);
@@ -70,9 +73,7 @@ namespace joy {
 		if (it != context_free_translation.end()) {
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 
 	bool parser::try_special(token_t& token) {

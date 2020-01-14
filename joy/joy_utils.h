@@ -41,22 +41,27 @@ namespace joy {
     /**
     * test if the string is a recognized Joy03 boolean pattern
     */
+    /*
     inline bool is_joy_bool(const std::string& match) {
         return ((match == "true") || (match == "false"));
     }
+    */
 
     /**
     * test if the string is a recognized Joy03 character pattern
     */
+    /*
     inline bool is_joy_char(const std::string& match) {
         return ((match.size() == 2) && (match[0] == '\''));
     }
+    */
 
     /**
     * test if the string is a double pattern
     * allowed: +3.0, 3.2e23, -4.70e+9, -.2E-4, -7.6603
     * not allowed: -1 (integer), +0003 (leading zeros), 37.e88 (dot before the e)
     */
+    /*
     inline bool is_joy_double(const std::string& match) {
         try {
             auto x = std::stod(match);
@@ -69,12 +74,15 @@ namespace joy {
             return false;
         }
     }
+    */
 
+   
     /**
     * test if the string is a integer pattern
     * allowed: +1, -1, 0, 10
     * not allowed: +0003   (leading zeros)
     */
+    /*
     inline bool is_joy_int(const std::string& match) {
         if (is_joy_double(match)) {
             return match.find_first_not_of("+-0123456789") == std::string::npos;
@@ -83,18 +91,8 @@ namespace joy {
             return false;
         }
     }
-
-    /**
-    * expects 2 numeric types atop the stack or risk undefined behaviour
-    * result is always cast to match joy_t of first arguement
-    * NB there is no warning if any loss of precision
     */
-    token_t operator+(const token_t& a, const token_t& b);
 
-    token_t operator-(const token_t& a, const token_t& b);
-
-    token_t operator*(const token_t& a, const token_t& b);
-
-    token_t operator/(const token_t& a, const token_t& b);
+   
 
 }
