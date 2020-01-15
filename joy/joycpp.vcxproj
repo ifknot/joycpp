@@ -155,12 +155,13 @@
   <ItemGroup>
     <ClCompile Include="io_device.cpp" />
     <ClCompile Include="joycpp.cpp" />
-    <ClCompile Include="joy_primitives_minimal.cpp" />
+    <ClCompile Include="primitives_minimal.cpp" />
     <ClCompile Include="joy_stack.cpp" />
-    <ClCompile Include="joy_to_string.cpp" />
+    <ClCompile Include="to_string.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="parse_joy.cpp" />
+    <ClCompile Include="primitives_performance.cpp" />
     <ClCompile Include="tokenizer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="error_messages.h" />
     <ClInclude Include="error_numbers.h" />
     <ClInclude Include="primitives_minimal.h" />
+    <ClInclude Include="primitives_performance.h" />
     <ClInclude Include="to_string.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="io_device.h" />

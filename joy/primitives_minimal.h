@@ -13,7 +13,7 @@
 *    top of stack ───┐ │
 *                    ↓ ↓
 *				 [a b]│uncons   →              a [b]│
-*				  T/F │choice   →					│ T/F
+*				B T F │choice   →					│ T or F
 *			   [a] [f]│infra    →                  [│a f]
 * 
 *	2. joy type enquiry take a token X as an argument and return a boolean (extended minimal):
@@ -37,29 +37,35 @@
 
 #include <string>
 #include <stdexcept>
+#include <regex>
 
 #include "joy_types.h"
+#include "joy_stack.h"
 
 namespace joy {
 
+    /**
+    * uncons unary operators expects a non-empty aggregate. 
+    *
+    *   [f R]  uncons    =>   f  [R]
+    *
+    * uncons : A -> F R
+    * F and R are the first and the rest of non-empty aggregate A.
+    */
+    void uncons(joy_stack& S);
+
 	/**
-	* choice : B T F -> X
+    * General ternary operator: choice
+    * The choice operator expects three values on top of the stack, say B, T and F, with F on top. 
+    * The third value from the top, B, has to be a truth value. 
+    * If it is true, then the choice operator just leaves T on top of the stack, and B and F disappear. 
+    * On the other hand, if B is false, then the choice operator just leaves F on top of the stack, and B and T disappear. 
+    * (This operator is related to two combinators ifte and branch.)
+	* 
+    * choice : B T F -> X
 	* If B is true, then X = T else X = F.
 	*/
-	//void choice(joy_stack& S);
-
-	/**
-	* infra : L1 [P] -> L2
-	* Using list L1 as stack, executes P and returns a new list L2.
-	* The first element of L1 is used as the top of stack, and after execution of P the top of stack becomes the first element of L2.
-	*/
-	//void infra(joy_stack& S);
-
-	/**
-	* uncons : A -> F R
-	* F and R are the first and the rest of non-empty aggregate A.
-	*/
-	//void uncons(joy_stack& S);
+	void choice(joy_stack& S);
 
     /**
     * expects 2 numeric types atop the stack or risk undefined behaviour
@@ -95,15 +101,18 @@ namespace joy {
     }
 
     inline bool jdouble(const std::string& match) {
-        try {
-            auto x = std::stod(match);
-            return true;
-        }
-        catch (std::invalid_argument) {
-            return false;
-        }
-        catch (std::out_of_range) {
-            return false;
+        //prevent stod from parsing the joy combinator infra as infinity
+        if (std::regex_match(match, std::regex("[+-]?(?=.)(?:0|[1-9]\\d*)?(?:\.\\d*)?(?:\\d[eE][+-]?\\d+)?"))) {
+            try {
+                auto x = std::stod(match);
+                return true;
+            }
+            catch (std::invalid_argument) {
+                return false;
+            }
+            catch (std::out_of_range) {
+                return false;
+            }
         }
     }
 

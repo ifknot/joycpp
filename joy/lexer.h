@@ -63,6 +63,11 @@ namespace joy {
 	private: 
 
 		/**
+		* internal quit flag
+		*/
+		bool quit_{ false };
+
+		/**
 		* try and execute token as a regular Joy command by searching the regular expression c++ dictionary
 		* return true on succes or call no_conversion
 		*/
@@ -90,10 +95,6 @@ namespace joy {
 		* FIX: work with list not just string on top stack
 		*/
 		void helpdetail(const joy_stack& stack);
-
-		//vars
-
-		bool quit_{ false };
 
 		/**
 		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)

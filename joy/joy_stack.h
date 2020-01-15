@@ -1,8 +1,34 @@
 ﻿/**
-* Joy stack is not simply a sequence of values but also contains operators and combinators.
+* A Joy stack is not simply a sequence of values but also contains operators and combinators.
 * So, strictly speaking the stack is always a quotation and can contain all of the Joy types.
 *
-* The joycpp stack list of supported operators:
+* Stack Operators
+* For performance the general unary operators are defined for stacks containing at least one element:
+*
+*        pop     dup
+*  
+* The top element does not have to satisfy any particular condition, it can be of any_t. 
+* The pop operator removes the top element. 
+* The dup operator pushes a duplicate on top, so it replaces the one original by two copies.
+* 
+* The following binary operators are defined for stacks containing at least two elements:
+*
+*        swap    popd    popop    dupd
+*  
+* The swap operator interchanges the top two elements. 
+* The popd operator removes the second element. 
+* The pop2 operator removes the first and the second element. 
+* The dupd operator duplicates the second element.
+*
+* The following ternary operators are defined for stack stacks containing at least three elements:
+*
+*       swapd    rollup    rolldown
+*  
+* The swapd operator interchanges the second and third elements but leaves the first element in place. 
+* The rollup operator moves the third and second element into second and third position and moves the first element into third position. 
+* The rolldown operator moves the second and first element into third and second position and moves the third element into first position.
+*
+* Thus, the joy_stack class list of supported operators:
 * (Those marked "?" could implemented in Joy but for performance and convenience are implemented as joy stack memeber functions)
 *
 * supported operators ──┐

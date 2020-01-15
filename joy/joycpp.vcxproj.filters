@@ -36,10 +36,13 @@
     <ClCompile Include="parse_joy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="joy_to_string.cpp">
+    <ClCompile Include="primitives_performance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="joy_primitives_minimal.cpp">
+    <ClCompile Include="primitives_minimal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="to_string.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="to_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives_performance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

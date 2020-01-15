@@ -123,51 +123,72 @@ namespace joy {
 		}
 	}
 
-	joy_stack parser::step(joy_stack& stack) {
-		auto P = std::any_cast<joy_stack&>(stack.top().first);
-		auto X = stack.sat(1);
-		stack.pop2();
-		auto A = std::any_cast<joy_stack&>(X.first);
-		joy_stack S;
-		for (auto a : A) {
-			S.push(a);
-			for (auto p : P) {
-				S.push(p);
-			}
+	void parser::infra(joy_stack& S) {
+		auto P = std::any_cast<joy_stack>(S.top().first); // get the program
+		if (P.size()) {
+			S.pop();
+			auto M = std::any_cast<joy_stack>(S.top().first); // get the list as a stack
+			S.pop();
+			M.push(make_token(P, joy_t::quote_t)); // push the program 
+			auto T = root_stack; //temporarily discard remainder of the root stack
+			root_stack = M; // set the new root stack
+			i(root_stack); //execute the program
+			root_stack.stack(); //convert the stack to a list [N]
+			auto N = root_stack.top();
+			root_stack = T; //restore the stack
+			root_stack.push(N); //push [N] onto original stack
 		}
-		return S;
 	}
 
-	void parser::reverse(joy_stack& stack) {
-		auto& A = std::any_cast<joy_stack&>(stack.top().first);
-		std::reverse(A.begin(), A.end());
-	}
-
-	token_t parser::map(joy_stack& stack) {
-		auto size = std::any_cast<joy_stack&>(stack.sat(1).first).size(); //aggregate size
-		auto type = stack.sat(1).second; //get the return aggregate type
-		parse(step(stack));
-		joy_stack S;
+	token_t parser::map(joy_stack& S) {
+		/*
+		auto P = std::any_cast<joy_stack>(S.top().first); // get the program
+		if (P.size()) {
+			S.pop();
+			auto A = std::any_cast<joy_stack>(S.top().first); // get the aggregate
+		}
+		*/
+		
+		auto size = std::any_cast<joy_stack&>(S.sat(1).first).size(); //aggregate size
+		auto type = S.sat(1).second; //get the return aggregate type
+		step(S);
+		joy_stack M;
 		while (size--) {
-			S.push(root_stack.top());
+			M.push(root_stack.top());
 			root_stack.pop();
 		}
-		std::reverse(S.begin(), S.end()); 
-		return make_token(S, type);
+		std::reverse(M.begin(), M.end()); 
+		return make_token(M, type);
+		
 	}
 
-	void parser::dip(joy_stack& stack) {
-		auto P = std::any_cast<joy_stack&>(stack.top().first);
+	void parser::dip(joy_stack& S) {
+		auto P = std::any_cast<joy_stack&>(S.top().first);
 		const auto X = root_stack.sat(1);
 		root_stack.pop2();
 		parse(P);
-		stack.push(X);
+		S.push(X);
 	}
 
-	void parser::i(joy_stack& stack) {
-		auto P = std::any_cast<joy_stack&>(stack.top().first);
-		stack.pop();
+	void parser::i(joy_stack& S) {
+		auto P = std::any_cast<joy_stack&>(S.top().first);
+		S.pop();
 		parse(P);
+	}
+
+	void parser::step(joy_stack& S) {	
+		auto P = std::any_cast<joy_stack&>(S.top().first); //get the program
+		S.pop();
+		auto A = std::any_cast<joy_stack&>(S.top().first); //get the aggregate
+		S.pop();
+		joy_stack M; 
+		for (auto a : A) {
+			M.push(a);
+			for (auto p : P) {
+				M.push(p);
+			}
+		}
+		parse(M);
 	}
 
 }
