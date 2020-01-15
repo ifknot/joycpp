@@ -35,19 +35,19 @@ namespace joy {
 
 		bool parse(token_t& token);
 
-		bool is_parsable(token_t& token);
+		bool is_context_free(token_t& token);
 
 	private:
 
 		/**
 		* try an execute token as a state changing operator
 		*/
-		bool try_special(token_t& token);
+		bool state_change(token_t& token);
 
 		/**
 		* try to map token to a context free grammar C++ lamda implementation of a Joy operator
 		*/
-		bool try_context_free(token_t& token);
+		bool context_free(token_t& token);
 
 		/**
 		* recursively descend into nested list to add a new list
@@ -56,6 +56,7 @@ namespace joy {
 
 		/**
 		* recursively descend into nested lists to add token
+		* convert list_t to quote_t if a command is added to a list
 		*/
 		void nest_token(token_t& token, joy_stack& stack, joy_t& type, size_t depth);
 
@@ -104,7 +105,7 @@ namespace joy {
 		/**
 		* state changing operators
 		*/
-		dictionary_t special_translation {
+		dictionary_t state_change_atoms {
 		{"[", [&]() { 
 			state_stack.push(state_t::list);
 			nest_list(root_stack, list_depth);
@@ -128,13 +129,13 @@ namespace joy {
 		* 1. can not be expressed in Joy grammar
 		* 2. offer performance benefit as c++ lambda equivalent
 		*/
-		dictionary_t context_free_translation {
+		dictionary_t context_free_atoms {
 		// combinators
-		{"map", [&]() { if (has({joy_t::quote_t, joy_t::aggregate_t}, root_stack)) { root_stack.push(map(root_stack)); } }},
-		{"reverse", [&]() { if (has({joy_t::aggregate_t}, root_stack)) { reverse(root_stack); } }},
-		{"step", [&]() { if (has({joy_t::quote_t, joy_t::aggregate_t}, root_stack)) { parse(step(root_stack)); } }},
-		{"dip", [&]() {if (has({joy_t::quote_t, joy_t::any_t}, root_stack)) { dip(root_stack); }}},
-		{"i", [&]() { if (has({joy_t::quote_t}, root_stack)) { i(root_stack); } }}
+		{"map", [&]() { if (require("map", {joy_t::quote_t, joy_t::aggregate_t})) { root_stack.push(map(root_stack)); } }},
+		{"reverse", [&]() { if (require("reverse", {joy_t::aggregate_t})) { reverse(root_stack); } }},
+		{"step", [&]() { if (require("step", {joy_t::quote_t, joy_t::aggregate_t})) { parse(step(root_stack)); } }},
+		{"dip", [&]() {if (require("dip", {joy_t::quote_t, joy_t::any_t})) { dip(root_stack); }}},
+		{"i", [&]() { if (require("i", {joy_t::quote_t})) { i(root_stack); } }}
 		};
 
 	};

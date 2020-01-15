@@ -17,18 +17,18 @@ namespace joy {
 		quit_ = true;
 	}
 
-	bool lexer::lex(token_t& token) {
+	bool lexer::regular(token_t& token) {
 		return try_regular(token);
 	}
 
-	bool lexer::is_lexable(token_t& token) {
+	bool lexer::is_regular(token_t& token) {
 		assert(token.second == joy_t::undef_t);
 		auto it = regular_translation.find(std::any_cast<std::string>(token.first));
 		return it != regular_translation.end();
 	}
 
-	bool lexer::has(const std::initializer_list<joy_t>& argt, const joy_stack& stack) {
-		if (stack.size() >= argt.size()) {
+	bool lexer::require(const std::string& op, const prerequisites& argt) {
+		if (root_stack.size() >= argt.size()) {
 			size_t i{ 0 };
 			for (const auto& t : argt) { //for each of the joy types in the initializer list
 				switch (t) {
@@ -40,31 +40,31 @@ namespace joy {
 				case joy::joy_t::list_t:
 				case joy::joy_t::set_t:
 				case joy::joy_t::string_t:
-					if (stack.sat(i).second != t) {
-						return run_error(XTYPEMISMATCH, "arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
+					if (root_stack.sat(i).second != t) {
+						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
 					}
 					break;
 				case joy::joy_t::numeric_t:
-					if ((stack.sat(i).second == joy_t::int_t) || (stack.sat(i).second == joy_t::double_t) || (stack.sat(i).second == joy_t::char_t)) {
+					if (!jnumeric(root_stack.sat(i))) {
 						break;
 					}
 					else {
-						return run_error(XTYPEMISMATCH, "arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
+						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
 					}
 					return false;
 				case joy::joy_t::aggregate_t:
-					if ((stack.sat(i).second == joy_t::list_t) || (stack.sat(i).second == joy_t::quote_t) || (stack.sat(i).second == joy_t::set_t) || (stack.sat(i).second == joy_t::string_t)) {
+					if ((!jaggregate(root_stack.sat(i)))) {
 						break;
 					}
 					else {
-						return run_error(XTYPEMISMATCH, "arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(stack.sat(i).second));
+						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
 					}
 					return false;
 				case joy::joy_t::any_t:
 					break;
 				case joy::joy_t::undef_t:
 				default:
-					run_error(XNOCONVERSION, "argument conformability checking");
+					run_error(XNOCONVERSION, op + " argument conformability checking");
 					return false;
 				}
 				++i;
@@ -72,7 +72,7 @@ namespace joy {
 			return true;
 		}
 		else {
-			return run_error(XARGC, "expected: " + std::to_string(argt.size()) + " found: " + std::to_string(stack.size()));
+			return run_error(XARGC, op + " expected: " + std::to_string(argt.size()) + " found: " + std::to_string(root_stack.size()));
 		}
 	}
 
@@ -136,7 +136,7 @@ namespace joy {
 	void lexer::helpdetail(const joy_stack& stack) {
 		io.colour(YELLOW);
 		for (const auto [command, type] : stack) {
-			assert(type == joy_t::undef_t);
+			assert(type == joy_t::cmd_t);
 			auto match = std::any_cast<std::string>(command);
 			auto it = joy_manual.find(match);
 			if (it != joy_manual.end()) {

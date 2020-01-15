@@ -17,6 +17,8 @@ namespace joy {
 
 	class lexer : public tokenizer {
 
+		using prerequisites = std::initializer_list<joy_t>;
+
 	public:
 
 		lexer(joy_stack& stack, io_device& io, std::string path_to_manual);
@@ -40,17 +42,18 @@ namespace joy {
 		/**
 		* try to map token to a regular grammar C++ lamda implementation of a regular grammar Joy operator
 		*/
-		bool lex(token_t& token);
+		bool regular(token_t& token);
 
 		/**
 		* test if the token is Joy03 regular grammar
 		*/
-		bool is_lexable(token_t& token);
+		bool is_regular(token_t& token);
 
 		/**
+		* argument conformability checking
 		* test stack has the requirments of the initializer list
 		*/
-		bool has(const std::initializer_list<joy_t>& argt, const joy_stack& stack);
+		bool require(const std::string& op, const prerequisites& argt);
 
 		/**
 		* display error then return false
@@ -100,65 +103,66 @@ namespace joy {
 		*/
 		dictionary_t regular_translation { 
 		//non-standard
-		{"?", [&]() { if (has({joy_t::list_t}, root_stack)) { helpdetail(std::any_cast<joy_stack&>(root_stack.top().first)); } }},
+		{"?", [&]() { if (require("?", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(root_stack.top().first)); } }},
 		//stack commands
 		{".s", [&]() { print_stack(root_stack); }},
-		{".", [&]() { if (has({joy_t::any_t}, root_stack)) { print_top(root_stack); } }},
+		{".", [&]() { if (require(".", {joy_t::any_t})) { print_top(root_stack); } }},
 		{"newstack", [&]() { root_stack.newstack(); }},
 		{"stack", [&]() { root_stack.stack(); }},
-		{"unstack", [&]() { if (has({joy_t::quote_t}, root_stack)) { root_stack.unstack(); } }},
-		{"dup", [&]() { if (has({joy_t::any_t}, root_stack)) { root_stack.dup(); } }},
-		{"dupd", [&]() { if (has({joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.dupd(); } }},
-		{"pop", [&]() { if (has({joy_t::any_t}, root_stack)) { root_stack.pop(); } }},
-		{"popd", [&]() { if (has({joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.popd(); } }},
-		{"pop2", [&]() { if (has({joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.pop2(); } }},
-		{"unit", [&]() { if (has({joy_t::any_t}, root_stack)) { root_stack.unit(); } }},
-		{"swap", [&]() { if (has({joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.swap(); } }},
-		{"swapd", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.swapd(); } }},
-		{"rotate", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.rotate(); } }},
-		{"rollup", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.rollup(); } }},
-		{"rolldown", [&]() { if (has({joy_t::any_t, joy_t::any_t, joy_t::any_t}, root_stack)) { root_stack.rolldown(); } }},
+		//change has to use a lookup map depending on the op eg args("popd") {...}
+		{"unstack", [&]() { if (require(" ", {joy_t::quote_t})) { root_stack.unstack(); } }},
+		{"dup", [&]() { if (require(" ", {joy_t::any_t})) { root_stack.dup(); } }},
+		{"dupd", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t})) { root_stack.dupd(); } }},
+		{"pop", [&]() { if (require(" ", {joy_t::any_t})) { root_stack.pop(); } }},
+		{"popd", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t})) { root_stack.popd(); } }},
+		{"pop2", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t})) { root_stack.pop2(); } }},
+		{"unit", [&]() { if (require(" ", {joy_t::any_t})) { root_stack.unit(); } }},
+		{"swap", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t})) { root_stack.swap(); } }},
+		{"swapd", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.swapd(); } }},
+		{"rotate", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.rotate(); } }},
+		{"rollup", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.rollup(); } }},
+		{"rolldown", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.rolldown(); } }},
 		//char
 		{"ord", [&]() {
-			if (has({joy_t::char_t}, root_stack)) {
+			if (require(" ", {joy_t::char_t})) {
 				auto c = std::any_cast<char>(root_stack.top().first);
 				root_stack.push(make_token(static_cast<int>(c), joy_t::int_t));
 				root_stack.popd();
 			}
 		}},
 		{"chr", [&]() {
-			if (has({joy_t::int_t}, root_stack)) { 
+			if (require(" ", {joy_t::int_t})) { 
 				auto c = static_cast<char>(std::any_cast<int>(root_stack.top().first));
 				root_stack.push(make_token(c, joy_t::char_t));
 				root_stack.popd();
 			}
 		}},
 		{"char", [&]() {
-			if (has({joy_t::any_t}, root_stack)) {
+			if (require(" ", {joy_t::any_t})) {
 				root_stack.push(make_token((root_stack.top().second == joy_t::char_t) ? true : false, joy_t::bool_t));
 			}
 		}},
 		//math
 		{"+", [&]() {
-			if (has({joy_t::numeric_t, joy_t::numeric_t}, root_stack)) {
+			if (require(" ", {joy_t::numeric_t, joy_t::numeric_t})) {
 				root_stack.sat(1) = (root_stack.sat(1) + root_stack.top());
 				root_stack.pop();
 			}
 		}},
 		{"-", [&]() {
-			if (has({joy_t::numeric_t, joy_t::numeric_t}, root_stack)) {
+			if (require(" ", {joy_t::numeric_t, joy_t::numeric_t})) {
 				root_stack.sat(1) = (root_stack.sat(1) - root_stack.top());
 				root_stack.pop();
 			}
 		}},
 		{"*", [&]() {
-			if (has({joy_t::numeric_t, joy_t::numeric_t}, root_stack)) {
+			if (require(" ", {joy_t::numeric_t, joy_t::numeric_t})) {
 				root_stack.sat(1) = (root_stack.sat(1) * root_stack.top());
 				root_stack.pop();
 			}
 		}},
 		{"/", [&]() {
-			if (has({joy_t::numeric_t, joy_t::numeric_t}, root_stack)) {
+			if (require(" ", {joy_t::numeric_t, joy_t::numeric_t})) {
 				root_stack.sat(1) = (root_stack.sat(1) / root_stack.top());
 				root_stack.pop();
 			}
@@ -166,7 +170,7 @@ namespace joy {
 		//aggregates
 		// TODO:
 		{"size", [&]() { 
-			if (has({joy_t::aggregate_t}, root_stack)) {
+			if (require(" ", {joy_t::aggregate_t})) {
 				//s.push(size(s.top()));
 			}
 		}},

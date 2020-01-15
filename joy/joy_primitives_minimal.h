@@ -162,7 +162,7 @@ namespace joy {
         return token.second == joy_t::cmd_t;
     }
 
-    inline bool jstack(const token_t& token) {
+    inline bool jgroup(const token_t& token) {
         return jlist(token) || jquote(token);
     }
 
