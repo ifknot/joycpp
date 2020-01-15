@@ -7,11 +7,11 @@
 
 #include <cassert>
 
-#include "joy_to_string.h"
+#include "to_string.h"
 
 #include "tokenizer.h"
 #include "joy_stack.h"
-#include "joy_primitives_minimal.h"
+#include "primitives_minimal.h"
 
 namespace joy {
 

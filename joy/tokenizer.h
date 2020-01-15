@@ -9,10 +9,10 @@
 
 #include "io_device.h"
 #include "joy_types.h"
-#include "joy_primitives_minimal.h"
+#include "primitives_minimal.h"
 #include "joy_stack.h"
-#include "joy_error_numbers.h"
-#include "joy_error_messages.h"
+#include "error_numbers.h"
+#include "error_messages.h"
 
 namespace joy {
 

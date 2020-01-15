@@ -135,7 +135,7 @@ namespace joy {
 		{"reverse", [&]() { if (require("reverse", {joy_t::aggregate_t})) { reverse(root_stack); } }},
 		{"step", [&]() { if (require("step", {joy_t::quote_t, joy_t::aggregate_t})) { parse(step(root_stack)); } }},
 		{"dip", [&]() {if (require("dip", {joy_t::quote_t, joy_t::any_t})) { dip(root_stack); }}},
-		{"i", [&]() { if (require("i", {joy_t::quote_t})) { i(root_stack); } }}
+		{"i", [&]() { if (require("i", {joy_t::group_t})) { i(root_stack); } }}
 		};
 
 	};

@@ -68,19 +68,16 @@
     <ClInclude Include="parse_joy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="joy_to_string.h">
+    <ClInclude Include="error_messages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="joy_primitives_minimal.h">
+    <ClInclude Include="error_numbers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="joy_error_messages.h">
+    <ClInclude Include="primitives_minimal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="joy_primitives_performance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="joy_error_numbers.h">
+    <ClInclude Include="to_string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

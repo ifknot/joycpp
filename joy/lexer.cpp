@@ -40,12 +40,29 @@ namespace joy {
 				case joy::joy_t::list_t:
 				case joy::joy_t::set_t:
 				case joy::joy_t::string_t:
+				case joy::joy_t::cmd_t:
 					if (root_stack.sat(i).second != t) {
 						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
 					}
 					break;
 				case joy::joy_t::numeric_t:
-					if (!jnumeric(root_stack.sat(i))) {
+					if (jnumeric(root_stack.sat(i))) {
+						break;
+					}
+					else {
+						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
+					}
+					return false;
+				case joy::joy_t::group_t:
+					if (jgroup(root_stack.sat(i))) {
+						break;
+					}
+					else {
+						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
+					}
+					return false;
+				case joy::joy_t::sequence_t:
+					if (jsequence(root_stack.sat(i))) {
 						break;
 					}
 					else {
@@ -53,7 +70,7 @@ namespace joy {
 					}
 					return false;
 				case joy::joy_t::aggregate_t:
-					if ((!jaggregate(root_stack.sat(i)))) {
+					if (jaggregate(root_stack.sat(i))) {
 						break;
 					}
 					else {

@@ -25,7 +25,7 @@
 #include <string>
 #include <map>
 
-#include "joy_error_numbers.h"
+#include "error_numbers.h"
 
 namespace joy {
 

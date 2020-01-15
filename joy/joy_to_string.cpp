@@ -10,6 +10,9 @@ namespace joy {
         {joy_t::undef_t, "undef"},
         {joy_t::any_t, "any"},
         {joy_t::numeric_t, "numeric"},
+        {joy_t::group_t, "group"},
+        {joy_t::sequence_t, "sequence"},
+        {joy_t::aggregate_t, "aggregate"},
         {joy_t::cmd_t, "command"},
         //simple types
         {joy_t::bool_t, "bool"},

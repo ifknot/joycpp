@@ -165,11 +165,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="colour_codes.h" />
-    <ClInclude Include="joy_error_messages.h" />
-    <ClInclude Include="joy_error_numbers.h" />
-    <ClInclude Include="joy_primitives_minimal.h" />
-    <ClInclude Include="joy_primitives_performance.h" />
-    <ClInclude Include="joy_to_string.h" />
+    <ClInclude Include="error_messages.h" />
+    <ClInclude Include="error_numbers.h" />
+    <ClInclude Include="primitives_minimal.h" />
+    <ClInclude Include="to_string.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_stack.h" />
