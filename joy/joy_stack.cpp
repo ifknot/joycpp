@@ -2,35 +2,19 @@
 
 namespace joy {
 
-	joy_stack::const_reference joy_stack::sat(size_t i) const {
-		assert(i < size());
-		return at(size() - 1 - i);
-	}
-
-	joy_stack::reference joy_stack::sat(size_t i) {
-		assert(i < size());
-		return at(size() - 1 - i);
-	}
-
-	void joy_stack::push(const value_type& val) {
-		push_back(val);
-	}
-
-	void joy_stack::push(value_type&& val) {
-		push_back(val);
-	}
-
 	void joy_stack::newstack() {
 		clear();
 	}
 
 	void joy_stack::stack() {
 		joy_stack S = *this;
+		std::reverse(S.begin(), S.end());
 		push(make_token(S, joy_t::quote_t));
 	}
 
 	void joy_stack::unstack() {
 		auto S = std::any_cast<joy_stack>(top().first);
+		std::reverse(S.begin(), S.end());
 		*this = S;
 	}
 
@@ -93,6 +77,16 @@ namespace joy {
 		swapd();
 	}
 
+	joy_stack::const_reference joy_stack::sat(size_t i) const {
+		assert(i < size());
+		return at(size() - 1 - i);
+	}
+
+	joy_stack::reference joy_stack::sat(size_t i) {
+		assert(i < size());
+		return at(size() - 1 - i);
+	}
+
 	joy_stack::reference joy_stack::top() {
 		assert(size());
 		return back();
@@ -101,6 +95,14 @@ namespace joy {
 	joy_stack::const_reference joy_stack::top() const {
 		assert(size());
 		return back();
+	}
+
+	void joy_stack::push(const value_type& val) {
+		push_back(val);
+	}
+
+	void joy_stack::push(value_type&& val) {
+		push_back(val);
 	}
 
 }

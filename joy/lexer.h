@@ -111,68 +111,66 @@ namespace joy {
 		{"newstack", [&]() { root_stack.newstack(); }},
 		{"stack", [&]() { root_stack.stack(); }},
 		//change has to use a lookup map depending on the op eg args("popd") {...}
-		{"unstack", [&]() { if (require(" ", {joy_t::quote_t})) { root_stack.unstack(); } }},
-		{"dup", [&]() { if (require(" ", {joy_t::any_t})) { root_stack.dup(); } }},
-		{"dupd", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t})) { root_stack.dupd(); } }},
-		{"pop", [&]() { if (require(" ", {joy_t::any_t})) { root_stack.pop(); } }},
-		{"popd", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t})) { root_stack.popd(); } }},
-		{"pop2", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t})) { root_stack.pop2(); } }},
-		{"unit", [&]() { if (require(" ", {joy_t::any_t})) { root_stack.unit(); } }},
-		{"swap", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t})) { root_stack.swap(); } }},
-		{"swapd", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.swapd(); } }},
-		{"rotate", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.rotate(); } }},
-		{"rollup", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.rollup(); } }},
-		{"rolldown", [&]() { if (require(" ", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.rolldown(); } }},
+		{"unstack", [&]() { if (require("unstack", {joy_t::group_t})) { root_stack.unstack(); } }},
+		{"dup", [&]() { if (require("dup", {joy_t::any_t})) { root_stack.dup(); } }},
+		{"dupd", [&]() { if (require("dupd", {joy_t::any_t, joy_t::any_t})) { root_stack.dupd(); } }},
+		{"pop", [&]() { if (require("pop", {joy_t::any_t})) { root_stack.pop(); } }},
+		{"popd", [&]() { if (require("popd", {joy_t::any_t, joy_t::any_t})) { root_stack.popd(); } }},
+		{"pop2", [&]() { if (require("pop2", {joy_t::any_t, joy_t::any_t})) { root_stack.pop2(); } }},
+		{"unit", [&]() { if (require("unit", {joy_t::any_t})) { root_stack.unit(); } }},
+		{"swap", [&]() { if (require("swap", {joy_t::any_t, joy_t::any_t})) { root_stack.swap(); } }},
+		{"swapd", [&]() { if (require("swapd", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.swapd(); } }},
+		{"rotate", [&]() { if (require("rotate", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.rotate(); } }},
+		{"rollup", [&]() { if (require("rollup", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.rollup(); } }},
+		{"rolldown", [&]() { if (require("rolldown", {joy_t::any_t, joy_t::any_t, joy_t::any_t})) { root_stack.rolldown(); } }},
 		//char
 		{"ord", [&]() {
-			if (require(" ", {joy_t::char_t})) {
-				auto c = std::any_cast<char>(root_stack.top().first);
-				root_stack.push(make_token(static_cast<int>(c), joy_t::int_t));
+			if (require("ord", {joy_t::char_t})) {
+				root_stack.push(make_token(static_cast<int>(std::any_cast<char>(root_stack.top().first)), joy_t::int_t));
 				root_stack.popd();
 			}
 		}},
 		{"chr", [&]() {
-			if (require(" ", {joy_t::int_t})) { 
-				auto c = static_cast<char>(std::any_cast<int>(root_stack.top().first));
-				root_stack.push(make_token(c, joy_t::char_t));
+			if (require("chr", {joy_t::int_t})) { 
+				root_stack.push(make_token(static_cast<char>(std::any_cast<int>(root_stack.top().first)), joy_t::char_t));
 				root_stack.popd();
 			}
 		}},
 		{"char", [&]() {
-			if (require(" ", {joy_t::any_t})) {
+			if (require("char", {joy_t::any_t})) {
 				root_stack.push(make_token((root_stack.top().second == joy_t::char_t) ? true : false, joy_t::bool_t));
 			}
 		}},
 		//math
 		{"+", [&]() {
-			if (require(" ", {joy_t::numeric_t, joy_t::numeric_t})) {
+			if (require("+", {joy_t::numeric_t, joy_t::numeric_t})) {
 				root_stack.sat(1) = (root_stack.sat(1) + root_stack.top());
 				root_stack.pop();
 			}
 		}},
 		{"-", [&]() {
-			if (require(" ", {joy_t::numeric_t, joy_t::numeric_t})) {
+			if (require("-", {joy_t::numeric_t, joy_t::numeric_t})) {
 				root_stack.sat(1) = (root_stack.sat(1) - root_stack.top());
 				root_stack.pop();
 			}
 		}},
 		{"*", [&]() {
-			if (require(" ", {joy_t::numeric_t, joy_t::numeric_t})) {
+			if (require("*", {joy_t::numeric_t, joy_t::numeric_t})) {
 				root_stack.sat(1) = (root_stack.sat(1) * root_stack.top());
 				root_stack.pop();
 			}
 		}},
 		{"/", [&]() {
-			if (require(" ", {joy_t::numeric_t, joy_t::numeric_t})) {
+			if (require("/", {joy_t::numeric_t, joy_t::numeric_t})) {
 				root_stack.sat(1) = (root_stack.sat(1) / root_stack.top());
 				root_stack.pop();
 			}
 		}},
 		//aggregates
-		// TODO:
+		// size  ==  [ pop 1 ]  map  sum
 		{"size", [&]() { 
-			if (require(" ", {joy_t::aggregate_t})) {
-				//s.push(size(s.top()));
+			if (require("size", {joy_t::aggregate_t})) {
+				root_stack.push(make_token(static_cast<int>(std::any_cast<joy_stack>(root_stack.top().first).size()), joy_t::int_t));
 			}
 		}},
 		//environment

@@ -56,6 +56,7 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
 #include <cassert>
 
 #include "joy_types.h"

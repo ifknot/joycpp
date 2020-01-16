@@ -12,6 +12,7 @@
 #include "lexer.h"
 #include "primitives_performance.h"
 
+// [ 1 2 3 4 ] [ + * ] infra
 // [ [ 1 2 3 ] [ 4 5 6 ] ] [ [ dup dup * * ] map ] map
 
 namespace joy {
@@ -77,6 +78,9 @@ namespace joy {
 		//Joy op C++ implementations
 
 		/**
+		* The stack can be pushed as a quotation onto the stack by stack, a quotation can be turned into the stack by unstack. 
+		* A list on the stack, such as [1 2 3 4] can be treated temporarily as the stack by a quotation, say [+ *] and the combinator infra, with the result [9 4].
+		*
 		* The infra combinator expects a quotation [P] which will be executed and below that another quotation which normally will be just a list [M].
 		* The infra combinator temporarily discards the remainder of the stack and takes the quotation or list [M] to be the stack.
 		* It then executes the top quotation [P] which yields a result stack.
@@ -98,6 +102,10 @@ namespace joy {
 		token_t map(joy_stack& S);
 
 		/**
+		* The dip combinator expects a quotation parameter (which it will consume), and below that one more element. 
+		* It saves that element away, executes the quotation on whatever of the stack is left, and then restores the saved element. 
+		* So 2 3 4 [+] dip is the same as 5 4. 
+		* This single combinator was inspired by several special purpose optimising combinators S', B' and C' in the combinatory calculus, see Peyton Jones (1987, sections 16.2.5 and 16.2.6).
 		* dip: X [P] -> ... X
 		* Saves X, executes P, pushes X back onto stack.
 		*/

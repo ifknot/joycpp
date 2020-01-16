@@ -124,20 +124,20 @@ namespace joy {
 	}
 
 	void parser::infra(joy_stack& S) {
-		auto P = std::any_cast<joy_stack>(S.top().first); // get the program
-		if (P.size()) {
-			S.pop();
-			auto M = std::any_cast<joy_stack>(S.top().first); // get the list as a stack
-			S.pop();
-			M.push(make_token(P, joy_t::quote_t)); // push the program 
-			auto T = root_stack; //temporarily discard remainder of the root stack
-			root_stack = M; // set the new root stack
-			i(root_stack); //execute the program
-			root_stack.stack(); //convert the stack to a list [N]
-			auto N = root_stack.top();
-			root_stack = T; //restore the stack
-			root_stack.push(N); //push [N] onto original stack
-		}
+		auto P = S.top(); // get the program
+		S.pop();
+		joy_stack M; //fresh stack to work with
+		M.push(S.top()); //get the list
+		S.pop();
+		M.unstack(); //make the list the stack
+		M.push(P); // push the program 
+		auto T = root_stack; //temporarily discard remainder of the root stack
+		root_stack = M; // set the new root stack
+		i(root_stack); //execute the program
+		root_stack.stack(); //convert the stack to a list [N]
+		auto N = root_stack.top(); //get the result of P M as N
+		root_stack = T; //restore the stack
+		root_stack.push(N); //push [N] onto original stack as the result
 	}
 
 	token_t parser::map(joy_stack& S) {
