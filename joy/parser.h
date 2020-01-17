@@ -112,10 +112,10 @@ namespace joy {
 		void dip(joy_stack& S);
 
 		/**
-	   * step: A [P] -> ...
-	   * Sequentially putting members of aggregate A onto a stack M
-	   * pasring M that executes P for each member of A stack the result
-	   */
+	   	* step: A [P] -> ...
+	   	* Sequentially putting members of aggregate A onto a stack M
+	   	* pasring M that executes P for each member of A stack the result
+	   	*/
 		void step(joy_stack& stack);
 
 		/**
