@@ -118,7 +118,10 @@ namespace joy {
 
 	void parser::unwind(joy_stack& S) {
 		while (list_depth) {
-			S.pop();
+			//if S.size { //see whats going on...
+			// 	io << S.top();
+			//	S.pop();
+			//}
 			--list_depth;
 		}
 	}
@@ -131,14 +134,17 @@ namespace joy {
 		M.push(S.top()); //get the list
 		S.pop();
 		M.unstack(); //make the list the stack
-		M.push(P); // push the program 
-		auto T = root_stack; //temporarily discard remainder of the root stack
-		root_stack = M; // set the new root stack
-		i(root_stack); //execute the program
-		root_stack.stack(); //convert the stack to a list [N]
-		auto N = root_stack.top(); //get the result of P M as N
-		root_stack = T; //restore the stack
-		root_stack.push(N); //push [N] onto original stack as the result
+		M.push(P); // push the program [P]
+		//auto T = root_stack; //temporarily discard remainder of the root stack
+		//root_stack = M; // set the new root stack
+		i(M); //execute P
+		//i(root_stack); //execute the program
+		M.stack(); //convert the stack to a list [N]
+		//root_stack.stack(); //convert the stack to a list [N]
+		//auto N = root_stack.top(); //get the result of P M as N
+		//root_stack = T; //restore the stack
+		S.push(M.top()); //return [N] as the result
+		//root_stack.push(N); //push [N] onto original stack as the result
 	}
 
 	token_t parser::map(joy_stack& S) {
