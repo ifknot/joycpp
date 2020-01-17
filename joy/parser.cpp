@@ -12,28 +12,28 @@ namespace joy {
 
 	void parser::parse(std::string line) {
 		auto tokens = tokenizer::tokenize(line);
-		parse(tokens);
+		parse(tokens, root_stack);
 	}
 
-	void parser::parse(joy_stack& stack) {
+	void parser::parse(joy_stack& P, joy_stack& S) {
 		assert(state_stack.top() == state_t::parse);
-		for (auto& token : stack) {
-			if (!parse(token)) {
+		for (auto& token : P) {
+			if (!parse(token, S)) {
 				break;
 			}
 		}
 	}
 
-	void parser::parse(joy_stack&& stack) {
+	void parser::parse(joy_stack&& P, joy_stack& S) {
 		assert(state_stack.top() == state_t::parse);
-		for (auto& token : stack) {
-			if (!parse(token)) {
+		for (auto& token : P) {
+			if (!parse(token, S)) {
 				break;
 			}
 		}
 	}
 
-	bool parser::parse(token_t& token) {
+	bool parser::parse(token_t& token, joy_stack& S) {
 		if (jundef(token)) {
 			if (state_change(token)) {
 				return true;
@@ -42,7 +42,7 @@ namespace joy {
 				token.second = joy_t::cmd_t;
 			}
 			else {
-				unwind();
+				unwind(S);
 				return lexer::no_conversion(token);
 			}
 		}
@@ -52,7 +52,7 @@ namespace joy {
 				return state_change(token) || context_free(token) || regular(token);
 			} 
 			else {
-				root_stack.push(token);
+				S.push(token);
 				return true;
 			}
 		case joy::state_t::list:
@@ -116,9 +116,9 @@ namespace joy {
 		}
 	}
 
-	void parser::unwind() {
+	void parser::unwind(joy_stack& S) {
 		while (list_depth) {
-			state_stack.pop();
+			S.pop();
 			--list_depth;
 		}
 	}
@@ -142,10 +142,13 @@ namespace joy {
 
 	token_t parser::map(joy_stack& S) {
 		/*
-		auto P = std::any_cast<joy_stack>(S.top().first); // get the program
-		if (P.size()) {
-			S.pop();
-			auto A = std::any_cast<joy_stack>(S.top().first); // get the aggregate
+		auto P = S.top(); // get the program
+		S.pop();
+		auto A = S.top(); // get the aggregate
+		S.pop();
+		A.unstack(); //make the aggregate the stack
+		A.push(P); //push the program
+		step(A, S);
 		}
 		*/
 		
@@ -164,16 +167,11 @@ namespace joy {
 
 	void parser::dip(joy_stack& S) {
 		auto P = std::any_cast<joy_stack&>(S.top().first);
-		const auto X = root_stack.sat(1);
-		root_stack.pop2();
-		parse(P);
-		S.push(X);
-	}
-
-	void parser::i(joy_stack& S) {
-		auto P = std::any_cast<joy_stack&>(S.top().first);
 		S.pop();
-		parse(P);
+		const auto X = S.top();
+		S.pop();
+		parse(P, S);
+		S.push(X);
 	}
 
 	void parser::step(joy_stack& S) {	
@@ -188,7 +186,13 @@ namespace joy {
 				M.push(p);
 			}
 		}
-		parse(M);
+		parse(M, S);
+	}
+
+	void parser::i(joy_stack& S) {
+		auto P = std::any_cast<joy_stack&>(S.top().first);
+		S.pop();
+		parse(P, S);
 	}
 
 }

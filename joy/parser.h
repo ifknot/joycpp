@@ -31,11 +31,11 @@ namespace joy {
 
 	protected:
 
-		void parse(joy_stack& stack);
+		void parse(joy_stack& P, joy_stack& S);
 
-		void parse(joy_stack&& stack);
+		void parse(joy_stack&& P, joy_stack& S);
 
-		bool parse(token_t& token);
+		bool parse(token_t& token, joy_stack& S);
 
 		bool is_context_free(token_t& token);
 
@@ -62,18 +62,18 @@ namespace joy {
 		/**
 		* recursively descend into nested list to add a new list
 		*/
-		void nest_list(joy_stack& stack, size_t depth);
+		void nest_list(joy_stack& S, size_t depth);
 
 		/**
 		* recursively descend into nested lists to add token
 		* convert list_t to quote_t if a command is added to a list
 		*/
-		void nest_token(token_t& token, joy_stack& stack, joy_t& type, size_t depth);
+		void nest_token(token_t& token, joy_stack& S, joy_t& type, size_t depth);
 
 		/**
-		* error state - unwind the state stack by depth
+		* error state - unwind the stack by depth
 		*/
-		void unwind();
+		void unwind(joy_stack& S);
 
 		//Joy op C++ implementations
 
@@ -112,17 +112,17 @@ namespace joy {
 		void dip(joy_stack& S);
 
 		/**
-		* i: [P] -> ...
-		* Executes P. So, [P] i == P
-		*/
-		void i(joy_stack& S);
-
-		/**
 	   * step: A [P] -> ...
 	   * Sequentially putting members of aggregate A onto a stack M
 	   * pasring M that executes P for each member of A stack the result
 	   */
 		void step(joy_stack& stack);
+
+		/**
+		* i: [P] -> ...
+		* Executes P. So, [P] i == P
+		*/
+		void i(joy_stack& S);
 	
 		/**
 		* state changing operators
