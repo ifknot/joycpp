@@ -124,6 +124,7 @@ namespace joy {
 	}
 
 	void parser::infra(joy_stack& S) {
+		//ToDO: improve
 		auto P = S.top(); // get the program
 		S.pop();
 		joy_stack M; //fresh stack to work with
@@ -141,14 +142,20 @@ namespace joy {
 	}
 
 	token_t parser::map(joy_stack& S) {
+		//TODO: test 
 		/*
 		auto P = S.top(); // get the program
 		S.pop();
-		auto A = S.top(); // get the aggregate
+		joy_stack M; //fresh stack to work with
+		M.push(S.top()); //get the list
+		auto t = S.top().second; //copy the return aggregate type
 		S.pop();
-		A.unstack(); //make the aggregate the stack
-		A.push(P); //push the program
-		step(A, S);
+		M.unstack(); //make the list the stack
+		M.push(P); // push the program
+		step(M)
+		M.stack(); //copy stack as a list
+		S.push(M.top()); //return it the list as result
+		S.top().second = t; //convert to correct aggregate type
 		}
 		*/
 		
