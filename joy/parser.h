@@ -78,8 +78,11 @@ namespace joy {
 		//Joy op C++ implementations
 
 		/**
-		* The stack can be pushed as a quotation onto the stack by stack, a quotation can be turned into the stack by unstack. 
-		* A list on the stack, such as [1 2 3 4] can be treated temporarily as the stack by a quotation, say [+ *] and the combinator infra, with the result [9 4].
+		* The stack can be pushed as a quotation onto the stack by .stack() 
+		* .. b a│stack    →    .. b a [a b ..]│
+		* A quotation can be turned into the stack by .unstack()  
+		* . [a b]│unstack  →                b a│
+		* Therefore, a list on the stack, e.g. [1 2 3 4], can be treated temporarily as the stack by a quotation, say [+ *] and the combinator infra, with the result [9 4].
 		*
 		* The infra combinator expects a quotation [P] which will be executed and below that another quotation which normally will be just a list [M].
 		* The infra combinator temporarily discards the remainder of the stack and takes the quotation or list [M] to be the stack.
@@ -89,6 +92,7 @@ namespace joy {
 		* 
 		*   L  [M]  [P]  infra  =>  L  [N]   :-  [M]  unstack  P  =>  N
 		*
+		* [a] [f]│infra    →     [│a f]
 		* infra : L1 [P] -> L2
 		* Using list L1 as stack, executes P and returns a new list L2.
 		* The first element of L1 is used as the top of stack, and after execution of P the top of stack becomes the first element of L2.
@@ -96,6 +100,7 @@ namespace joy {
 		void infra(joy_stack& S);
 
 		/**
+		* [a b ...] [f]│map     →       [f¨a b ...]│
 		* map: A [P] -> B
 		* Executes P on each member of aggregate A, collects results in sametype aggregate B.
 		*/
@@ -106,12 +111,15 @@ namespace joy {
 		* It saves that element away, executes the quotation on whatever of the stack is left, and then restores the saved element. 
 		* So 2 3 4 [+] dip is the same as 5 4. 
 		* This single combinator was inspired by several special purpose optimising combinators S', B' and C' in the combinatory calculus, see Peyton Jones (1987, sections 16.2.5 and 16.2.6).
+		* 
+		* a [f]│dip      →       │f a
 		* dip: X [P] -> ... X
 		* Saves X, executes P, pushes X back onto stack.
 		*/
 		void dip(joy_stack& S);
 
 		/**
+		* [a b ...] [p]│step     →     │a p b p ...
 	   	* step: A [P] -> ...
 	   	* Sequentially putting members of aggregate A onto a stack M
 	   	* pasring M that executes P for each member of A stack the result
@@ -119,6 +127,7 @@ namespace joy {
 		void step(joy_stack& stack);
 
 		/**
+		* [a]│i   →  │a
 		* i: [P] -> ...
 		* Executes P. So, [P] i == P
 		*/
