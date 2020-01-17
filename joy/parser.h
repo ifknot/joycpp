@@ -100,6 +100,8 @@ namespace joy {
 		void infra(joy_stack& S);
 
 		/**
+		* The map combinator expects an aggregate value on top of the stack, and it yields another aggregate of the same size. 
+		* The elements of the new aggregate are computed by applying the quoted program to each element of the original aggregate. 
 		* [a b ...] [f]│map     →       [f¨a b ...]│
 		* map: A [P] -> B
 		* Executes P on each member of aggregate A, collects results in sametype aggregate B.
@@ -119,19 +121,42 @@ namespace joy {
 		void dip(joy_stack& S);
 
 		/**
+		* The step combinator can be used to access all elements of an aggregate in sequence. 
+		* For strings and lists this means the order of their occurrence, for sets it means the underlying order. 
+		* The following will step through the members of the second list and swons them into the initially empty first list. 
+		* []  [2 8 3 6 5]  [swons]  step
+	  	* The effect is to reverse the non-empty list, yielding [5 6 3 8 2].
+		*
 		* [a b ...] [p]│step     →     │a p b p ...
 	   	* step: A [P] -> ...
 	   	* Sequentially putting members of aggregate A onto a stack M
 	   	* pasring M that executes P for each member of A stack the result
 	   	*/
 		void step(joy_stack& stack);
+		
+		/**
+		* The times unary combinator expects a numeric value below its quotation parameter and executes its quotation parameter as many times as indicated by the numeric value.
+		* If the value is zero or less, then the quotation is not executed at all.
+		*
+		* n [ops]│times    →              ops⍣n│
+		* times : N[P] ->...
+		* N times executes P.
+		*/
+		//void times(joy_stack& stack, parser& parser);
 
 		/**
+		* Joy has certain devices called combinators which cause the execution of quoted programs that are on top of the stack. 
+		* One of the simplest is the i combinator. 
+		* Its effect is to execute a single program on top of the stack, and nothing else. 
+		* Syntactically speaking, its effect is to remove the quoting square brackets and thus to expose the quoted program for execution.
+		*
 		* [a]│i   →  │a
 		* i: [P] -> ...
 		* Executes P. So, [P] i == P
 		*/
 		void i(joy_stack& S);
+		//void i(joy_stack& stack, parser& parser);
+
 	
 		/**
 		* state changing operators
