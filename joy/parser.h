@@ -110,16 +110,6 @@ namespace joy {
 		*
 		* For many operators an implementation can choose whether to make it a Joy03 primitive or define it in a library.
 		* Apart from execution speed, to the user it makes no difference as to which choice has been made.
-		*
-		* However, for the minimal set there is no choice but to implement them in the primitives_minimal.h library.
-		* namely: unoncs choice infra and the basic arithmetic operators + - * /
-		* 
-		* Others benefit from performance improvements of being defined in the primitives_performance.h library.
-		* namely: reverse
-		*
-		* Finally, in the current implementation of joycpp, there a number of operators that execute a quoted program internally
-		* and, as such, benefit by being defined intimately with the parser class.
-		* namely: infra map dip i step
 		*/
 		dictionary_t context_free_atoms {
 		//combinators of aggregate types
