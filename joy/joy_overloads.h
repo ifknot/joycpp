@@ -24,7 +24,29 @@
 
 namespace joy {
 
-    //arithmetic token operators
+    //unary token overloads
+
+    /**
+    * ord : C -> I
+    * Integer I is the Ascii value of character C( or logical or integer).
+    * TODO: logical [] integer []
+    */
+    token_t ord(token_t token);
+
+    /**
+    * chr : I -> C
+    * C is the character whose Ascii value is integer I( or logical or character).
+    * TODO: logical [] integer []
+    */
+    token_t chr(token_t token);
+
+    /**
+    * char : X -> B
+    * Tests whether X is a character.
+    */
+    token_t is_char(token_t token);
+
+    //arithmetic token overloads
 
     token_t operator+(const token_t& a, const token_t& b);
 

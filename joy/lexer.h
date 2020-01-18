@@ -114,23 +114,9 @@ namespace joy {
 		{"rollup", [&](joy_stack& S) { S.rollup(); }},
 		{"rolldown", [&](joy_stack& S) { S.rolldown(); }},
 		//char
-		{"ord", [&](joy_stack& S) {
-			if (S.has("ord", {joy_t::char_t})) {
-				S.push(make_token(static_cast<int>(std::any_cast<char>(S.top().first)), joy_t::int_t));
-				S.popd();
-			}
-		}},
-		{"chr", [&](joy_stack& S) {
-			if (S.has("chr", {joy_t::int_t})) {
-				S.push(make_token(static_cast<char>(std::any_cast<int>(S.top().first)), joy_t::char_t));
-				S.popd();
-			}
-		}},
-		{"char", [&](joy_stack& S) {
-			if (S.has("char", {joy_t::any_t})) {
-				S.push(make_token((S.top().second == joy_t::char_t) ? true : false, joy_t::bool_t));
-			}
-		}},
+		{"ord", [&](joy_stack& S) { if (S.has("ord", {joy_t::char_t})) { S.push(ord(S.top())); } }},
+		{"chr", [&](joy_stack& S) { if (S.has("chr", {joy_t::int_t})) { S.push(chr(S.top())); } }},
+		{"char", [&](joy_stack& S) { if (S.has("char", {joy_t::any_t})) { S.push(is_char(S.top())); } }},
 		//math
 		{"+", [&](joy_stack& S) {
 			if (S.has("+", {joy_t::numeric_t, joy_t::numeric_t})) {

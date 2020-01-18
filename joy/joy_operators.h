@@ -46,7 +46,7 @@ namespace joy {
     void size(joy_stack& S);
 
     /**
-    * syntactice sugar
+    * syntactic sugar
     */
     inline int size(token_t& token) {
         return static_cast<int>(std::any_cast<joy_stack>(token.first).size());
