@@ -60,40 +60,4 @@ namespace joy {
 		}
 	}
 
-	//Joy op C++ implementations
-
-	void lexer::print_top(const joy_stack& S) {
-		io.colour(GREEN);
-		io << to_string(S.top());
-	}
-
-	void lexer::print_stack(const joy_stack& S) {
-		io.colour(GREEN);
-		std::string dump{ ">" + std::to_string(root_stack.size()) + "<\n"};
-		for (size_t i{ 0 }; i < S.size(); ++i) {
-			const auto& t = S.sat(i);
-			dump += to_string(t) + "\n";
-		}
-		io << dump;
-	}
-
-	void lexer::manual() {
-		io.colour(YELLOW);
-		for (const auto& [cmd, info] : joy_manual) {
-			io << cmd << info;
-		}
-	}
-
-	void lexer::helpdetail(const joy_stack& S) {
-		io.colour(YELLOW);
-		for (const auto [command, type] : S) {
-			assert(type == joy_t::cmd_t);
-			auto match = std::any_cast<std::string>(command);
-			auto it = joy_manual.find(match);
-			if (it != joy_manual.end()) {
-				io << match + joy_manual[match];
-			}
-		}
-	}
-
 }

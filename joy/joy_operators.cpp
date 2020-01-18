@@ -1,4 +1,5 @@
 #include "joy_operators.h"
+#include "to_string.h"
 
 namespace joy {
 
@@ -13,240 +14,39 @@ namespace joy {
         }
     }
 
-    token_t operator+(const token_t& a, const token_t& b) {
-        switch (a.second) { //switch through all of the Joy03 numeric types for the first arguement
-        case joy::joy_t::char_t: {
-            auto c = std::any_cast<char>(a.first); //cast the the first arguement
-            switch (b.second) { //switch through all of the Joy03 numeric types for the second arguement
-            case joy::joy_t::char_t: //cast the the second arguement and to the first
-                c += std::any_cast<char>(b.first);
-                return make_token(c, joy_t::char_t); //return new sum token
-            case joy::joy_t::int_t: //ditto
-                c += std::any_cast<int>(b.first);
-                return make_token(c, joy_t::char_t);
-            case joy::joy_t::double_t://ditto
-                c += std::any_cast<double>(b.first);
-                return make_token(c, joy_t::char_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
-        } //and so on...
-        case joy::joy_t::int_t: {
-            auto c = std::any_cast<int>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c += std::any_cast<char>(b.first);
-                return make_token(c, joy_t::int_t);
-            case joy::joy_t::int_t:
-                c += std::any_cast<int>(b.first);
-                return make_token(c, joy_t::int_t);
-            case joy::joy_t::double_t:
-                c += std::any_cast<double>(b.first);
-                return make_token(c, joy_t::int_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
+    void print_top(const joy_stack& S, io_device& io) {
+        io.colour(GREEN);
+        io << to_string(S.top());
+    }
+
+    void print_stack(const joy_stack& S, io_device& io) {
+        io.colour(GREEN);
+        std::string dump{ ">" + std::to_string(S.size()) + "<\n" };
+        for (size_t i{ 0 }; i < S.size(); ++i) {
+            const auto& t = S.sat(i);
+            dump += to_string(t) + "\n";
         }
-        case joy::joy_t::double_t: {
-            auto c = std::any_cast<double_t>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c += std::any_cast<char>(b.first);
-                return make_token(c, joy_t::double_t);
-            case joy::joy_t::int_t:
-                c += std::any_cast<int>(b.first);
-                return make_token(c, joy_t::double_t);
-            case joy::joy_t::double_t:
-                c += std::any_cast<double>(b.first);
-                return make_token(c, joy_t::double_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
-        }
-        default:
-            return make_token("", joy_t::undef_t);
-            break;
+        io << dump;
+    }
+
+    void manual(std::map<std::string, std::string>& joy_manual, io_device& io) {
+        io.colour(YELLOW);
+        for (const auto& [cmd, info] : joy_manual) {
+            io << cmd << info;
         }
     }
 
-    token_t operator-(const token_t& a, const token_t& b) {
-        switch (a.second) {
-        case joy::joy_t::char_t: {
-            auto c = std::any_cast<char>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c -= std::any_cast<char>(b.first);
-                return make_token(c, joy_t::char_t);
-            case joy::joy_t::int_t:
-                c -= std::any_cast<int>(b.first);
-                return make_token(c, joy_t::char_t);
-            case joy::joy_t::double_t:
-                c -= std::any_cast<double>(b.first);
-                return make_token(c, joy_t::char_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
+    void helpdetail(const joy_stack& S, std::map<std::string, std::string>& joy_manual, io_device& io) {
+        io.colour(YELLOW);
+        for (const auto [command, type] : S) {
+            assert(type == joy_t::cmd_t);
+            auto match = std::any_cast<std::string>(command);
+            auto it = joy_manual.find(match);
+            if (it != joy_manual.end()) {
+                io << match + joy_manual[match];
             }
         }
-        case joy::joy_t::int_t: {
-            auto c = std::any_cast<int>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c -= std::any_cast<char>(b.first);
-                return make_token(c, joy_t::int_t);
-            case joy::joy_t::int_t:
-                c -= std::any_cast<int>(b.first);
-                return make_token(c, joy_t::int_t);
-            case joy::joy_t::double_t:
-                c -= std::any_cast<double>(b.first);
-                return make_token(c, joy_t::int_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
-        }
-        case joy::joy_t::double_t: {
-            auto c = std::any_cast<double_t>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c -= std::any_cast<char>(b.first);
-                return make_token(c, joy_t::double_t);
-            case joy::joy_t::int_t:
-                c -= std::any_cast<int>(b.first);
-                return make_token(c, joy_t::double_t);
-            case joy::joy_t::double_t:
-                c -= std::any_cast<double>(b.first);
-                return make_token(c, joy_t::double_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
-        }
-        default:
-            return make_token("", joy_t::undef_t);
-            break;
-        }
-    }
 
-    token_t operator*(const token_t& a, const token_t& b) {
-        switch (a.second) {
-        case joy::joy_t::char_t: {
-            auto c = std::any_cast<char>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c *= std::any_cast<char>(b.first);
-                return make_token(c, joy_t::char_t);
-            case joy::joy_t::int_t:
-                c *= std::any_cast<int>(b.first);
-                return make_token(c, joy_t::char_t);
-            case joy::joy_t::double_t:
-                c *= std::any_cast<double>(b.first);
-                return make_token(c, joy_t::char_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
-        }
-        case joy::joy_t::int_t: {
-            auto c = std::any_cast<int>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c *= std::any_cast<char>(b.first);
-                return make_token(c, joy_t::int_t);
-            case joy::joy_t::int_t:
-                c *= std::any_cast<int>(b.first);
-                return make_token(c, joy_t::int_t);
-            case joy::joy_t::double_t:
-                c *= std::any_cast<double>(b.first);
-                return make_token(c, joy_t::int_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
-        }
-        case joy::joy_t::double_t: {
-            auto c = std::any_cast<double_t>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c *= std::any_cast<char>(b.first);
-                return make_token(c, joy_t::double_t);
-            case joy::joy_t::int_t:
-                c *= std::any_cast<int>(b.first);
-                return make_token(c, joy_t::double_t);
-            case joy::joy_t::double_t:
-                c *= std::any_cast<double>(b.first);
-                return make_token(c, joy_t::double_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
-        }
-        default:
-            return make_token("", joy_t::undef_t);
-            break;
-        }
-    }
-
-    token_t operator/(const token_t& a, const token_t& b) {
-        switch (a.second) {
-        case joy::joy_t::char_t: {
-            auto c = std::any_cast<char>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c /= std::any_cast<char>(b.first);
-                return make_token(c, joy_t::char_t);
-            case joy::joy_t::int_t:
-                c /= std::any_cast<int>(b.first);
-                return make_token(c, joy_t::char_t);
-            case joy::joy_t::double_t:
-                c /= std::any_cast<double>(b.first);
-                return make_token(c, joy_t::char_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
-        }
-        case joy::joy_t::int_t: {
-            auto c = std::any_cast<int>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c /= std::any_cast<char>(b.first);
-                return make_token(c, joy_t::int_t);
-            case joy::joy_t::int_t:
-                c /= std::any_cast<int>(b.first);
-                return make_token(c, joy_t::int_t);
-            case joy::joy_t::double_t:
-                c /= std::any_cast<double>(b.first);
-                return make_token(c, joy_t::int_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
-        }
-        case joy::joy_t::double_t: {
-            auto c = std::any_cast<double_t>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                c /= std::any_cast<char>(b.first);
-                return make_token(c, joy_t::double_t);
-            case joy::joy_t::int_t:
-                c /= std::any_cast<int>(b.first);
-                return make_token(c, joy_t::double_t);
-            case joy::joy_t::double_t:
-                c /= std::any_cast<double>(b.first);
-                return make_token(c, joy_t::double_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
-        }
-        default:
-            return make_token("", joy_t::undef_t);
-            break;
-        }
     }
 
 }

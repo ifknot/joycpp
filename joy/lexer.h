@@ -74,22 +74,17 @@ namespace joy {
 
 		//Joy op C++ implementations
 
-		void print_top(const joy_stack& S);
+		//void print_top(const joy_stack& S);
 
-		void print_stack(const joy_stack& S);
-
-		/**
-		* manual: ->
-		* Writes the loaded manual of all Joy primitives to output file.
-		*/
-		void manual();
+		//void print_stack(const joy_stack& S);
 
 		/**
-		* helpdetail: [ S1 S2 .. ]
-		* Gives brief help on each symbol S in the list.
-		* FIX: work with list not just string on top stack
+		* FIX: this prob needs to be nested joy(parse(lex))) to print all symbols
+		* help : ->
+		* Lists all defined symbols, including those from library files.
+		* Then lists all primitives of raw Joy.
 		*/
-		void helpdetail(const joy_stack& S);
+		//void help()
 
 		/**
 		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
@@ -99,10 +94,10 @@ namespace joy {
 		*/
 		dictionary_t regular_translation { 
 		//non-standard
-		{"?", [&](joy_stack& S) { if (S.has("?", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first)); } }},
+		{"?", [&](joy_stack& S) { if (S.has("?", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
 		//stack commands
-		{".s", [&](joy_stack& S) { print_stack(S); }},
-		{".", [&](joy_stack& S) { if (S.has(".", {joy_t::any_t})) { print_top(S); } }},
+		{".s", [&](joy_stack& S) { print_stack(S, io); }},
+		{".", [&](joy_stack& S) { if (S.has(".", {joy_t::any_t})) { print_top(S, io); } }},
 		{"newstack", [&](joy_stack& S) { S.newstack(); }},
 		{"stack", [&](joy_stack& S) { S.stack(); }},
 		//change has to use a lookup map depending on the op eg args("popd") {...}
@@ -165,7 +160,7 @@ namespace joy {
 		// size  ==  [ pop 1 ]  map  sum
 		{"size", [&](joy_stack& S) { size(S); }},
 		//environment
-		{"manual", [&](joy_stack& S) { manual(); }},
+		{"manual", [&](joy_stack& S) { manual(joy_manual, io); }},
 		{"quit", [&](joy_stack& S) { quit(); io << ". . ."; }}
 		};
 

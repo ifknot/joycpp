@@ -48,6 +48,9 @@
     <ClCompile Include="joy_minimal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="joy_overloads.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="joy_types.h">

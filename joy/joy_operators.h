@@ -25,11 +25,13 @@
 *       top of stack ───┐ │
 *                       ↓ ↓
 *			   	  [a b c]│reverse  →            [c b a]│
+*                 [a ...]│size     →                 ≢⍵│
 *
 */
 #pragma once
 
 #include "joy_stack.h"
+#include "io_device.h"
 
 namespace joy {
 
@@ -50,4 +52,28 @@ namespace joy {
         return static_cast<int>(std::any_cast<joy_stack>(token.first).size());
     }
 
+    /**
+    * Joy . operator
+    * print top of stack S in left:right format to an io device
+    */
+    void print_top(const joy_stack& S, io_device& io);
+
+    /**
+    * Joy .s operator
+    * print stack S size and S contents in top:down format to an io device
+    */
+    void print_stack(const joy_stack& S, io_device& io);
+
+    /**
+    * manual: ->
+    * Writes the loaded manual of all Joy primitives to an io device.
+    */
+    void manual(std::map<std::string, std::string>& joy_manual, io_device& io);
+
+    /**
+    * helpdetail: [ S1 S2 .. ]
+    * @note joycpp uses ? as a synonym convenience
+    * Gives brief help on each symbol S in the list.
+    */
+    void helpdetail(const joy_stack& S, std::map<std::string, std::string>& joy_manual, io_device& io);
 }
