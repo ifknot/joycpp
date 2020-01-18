@@ -11,7 +11,7 @@
 #include "error.h"
 #include "joy_types.h"
 #include "joy_stack.h"
-#include "joy_minimal.h"
+
 
 namespace joy {
 

@@ -50,11 +50,6 @@ namespace joy {
 		*/
 		bool is_regular(token_t& token);
 
-		/**
-		* display error then return false
-		*/
-		bool no_conversion(token_t& token);
-
 	private: 
 
 		/**
@@ -63,28 +58,17 @@ namespace joy {
 		bool quit_{ false };
 
 		/**
-		* try and execute token as a regular Joy command by searching the regular expression c++ dictionary
-		* return true on succes or call no_conversion
+		* load a Joy manual in Thun's orginal manual format but with the addition of:
+		* # a line must start with # to be a comment in a manual file
+		* "JOY - compiled at 16: 57: 51 on Mar 17 2003(BDW) Copyright 2001 by Manfred von Thun"
+		* Manual entry format:
+		* command_name : command algebra
+		* command summary
+		* e.g.
+		* rolldown : X Y Z -> Y Z X
+		* Moves Y and Z down, moves X up
 		*/
-		bool try_regular(token_t& token, joy_stack& S);
-
-		//helper member functions
-
 		void load_manual(std::string& path_to_manual);
-
-		//Joy op C++ implementations
-
-		//void print_top(const joy_stack& S);
-
-		//void print_stack(const joy_stack& S);
-
-		/**
-		* FIX: this prob needs to be nested joy(parse(lex))) to print all symbols
-		* help : ->
-		* Lists all defined symbols, including those from library files.
-		* Then lists all primitives of raw Joy.
-		*/
-		//void help()
 
 		/**
 		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
@@ -100,7 +84,6 @@ namespace joy {
 		{".", [&](joy_stack& S) { if (S.has(".", {joy_t::any_t})) { print_top(S, io); } }},
 		{"newstack", [&](joy_stack& S) { S.newstack(); }},
 		{"stack", [&](joy_stack& S) { S.stack(); }},
-		//change has to use a lookup map depending on the op eg args("popd") {...}
 		{"unstack", [&](joy_stack& S) { S.unstack(); }},
 		{"dup", [&](joy_stack& S) { S.dup(); }},
 		{"dupd", [&](joy_stack& S) { S.dupd(); }},

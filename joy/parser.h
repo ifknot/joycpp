@@ -11,6 +11,7 @@
 
 #include "lexer.h"
 
+#include "joy_minimal.h"
 #include "joy_combinators.h"
 
 // 2 3 4 [ + ] dip
@@ -32,9 +33,16 @@ namespace joy {
 		// TODO: remove once joy parser implemented
 		void parse(std::string line);
 
-		void operator()(joy_stack& P, joy_stack& S);
+		/**
+		* endow anonymous functor behaviour on parser
+		*/
+		inline void operator()(joy_stack& P, joy_stack& S) {
+			parse(P, S);
+		}
 
-		void operator()(joy_stack&& P, joy_stack& S);
+		inline void operator()(joy_stack&& P, joy_stack& S) {
+			parse(P, S);
+		}
 
 	protected:
 
@@ -54,10 +62,9 @@ namespace joy {
 		state_stack_t state_stack;
 
 		size_t list_depth{ 0 };
-		size_t set_depth{ 0 };
 
 		/**
-		* try an execute token as a state changing operator
+		* try ti execute token as a state changing operator
 		*/
 		bool state_change(token_t& token, joy_stack& S);
 

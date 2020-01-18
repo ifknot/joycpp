@@ -34,38 +34,10 @@ namespace joy {
 		{XAGGSIGIL, "opening bracket "},
 		{XARGC, "more arguements "},
 		{XTYPEMISMATCH, "correct type "},
-		{XNOCONVERSION, "Joy03 "},
+		{XNOCONVERSION, "Joy03 syntax "},
 		{XNOOPENSIGIL, "opening sigil "},
 		{XJOYERROR, "run time error: "},
 		{0, "needed for "}
-		/*
-		{D, "one parameter" },
-		{D,"two parameters" },
-		{D,"three parameters" },
-		{D,"four parameters" },
-		{D,"more parameters" },
-		{D,"quotation as top parameter" },
-		{D,"quotation as second parameter" },
-		{D,"quotation as third parameter" },
-		{D,"quotation as fourth parameter" },
-		{D,"two parameters of the same type" },
-		{D,"integer" },
-		{D,"two integers" },
-		{D,"numeric" },
-		{D,"numeric second parameter" },
-		{D,"non - zero operand" },
-		{D,"list" },
-		{D,"list as second parameter" },
-		{D,"user defined symbol" },
-		{D,"internal list" },
-		{D,"small numeric" },
-		{D,"non - empty set" },
-		{D,"non - empty string" },
-		{D,"non - empty list" },
-		{D,"smaller index" },
-		{D,"aggregate parameter" },
-		{D,"different type" }
-		*/
 	};
 
 }

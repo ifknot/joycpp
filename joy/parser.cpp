@@ -15,14 +15,6 @@ namespace joy {
 		parse(tokens, root_stack);
 	}
 
-	void parser::operator()(joy_stack& P, joy_stack& S) {
-		parse(P, S);
-	}
-
-	void parser::operator()(joy_stack&& P, joy_stack& S) {
-		parse(P, S);
-	}
-
 	void parser::parse(joy_stack& P, joy_stack& S) {
 		assert(state_stack.top() == state_t::parse);
 		for (auto& token : P) {
@@ -50,8 +42,9 @@ namespace joy {
 				token.second = joy_t::cmd_t;
 			}
 			else {
+				error(XNOCONVERSION, "command lookup >" + to_string(token) + "< " + to_string(token.second) + " is not recognised");
 				unwind(S);
-				return lexer::no_conversion(token);
+				return false;
 			}
 		}
 		switch (state_stack.top()) {
@@ -125,11 +118,14 @@ namespace joy {
 	}
 
 	void parser::unwind(joy_stack& S) {
+		if (S.size()) {
+			io.colour(RED);
+			io << "deleted: " + to_string(S.top());
+			S.pop();
+		}
+		print_stack(S, io);
 		while (list_depth) {
-			//if S.size { //see whats going on...
-			// 	io << S.top();
-			//	S.pop();
-			//}
+			state_stack.pop();
 			--list_depth;
 		}
 	}
