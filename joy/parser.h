@@ -85,7 +85,9 @@ namespace joy {
 		void nest_token(token_t& token, joy_stack& S, joy_t& type, size_t depth);
 
 		/**
-		* error state - unwind the stack by depth
+		* error state - unwind the state_stack by list_depth
+		* notify of any proto stack item deleted
+		* print the remaining stack
 		*/
 		void unwind(joy_stack& S);
 

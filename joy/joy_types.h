@@ -88,8 +88,8 @@ namespace joy {
     }
 
     inline bool jdouble(const std::string& match) {
-        //prevent stod from parsing the joy combinator infra as infinity
-        if (std::regex_match(match, std::regex("[+-]?(?=.)(?:0|[1-9]\\d*)?(?:\.\\d*)?(?:\\d[eE][+-]?\\d+)?"))) {
+        //prevent stod from parsing the joy combinator infra as infinity and daft things like 3] 4} as doubles
+        if (std::regex_match(match, std::regex("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"))) {
             try {
                 auto x = std::stod(match);
                 return true;
@@ -100,6 +100,9 @@ namespace joy {
             catch (std::out_of_range) {
                 return false;
             }
+        }
+        else {
+            return false;
         }
     }
 
