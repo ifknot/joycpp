@@ -10,8 +10,10 @@
 #include <cassert>
 
 #include "lexer.h"
-#include "primitives_performance.h"
 
+#include "joy_combinators.h"
+
+// [ 1 2 3 ] [ dup * ] step
 // [ 1 2 3 4 ] [ + * ] infra
 // [ [ 1 2 3 ] [ 4 5 6 ] ] [ [ dup dup * * ] map ] map
 
@@ -28,6 +30,10 @@ namespace joy {
 		//testing 
 		// TODO: remove once joy parser implemented
 		void parse(std::string line);
+
+		void operator()(joy_stack& P, joy_stack& S);
+
+		void operator()(joy_stack&& P, joy_stack& S);
 
 	protected:
 
@@ -52,12 +58,12 @@ namespace joy {
 		/**
 		* try an execute token as a state changing operator
 		*/
-		bool state_change(token_t& token);
+		bool state_change(token_t& token, joy_stack& S);
 
 		/**
 		* try to map token to a context free grammar C++ lamda implementation of a Joy operator
 		*/
-		bool context_free(token_t& token);
+		bool context_free(token_t& token, joy_stack& S);
 
 		/**
 		* recursively descend into nested list to add a new list
@@ -106,7 +112,7 @@ namespace joy {
 		* map: A [P] -> B
 		* Executes P on each member of aggregate A, collects results in sametype aggregate B.
 		*/
-		token_t map(joy_stack& S);
+		void map(joy_stack& S);
 
 		/**
 		* The dip combinator expects a quotation parameter (which it will consume), and below that one more element. 
@@ -155,21 +161,19 @@ namespace joy {
 		* Executes P. So, [P] i == P
 		*/
 		void i(joy_stack& S);
-		//void i(joy_stack& stack, parser& parser);
-
 	
 		/**
 		* state changing operators
 		*/
 		dictionary_t state_change_atoms {
-		{"[", [&]() { 
+		{"[", [&](joy_stack& S) { 
 			state_stack.push(state_t::list);
-			nest_list(root_stack, list_depth);
+			nest_list(S, list_depth);
 			++list_depth;
 		}},
-		{"]", [&]() { 
+		{"]", [&](joy_stack& S) { 
 			if (list_depth == 0) {
-				run_error(XAGGSIGIL, "]");
+				error(XAGGSIGIL, "]");
 			}
 			else { 
 				--list_depth;
@@ -201,18 +205,18 @@ namespace joy {
 		//combinators of aggregate types
 		//the combinators in this section expect aggregates below their quotation parameters.
 		//the stack is just a list, so any list could serve as the stack, including a list which happens to be on top of the stack.
-		{"infra", [&]() { if (require("infra", {joy_t::quote_t, joy_t::group_t})) { infra(root_stack); } }},
+		{"infra", [&](joy_stack& S) { if (S.has("infra", {joy_t::quote_t, joy_t::group_t})) { infra(S); } }},
 		//list operators
-		{"uncons", [&]() { if (require("uncons", {joy_t::aggregate_t}))  { uncons(root_stack); } }},
+		{"uncons", [&](joy_stack& S) { if (S.has("uncons", {joy_t::aggregate_t}))  { uncons(S); } }},
 		//general operators
 		//ternary
-		{"choice", [&]() { if (require("choice", {joy_t::any_t, joy_t::any_t, joy_t::bool_t})) { choice(root_stack); } }},
+		{"choice", [&](joy_stack& S) { if (S.has("choice", {joy_t::any_t, joy_t::any_t, joy_t::bool_t})) { choice(S); } }},
 		// combinators
-		{"map", [&]() { if (require("map", {joy_t::quote_t, joy_t::aggregate_t})) { root_stack.push(map(root_stack)); } }},
-		{"reverse", [&]() { if (require("reverse", {joy_t::aggregate_t})) { reverse(root_stack); } }},
-		{"step", [&]() { if (require("step", {joy_t::quote_t, joy_t::aggregate_t})) { step(root_stack); } }},
-		{"dip", [&]() {if (require("dip", {joy_t::quote_t, joy_t::any_t})) { dip(root_stack); }}},
-		{"i", [&]() { if (require("i", {joy_t::group_t})) { i(root_stack); } }}
+		{"map", [&](joy_stack& S) { if (S.has("map", {joy_t::quote_t, joy_t::aggregate_t})) { map(S); } }},
+		{"reverse", [&](joy_stack& S) { if (S.has("reverse", {joy_t::aggregate_t})) { reverse(S); } }},
+		{"step", [&](joy_stack& S) { if (S.has("step", {joy_t::quote_t, joy_t::aggregate_t})) { step(S); } }},
+		{"dip", [&](joy_stack& S) {if (S.has("dip", {joy_t::quote_t, joy_t::any_t})) { dip(S); }}},
+		{"i", [&](joy_stack& S) { if (S.has("i", {joy_t::group_t})) { i(S); } }}
 		};
 
 	};

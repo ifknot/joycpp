@@ -8,11 +8,10 @@
 #include <regex>
 
 #include "io_device.h"
+#include "error.h"
 #include "joy_types.h"
-#include "primitives_minimal.h"
 #include "joy_stack.h"
-#include "error_numbers.h"
-#include "error_messages.h"
+#include "joy_minimal.h"
 
 namespace joy {
 
@@ -28,8 +27,6 @@ namespace joy {
 	protected:
 
 		io_device& io;
-
-		bool run_error(size_t message, std::string name);
 
 	private:
 

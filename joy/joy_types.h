@@ -13,8 +13,10 @@
 #include <vector>
 #include <functional>
 #include <map>
+#include <stdexcept>
+#include <regex>
 
-namespace joy {
+namespace joy {    
 
     /**
     * Joy is a typed language, there are 2 main groups:
@@ -49,24 +51,127 @@ namespace joy {
         bool_t, char_t, int_t, double_t    
     };
 
+    typedef std::any pattern_t;
+    typedef std::pair<pattern_t, joy_t> token_t;
+    typedef std::initializer_list<joy_t> prerequisite_t;
+
     /**
     * joycpp context free parser states
     */
     enum class state_t { parse, quote, list, set };
 
     /**
-    * global joycpp types
-    */
-    typedef std::any pattern_t;
-    typedef std::pair<pattern_t, joy_t> token_t;
-    typedef std::function<void()> function_t;
-    typedef std::map<std::string, function_t> dictionary_t;
-
-    /**
     * Constructs a token object
     */
     inline token_t make_token(std::any arg, joy_t type) {
         return std::make_pair(arg, type);
+    }
+
+    //string joy primitive matching:
+
+    inline bool jlogical(const std::string& match) {
+        return ((match == "true") || (match == "false"));
+    }
+
+    inline bool jchar(const std::string& match) {
+        return ((match.size() == 2) && (match[0] == '\''));
+    }
+
+    //char special cases:
+
+    inline bool jchar_space(const std::string& match) {
+        return ((match.size() == 1) && (match[0] == '\''));
+    }
+
+    inline bool jchar_escape(const std::string& match) {
+        return ((match.size() == 3) && (match[0] == '\'') && (match[1] == '\\'));
+    }
+
+    inline bool jdouble(const std::string& match) {
+        //prevent stod from parsing the joy combinator infra as infinity
+        if (std::regex_match(match, std::regex("[+-]?(?=.)(?:0|[1-9]\\d*)?(?:\.\\d*)?(?:\\d[eE][+-]?\\d+)?"))) {
+            try {
+                auto x = std::stod(match);
+                return true;
+            }
+            catch (std::invalid_argument) {
+                return false;
+            }
+            catch (std::out_of_range) {
+                return false;
+            }
+        }
+    }
+
+    inline bool jinteger(const std::string& match) {
+        if (jdouble(match)) {
+            return match.find_first_not_of("+-0123456789") == std::string::npos;
+        }
+        else {
+            return false;
+        }
+    }
+
+    //token joy type matching
+
+    inline bool jlogical(const token_t& token) {
+        return token.second == joy_t::bool_t;
+    }
+
+    inline bool jchar(const token_t& token) {
+        return token.second == joy_t::char_t;
+    }
+
+    inline bool jdouble(const token_t& token) {
+        return token.second == joy_t::double_t;
+    }
+
+    inline bool jinteger(const token_t& token) {
+        return token.second == joy_t::int_t;
+    }
+
+    inline bool jnumeric(const token_t& token) {
+        return jchar(token) || jdouble(token) || jinteger(token);
+    }
+
+    inline bool jset(const token_t& token) {
+        return token.second == joy_t::set_t;
+    }
+
+    inline bool jstring(const token_t& token) {
+        return token.second == joy_t::string_t;
+    }
+
+    inline bool jlist(const token_t& token) {
+        return token.second == joy_t::list_t;
+    }
+
+    inline bool jquote(const token_t& token) {
+        return token.second == joy_t::quote_t;
+    }
+
+    inline bool jundef(const token_t& token) {
+        return token.second == joy_t::undef_t;
+    }
+
+    inline bool jcmd(const token_t& token) {
+        return token.second == joy_t::cmd_t;
+    }
+
+    inline bool jgroup(const token_t& token) {
+        return jlist(token) || jquote(token);
+    }
+
+    inline bool jsequence(const token_t& token) {
+        return jlist(token) || jquote(token) || jstring(token);
+    }
+
+    inline bool jaggregate(const token_t& token) {
+        return jsequence(token) || jset(token);
+    }
+
+    inline bool jleaf(const token_t& token) {
+        return !jaggregate(token);
     }
 
 }

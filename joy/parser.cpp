@@ -15,6 +15,14 @@ namespace joy {
 		parse(tokens, root_stack);
 	}
 
+	void parser::operator()(joy_stack& P, joy_stack& S) {
+		parse(P, S);
+	}
+
+	void parser::operator()(joy_stack&& P, joy_stack& S) {
+		parse(P, S);
+	}
+
 	void parser::parse(joy_stack& P, joy_stack& S) {
 		assert(state_stack.top() == state_t::parse);
 		for (auto& token : P) {
@@ -35,7 +43,7 @@ namespace joy {
 
 	bool parser::parse(token_t& token, joy_stack& S) {
 		if (jundef(token)) {
-			if (state_change(token)) {
+			if (state_change(token, S)) {
 				return true;
 			}
 			if (is_context_free(token) || is_regular(token)) {
@@ -49,7 +57,7 @@ namespace joy {
 		switch (state_stack.top()) {
 		case joy::state_t::parse:
 			if (jcmd(token)) {
-				return state_change(token) || context_free(token) || regular(token);
+				return state_change(token, S) || context_free(token, S) || regular(token, S);
 			} 
 			else {
 				S.push(token);
@@ -57,7 +65,7 @@ namespace joy {
 			}
 		case joy::state_t::list:
 		case joy::state_t::quote:
-			nest_token(token, root_stack, root_type, list_depth);
+			nest_token(token, S, root_type, list_depth);
 			return true;
 		case joy::state_t::set:
 			// TODO:
@@ -75,44 +83,44 @@ namespace joy {
 		return false;
 	}
 
-	bool parser::state_change(token_t& token) {
+	bool parser::state_change(token_t& token, joy_stack& S) {
 		auto it = state_change_atoms.find(std::any_cast<std::string>(token.first));
 		if (it != state_change_atoms.end()) {
-			(it->second)();
+			(it->second)(S);
 			return true;
 		}
 		return false;
 	}
 
-	bool parser::context_free(token_t& token) {
+	bool parser::context_free(token_t& token, joy_stack& S) {
 		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
 		if (it != context_free_atoms.end()) {
-			(it->second)();
+			(it->second)(S);
 			return true;
 		}
 		return false;
 	}
 
-	void parser::nest_list(joy_stack& stack, size_t depth) {
+	void parser::nest_list(joy_stack& S, size_t depth) {
 		if (depth == 0) {
-			stack.emplace_back(joy_stack{}, joy_t::list_t); //default to a list type...
+			S.emplace_back(joy_stack{}, joy_t::list_t); //default to a list type...
 		}
 		else {
-			assert(jgroup(stack.top()));
-			nest_list(std::any_cast<joy_stack&>(stack.top().first), depth - 1);
+			assert(jgroup(S.top()));
+			nest_list(std::any_cast<joy_stack&>(S.top().first), depth - 1);
 		}
 	}
 
-	void parser::nest_token(token_t& token, joy_stack& stack, joy_t& type, size_t depth) {
+	void parser::nest_token(token_t& token, joy_stack& S, joy_t& type, size_t depth) {
 		if (depth == 0) {
-			stack.push(token);
+			S.push(token);
 			if (token.second == joy_t::cmd_t) {
 				type = joy_t::quote_t; //...unless a joy command is added
 			}
 		}
 		else {
-			assert(jgroup(stack.top())); 
-			nest_token(token, std::any_cast<joy_stack&>(stack.top().first), stack.top().second, depth - 1);
+			assert(jgroup(S.top())); 
+			nest_token(token, std::any_cast<joy_stack&>(S.top().first), S.top().second, depth - 1);
 		}
 	}
 
@@ -127,7 +135,6 @@ namespace joy {
 	}
 
 	void parser::infra(joy_stack& S) {
-		//ToDO: improve
 		auto P = S.top(); // get the program
 		S.pop();
 		joy_stack M; //fresh stack to work with
@@ -135,47 +142,23 @@ namespace joy {
 		S.pop();
 		M.unstack(); //make the list the stack
 		M.push(P); // push the program [P]
-		//auto T = root_stack; //temporarily discard remainder of the root stack
-		//root_stack = M; // set the new root stack
 		i(M); //execute P
-		//i(root_stack); //execute the program
 		M.stack(); //convert the stack to a list [N]
-		//root_stack.stack(); //convert the stack to a list [N]
-		//auto N = root_stack.top(); //get the result of P M as N
-		//root_stack = T; //restore the stack
 		S.push(M.top()); //return [N] as the result
-		//root_stack.push(N); //push [N] onto original stack as the result
 	}
 
-	token_t parser::map(joy_stack& S) {
-		//TODO: test 
-		/*
-		auto P = S.top(); // get the program
-		S.pop();
-		joy_stack M; //fresh stack to work with
-		M.push(S.top()); //get the list
-		auto t = S.top().second; //copy the return aggregate type
-		S.pop();
-		M.unstack(); //make the list the stack
-		M.push(P); // push the program
-		step(M)
-		M.stack(); //copy stack as a list
-		S.push(M.top()); //return it the list as result
-		S.top().second = t; //convert to correct aggregate type
-		}
-		*/
-		
-		auto size = std::any_cast<joy_stack&>(S.sat(1).first).size(); //aggregate size
+	void parser::map(joy_stack& S) {
+		auto sz = size(S.sat(1)); //aggregate size
 		auto type = S.sat(1).second; //get the return aggregate type
 		step(S);
-		joy_stack M;
-		while (size--) {
-			M.push(root_stack.top());
-			root_stack.pop();
+		joy_stack M; //fresh stack to work with
+		while (sz--) { //copy off the results of step
+			M.push(S.top());
+			S.pop();
 		}
-		std::reverse(M.begin(), M.end()); 
-		return make_token(M, type);
-		
+		M.stack(); //convert the stack to a list [N]
+		M.top().second = type;
+		S.push(M.top());  //push [N] as the result
 	}
 
 	void parser::dip(joy_stack& S) {
@@ -201,7 +184,7 @@ namespace joy {
 		}
 		parse(M, S);
 	}
-
+	
 	void parser::i(joy_stack& S) {
 		auto P = std::any_cast<joy_stack&>(S.top().first);
 		S.pop();

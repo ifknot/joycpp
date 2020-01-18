@@ -1,8 +1,9 @@
 ﻿/**
 * A Joy stack is not simply a sequence of values but also contains operators and combinators.
 * So, strictly speaking the stack is always a quotation and can contain all of the Joy types.
+* The stack is also central to arguement conformability checking with the has(...) member function
 *
-* Stack Operators
+* Stack Operators are those atoms denoting structural functions of the stack component.
 * For performance the general unary operators are defined for stacks containing at least one element:
 *
 *        pop     dup
@@ -72,7 +73,11 @@ namespace joy {
 
 		using vector::vector; // get all the vector constructors for free
 
-		//Joy stack member functions:
+		/**
+		* argument conformability checking
+		* test stack has the requirments presented in the initializer list
+		*/
+		bool has(const std::string& op, const prerequisite_t& argt);
 
 		/**
 		* ..b a│stack    →    │

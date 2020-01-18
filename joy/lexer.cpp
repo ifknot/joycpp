@@ -17,8 +17,8 @@ namespace joy {
 		quit_ = true;
 	}
 
-	bool lexer::regular(token_t& token) {
-		return try_regular(token);
+	bool lexer::regular(token_t& token, joy_stack& S) {
+		return try_regular(token, S);
 	}
 
 	bool lexer::is_regular(token_t& token) {
@@ -27,83 +27,17 @@ namespace joy {
 		return it != regular_translation.end();
 	}
 
-	bool lexer::require(const std::string& op, const prerequisites& argt) {
-		if (root_stack.size() >= argt.size()) {
-			size_t i{ 0 };
-			for (const auto& t : argt) { //for each of the joy types in the initializer list
-				switch (t) {
-				case joy::joy_t::bool_t:
-				case joy::joy_t::int_t:
-				case joy::joy_t::char_t:
-				case joy::joy_t::double_t:
-				case joy::joy_t::quote_t:
-				case joy::joy_t::list_t:
-				case joy::joy_t::set_t:
-				case joy::joy_t::string_t:
-				case joy::joy_t::cmd_t:
-					if (root_stack.sat(i).second != t) {
-						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
-					}
-					break;
-				case joy::joy_t::numeric_t:
-					if (jnumeric(root_stack.sat(i))) {
-						break;
-					}
-					else {
-						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
-					}
-					return false;
-				case joy::joy_t::group_t:
-					if (jgroup(root_stack.sat(i))) {
-						break;
-					}
-					else {
-						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
-					}
-					return false;
-				case joy::joy_t::sequence_t:
-					if (jsequence(root_stack.sat(i))) {
-						break;
-					}
-					else {
-						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
-					}
-					return false;
-				case joy::joy_t::aggregate_t:
-					if (jaggregate(root_stack.sat(i))) {
-						break;
-					}
-					else {
-						return run_error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(root_stack.sat(i).second));
-					}
-					return false;
-				case joy::joy_t::any_t:
-					break;
-				case joy::joy_t::undef_t:
-				default:
-					run_error(XNOCONVERSION, op + " argument conformability checking");
-					return false;
-				}
-				++i;
-			}
-			return true;
-		}
-		else {
-			return run_error(XARGC, op + " expected: " + std::to_string(argt.size()) + " found: " + std::to_string(root_stack.size()));
-		}
-	}
-
-	bool lexer::try_regular(token_t& token) {
+	bool lexer::try_regular(token_t& token, joy_stack& S) {
 		auto it = regular_translation.find(std::any_cast<std::string>(token.first));
 		if (it != regular_translation.end()) {
-			(it->second)();
+			(it->second)(S);
 			return true;
 		}
 		return no_conversion(token);
 	}
 
 	bool lexer::no_conversion(token_t& token) {
-		return run_error(XNOCONVERSION, "command lookup >" + to_string(token) + "< " + to_string(token.second) + " is not recognised");
+		return error(XNOCONVERSION, "command lookup >" + to_string(token) + "< " + to_string(token.second) + " is not recognised");
 	}
 
 	//helper member functions
@@ -111,7 +45,7 @@ namespace joy {
 	void lexer::load_manual(std::string& path_to_manual) {
 		std::ifstream f(path_to_manual);
 		if (!f) {
-			run_error(XNOFILE, "load_manual " + path_to_manual + " not found");
+			error(XNOFILE, "load_manual " + path_to_manual + " not found");
 		}
 		else {
 			std::string line, cmd, msg;
@@ -128,16 +62,16 @@ namespace joy {
 
 	//Joy op C++ implementations
 
-	void lexer::print_top(const joy_stack& stack) {
+	void lexer::print_top(const joy_stack& S) {
 		io.colour(GREEN);
-		io << to_string(stack.top());
+		io << to_string(S.top());
 	}
 
-	void lexer::print_stack(const joy_stack& stack) {
+	void lexer::print_stack(const joy_stack& S) {
 		io.colour(GREEN);
 		std::string dump{ ">" + std::to_string(root_stack.size()) + "<\n"};
-		for (size_t i{ 0 }; i < stack.size(); ++i) {
-			const auto& t = stack.sat(i);
+		for (size_t i{ 0 }; i < S.size(); ++i) {
+			const auto& t = S.sat(i);
 			dump += to_string(t) + "\n";
 		}
 		io << dump;
@@ -150,9 +84,9 @@ namespace joy {
 		}
 	}
 
-	void lexer::helpdetail(const joy_stack& stack) {
+	void lexer::helpdetail(const joy_stack& S) {
 		io.colour(YELLOW);
-		for (const auto [command, type] : stack) {
+		for (const auto [command, type] : S) {
 			assert(type == joy_t::cmd_t);
 			auto match = std::any_cast<std::string>(command);
 			auto it = joy_manual.find(match);
