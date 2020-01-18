@@ -67,7 +67,44 @@ namespace joy {
 	*/
 	void choice(joy_stack& S);
 
-    
+	/**
+	* The stack can be pushed as a quotation onto the stack by .stack()
+	* .. b a│stack    →    .. b a [a b ..]│
+	* A quotation can be turned into the stack by .unstack()
+	* . [a b]│unstack  →                b a│
+	* Therefore, a list on the stack, e.g. [1 2 3 4], can be treated temporarily as the stack by a quotation, say [+ *] and the combinator infra, with the result [9 4].
+	*
+	* The infra combinator expects a quotation [P] which will be executed and below that another quotation which normally will be just a list [M].
+	* The infra combinator temporarily discards the remainder of the stack and takes the quotation or list [M] to be the stack.
+	* It then executes the top quotation [P] which yields a result stack.
+	* This resulting stack is then pushed as a list [N] onto the original stack replacing the original quotation or list.
+	* Hence any quotation can serve as a complex unary operation on other quotations or lists.
+	*
+	*   L  [M]  [P]  infra  =>  L  [N]   :-  [M]  unstack  P  =>  N
+	*
+	* [a] [f]│infra    →     [│a f]
+	* infra : L1 [P] -> L2
+	* Using list L1 as stack, executes P and returns a new list L2.
+	* The first element of L1 is used as the top of stack, and after execution of P the top of stack becomes the first element of L2.
+	*/
+	template<typename parser_t>
+	void infra(joy_stack& S, parser_t& parse) {
+		auto P = S.top(); // get the program
+		S.pop();
+		joy_stack M; //fresh stack to work with
+		M.push(S.top()); //get the list
+		S.pop();
+		M.unstack(); //make the list the stack
+		M.push(P); // push the program [P]
+		//i(M, parse); //execute P
+		{ //inline i to liberate dependency 
+			auto P = std::any_cast<joy_stack&>(M.top().first);
+			M.pop();
+			parse(P, M);
+		}
+		M.stack(); //convert the stack to a list [N]
+		S.push(M.top()); //return [N] as the result
+	}
 
     
 

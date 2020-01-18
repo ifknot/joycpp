@@ -15,7 +15,7 @@ namespace joy {
 	}
 
 	void joy_stack::unstack() {
-		if(has("unstack", { joy_t::group_t })) {
+		if(has("unstack", { joy_t::sequence_t })) {
 		auto S = std::any_cast<joy_stack>(top().first);
 		std::reverse(S.begin(), S.end());
 		*this = S;
