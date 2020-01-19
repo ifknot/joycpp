@@ -163,7 +163,6 @@
     <ClCompile Include="to_string.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="parser.cpp" />
-    <ClCompile Include="joy_parser.cpp" />
     <ClCompile Include="tokenizer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -181,7 +180,6 @@
     <ClInclude Include="joy_stack.h" />
     <ClInclude Include="joy_types.h" />
     <ClInclude Include="lexer.h" />
-    <ClInclude Include="joy_parser.h" />
     <ClInclude Include="tokenizer.h" />
   </ItemGroup>
   <ItemGroup>

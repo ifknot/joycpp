@@ -48,9 +48,6 @@
     <ClCompile Include="joy_overloads.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="joy_parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="joy_types.h">
@@ -96,9 +93,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="joy_overloads.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="joy_parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

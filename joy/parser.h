@@ -33,53 +33,50 @@ namespace joy {
 
 		using lexer::tokenize;
 
+		inline bool root_parse(joy_stack& tokens) {
+			return stack_parse(tokens, root_stack);
+		}
+
 		virtual joy_stack tokenize(joy_stack&& tokens) override;
 
-		virtual bool parse(joy_stack& tokens);
+		virtual bool stack_parse(joy_stack& tokens, joy_stack& S) override;
 
-		//virtual void no_conversion(joy_stack& tokens);
+		virtual bool token_parse(token_t& token, joy_stack& S) override;
+
+		/**
+		* unwind the stack then call lexer::no_conversion
+		*/
+		virtual void no_conversion(joy_stack& tokens);
 
 		/**
 		* endow anonymous functor behaviour on parser
 		*/
 		inline void operator()(joy_stack& P, joy_stack& S) {
-			parse(P, S);
+			assert(state_stack.top() == state_t::parse);
+			for (auto& token : P) {
+				if (!token_parse(token, S) && !lexer::token_parse(token, S)) {
+					break;
+				}
+			}
 		}
 
 		inline void operator()(joy_stack&& P, joy_stack& S) {
-			parse(P, S);
+			assert(state_stack.top() == state_t::parse);
+			for (auto& token : P) {
+				if (!token_parse(token, S) && !lexer::token_parse(token, S)) {
+					break;
+				}
+			}
 		}
 
 	protected:
-
-		void parse(joy_stack& P, joy_stack& S);
-
-		void parse(joy_stack&& P, joy_stack& S);
-
-		bool parse(token_t& token, joy_stack& S);
-
-		bool parse(token_t&& token, joy_stack& S);
-
-		bool is_state_change(token_t& token);
-
-		bool is_context_free(token_t& token);
-
-		bool parse_undef(token_t& token, joy_stack& S);
-
-		bool parse_defined(token_t& token, joy_stack& S);
-
-		inline bool commenting() {
-			return state_stack.top() == state_t::comment;
-		}
-
-		inline bool parsing() {
-			return state_stack.top() == state_t::parse;
-		}
 
 		/**
 		* push down automata context free stack
 		*/
 		state_stack_t state_stack;
+
+		size_t list_depth{ 0 };
 
 	private:
 
@@ -92,18 +89,6 @@ namespace joy {
 		* operator matching function and execute if match return true otherwise return false
 		*/
 		bool run(token_t& token, joy_stack& S);
-		
-		size_t list_depth{ 0 };
-
-		/**
-		* try ti execute token as a state changing operator
-		*/
-		bool state_change(token_t& token, joy_stack& S);
-
-		/**
-		* try to map token to a context free grammar C++ lamda implementation of a Joy operator
-		*/
-		bool context_free(token_t& token, joy_stack& S);
 
 		/**
 		* recursively descend into nested list to add a new list
@@ -116,17 +101,27 @@ namespace joy {
 		*/
 		void nest_token(token_t& token, joy_stack& S, joy_t& type, size_t depth);
 
-		/**
-		* error state - unwind the state_stack by list_depth
-		* notify of any proto stack item deleted
-		* print the remaining stack
-		*/
-		void unwind(joy_stack& S);
+
+		inline bool list_sigil(token_t& token) {
+			if (jcmd(token)) {
+				auto match = std::any_cast<std::string>(token.first);
+				return (match == "[" || match == "]");
+			}
+			else {
+				return false;
+			}
+		}
 
 		/**
-		* state changing operators
+		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
+		* translate Joy context free grammar commands into their c++ lambda equivalents only Joy grammar that either:
+		* 1. can not be expressed in Joy grammar
+		* 2. offer performance benefit as c++ lambda equivalent
+		*
+		* For many operators an implementation can choose whether to make it a Joy03 primitive or define it in a library.
+		* Apart from execution speed, to the user it makes no difference as to which choice has been made.
 		*/
-		dictionary_t state_change_atoms {
+		dictionary_t context_free_atoms {
 		{"(*", [&](joy_stack& S) {
 			if (state_stack.top() != state_t::comment) {
 				state_stack.push(state_t::comment);
@@ -141,32 +136,20 @@ namespace joy {
 				state_stack.pop();
 			}
 		}},
-		{"[", [&](joy_stack& S) { 
+		{"[", [&](joy_stack& S) {
 			state_stack.push(state_t::list);
 			nest_list(S, list_depth);
 			++list_depth;
 		}},
-		{"]", [&](joy_stack& S) { 
+		{"]", [&](joy_stack& S) {
 			if (list_depth == 0) {
 				error(XAGGSIGIL, "]");
 			}
-			else { 
+			else {
 				--list_depth;
 				state_stack.pop();
 			}
-		}}
-		};
-
-		/**
-		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
-		* translate Joy context free grammar commands into their c++ lambda equivalents only Joy grammar that either:
-		* 1. can not be expressed in Joy grammar
-		* 2. offer performance benefit as c++ lambda equivalent
-		*
-		* For many operators an implementation can choose whether to make it a Joy03 primitive or define it in a library.
-		* Apart from execution speed, to the user it makes no difference as to which choice has been made.
-		*/
-		dictionary_t context_free_atoms {
+		}},
 		//combinators of aggregate types
 		//the combinators in this section expect aggregates below their quotation parameters.
 		//the stack is just a list, so any list could serve as the stack, including a list which happens to be on top of the stack.

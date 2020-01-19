@@ -18,110 +18,52 @@ namespace joy {
 		return tokenize_context_free_types(lexer::tokenize(std::move(tokens)));
 	}
 
-	bool parser::parse(joy_stack& tokens) {
-		//for each token
-		switch (state_stack.top()) {
-		case joy::state_t::comment:
-			return true;
-		case joy::state_t::parse:
-			if !lexer::parse(token) !parse(token)
-			break;
-		case joy::state_t::quote:
-			break;
-		case joy::state_t::list:
-			break;
-		case joy::state_t::set:
-			break;
-		default:
-			throw std::runtime_error("unrecognised state " + to_string(state_stack.top()));
-			break;
-		}
-	}
-
-	void parser::parse(joy_stack& P, joy_stack& S) {
-		assert(state_stack.top() == state_t::parse);
-		for (auto& token : P) {
-			if (!parse(token, S)) {
+	bool parser::stack_parse(joy_stack& tokens, joy_stack& S) {
+		for (auto token : tokens) {
+			switch (state_stack.top()) {
+			case joy::state_t::comment:
+				return true;
+			case joy::state_t::parse:
+				if (!token_parse(token, S) && !lexer::token_parse(token, S)) {
+					return false;
+				}
+				break;
+			case joy::state_t::quote:
+			case joy::state_t::list: {
+				if(list_sigil(token)) {
+					run(token, S);
+					break;
+				}
+				nest_token(token, S, root_type, list_depth);
+				break;
+			}
+			case joy::state_t::set:
+				break;
+			default:
+				throw std::runtime_error("unrecognised state " + to_string(state_stack.top()));
 				break;
 			}
 		}
+		return true;
 	}
 
-	void parser::parse(joy_stack&& P, joy_stack& S) {
-		parse(std::move(P), S);
-	}
-
-	bool parser::parse(token_t& token, joy_stack& S) {
-		if (jundef(token)) {
-			return parse_undef(token, S);
-		}
-		else {
-			return parse_defined(token, S);
-		}
-	}
-
-	bool parser::parse(token_t&& token, joy_stack& S) {
-		return parse(std::move(token), S);
-	}
-
-	bool parser::is_state_change(token_t& token) {
-		assert(token.second == joy_t::undef_t);
-		auto it = state_change_atoms.find(std::any_cast<std::string>(token.first));
-		if (it != state_change_atoms.end()) {
-			return true;
-		}
-		return false;
-	}
-
-	bool parser::is_context_free(token_t& token) {
-		assert(token.second == joy_t::undef_t);
-		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
-		if (it != context_free_atoms.end()) {
-			return true;
-		}
-		return false;
-	}
-
-	bool parser::parse_undef(token_t& token, joy_stack& S) {
-		if (state_change(token, S)) {
-			return true;
-		}
-		if (commenting()) {
-			return true;
-		}
-		if (is_context_free(token) || is_regular(token)) {
-			token.second = joy_t::cmd_t;
-			return parse_defined(token, S);
-		}
-		error(XNOCONVERSION, "command lookup >" + to_string(token) + "< " + to_string(token.second) + " is not recognised");
-		unwind(S);
-		return false;
-	}
-
-	bool parser::parse_defined(token_t& token, joy_stack& S) {
-		//io << to_string(state_stack.top());
-		switch (state_stack.top()) {
-		case joy::state_t::parse:
-			if (jcmd(token)) {
-				return state_change(token, S) || context_free(token, S) || regular(token, S);
-			} 
-			else {
-				S.push(token);
-				return true;
-			}
-		case joy::state_t::list:
-		case joy::state_t::quote:
-			nest_token(token, S, root_type, list_depth);
-			return true;
-		case joy::state_t::set:
-			// TODO:
+	bool parser::token_parse(token_t& token, joy_stack& S) {
+		switch (token.second) {
+		case joy::joy_t::undef_t:
 			return false;
-		case joy::state_t::comment:
-			return true;
+		case joy::joy_t::cmd_t:
+			return run(token, S);
 		default:
-			throw std::runtime_error("unrecognised state " + to_string(state_stack.top()));
-			break;
+			return false;
 		}
+	}
+
+	void parser::no_conversion(joy_stack& tokens) {
+		while (list_depth) {
+			state_stack.pop();
+			--list_depth;
+		}
+		lexer::no_conversion(tokens);
 	}
 
 	joy_stack parser::tokenize_context_free_types(joy_stack&& tokens) {
@@ -138,24 +80,6 @@ namespace joy {
 	}
 
 	bool parser::run(token_t& token, joy_stack& S) {
-		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
-		if (it != context_free_atoms.end()) {
-			(it->second)(S);
-			return true;
-		}
-		return false;
-	}
-
-	bool parser::state_change(token_t& token, joy_stack& S) {
-		auto it = state_change_atoms.find(std::any_cast<std::string>(token.first));
-		if (it != state_change_atoms.end()) {
-			(it->second)(S);
-			return true;
-		}
-		return false;
-	}
-
-	bool parser::context_free(token_t& token, joy_stack& S) {
 		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
 		if (it != context_free_atoms.end()) {
 			(it->second)(S);
@@ -186,14 +110,6 @@ namespace joy {
 		else {
 			assert(jgroup(S.top())); 
 			nest_token(token, std::any_cast<joy_stack&>(S.top().first), S.top().second, depth - 1);
-		}
-	}
-
-	void parser::unwind(joy_stack& S) {
-		print_stack(S, io);
-		while (list_depth) {
-			state_stack.pop();
-			--list_depth;
 		}
 	}
 

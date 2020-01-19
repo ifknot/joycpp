@@ -28,7 +28,9 @@ namespace joy {
 
 		virtual joy_stack tokenize(joy_stack&& tokens) override;
 
-		virtual bool parse(joy_stack& tokens);
+		virtual bool stack_parse(joy_stack& tokens, joy_stack& S);
+
+		virtual bool token_parse(token_t& token, joy_stack& S);
 
 		virtual void no_conversion(joy_stack& tokens);
 

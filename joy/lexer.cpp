@@ -13,30 +13,31 @@ namespace joy {
 		return tokenize_regular_types(tokenizer::tokenize(std::move(tokens)));
 	}
 
-	bool lexer::parse(joy_stack& tokens) {
-		//bool parse(token)
-		for(auto& token : tokens) {
-			switch (token.second) {
-			case joy::joy_t::undef_t:
+	bool lexer::stack_parse(joy_stack& tokens, joy_stack& S) {
+		for(auto token : tokens) {
+			if (!lexer::token_parse(token, S)) {
 				return false;
-			case joy::joy_t::cmd_t:
-				if (!run(token, root_stack)) {
-					return false;
-				}
-				break;
-			case joy::joy_t::string_t:
-			case joy::joy_t::bool_t:
-			case joy::joy_t::char_t:
-			case joy::joy_t::int_t:
-			case joy::joy_t::double_t:
-				root_stack.push(token);
-				break;
-			default:
-				break;
 			}
 		}
 		return true;
-		//
+	}
+
+	bool lexer::token_parse(token_t& token, joy_stack& S) {
+		switch (token.second) {
+		case joy::joy_t::undef_t:
+			return false;
+		case joy::joy_t::cmd_t:
+			return run(token, S);
+		case joy::joy_t::string_t:
+		case joy::joy_t::bool_t:
+		case joy::joy_t::char_t:
+		case joy::joy_t::int_t:
+		case joy::joy_t::double_t:
+			S.push(token);
+			return true;
+		default:
+			return false;
+		}
 	}
 
 	void lexer::no_conversion(joy_stack& tokens) {
@@ -46,7 +47,6 @@ namespace joy {
 				error(XNOCONVERSION, "command lookup >" + culprit + "< " + to_string(type) + " is not recognised");
 			}
 		}
-		print_stack(root_stack, io);
 	}
 
 	bool lexer::is_quit() {
