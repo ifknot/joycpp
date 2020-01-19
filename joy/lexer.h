@@ -125,6 +125,7 @@ namespace joy {
 				S.pop();
 			}
 		}},
+		{"==", [&](joy_stack& S) { io << "fix me"; }},
 		//aggregates
 		// size  ==  [ pop 1 ]  map  sum
 		{"size", [&](joy_stack& S) { size(S); }},

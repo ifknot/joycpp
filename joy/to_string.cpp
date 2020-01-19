@@ -34,8 +34,7 @@ namespace joy {
         {state_t::parse, " ready"},
         {state_t::quote, " quote"},
         {state_t::list, " list"},
-        {state_t::set, " set"},
-        {state_t::define, " define"}
+        {state_t::set, " set"}
     };
 
     /**
@@ -46,8 +45,7 @@ namespace joy {
         {state_t::parse, BOLDWHITE},
         {state_t::quote, BOLDYELLOW},
         {state_t::list, BOLDCYAN},
-        {state_t::set, BOLDMAGENTA},
-        {state_t::define, WHITE}
+        {state_t::set, BOLDMAGENTA}
     };
 
     std::string to_string(const joy_t match) {

@@ -27,6 +27,8 @@ namespace joy {
 
 		bool joy_token(token_t& token);
 
+		token_t candidate;
+
 		joy_dictionary_t joy_core {
 			{"bar", "manual"}
 		};

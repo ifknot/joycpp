@@ -36,7 +36,6 @@ namespace joy {
     enum class joy_t { 
         //grouped types
         undef_t,        // an undefined lexeme
-        def_t,          // a definition token 
         any_t,          // any joy type
         numeric_t,      // int_t, char_t double_t
         group_t,        // quote_t, list_t
@@ -59,7 +58,7 @@ namespace joy {
     /**
     * joycpp context free parser states
     */
-    enum class state_t { comment, parse, quote, list, set, define };
+    enum class state_t { comment, parse, quote, list, set };
 
     /**
     * Constructs a token object

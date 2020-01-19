@@ -52,6 +52,8 @@ namespace joy {
 
 		bool parse(token_t&& token, joy_stack& S);
 
+		bool is_state_change(token_t& token);
+
 		bool is_context_free(token_t& token);
 
 		bool parse_undef(token_t& token, joy_stack& S);
@@ -66,12 +68,12 @@ namespace joy {
 			return state_stack.top() == state_t::parse;
 		}
 
-	private:
-
 		/**
 		* push down automata context free stack
 		*/
 		state_stack_t state_stack;
+
+	private:
 		
 		size_t list_depth{ 0 };
 

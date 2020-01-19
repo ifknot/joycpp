@@ -22,11 +22,11 @@ namespace joy {
 	}
 
 	bool joy_parser::parse_joy(token_t& token) {
-		if (parsing()) {
+		switch (state_stack.top()) {
+		case joy::state_t::parse:
 			return(user_token(token) || joy_token(token) || parser::parse(token, root_stack));
-		}
-		else {
-			parser::parse(token, root_stack);
+		default:
+			return parser::parse(token, root_stack);
 		}
 	}
 
@@ -51,7 +51,5 @@ namespace joy {
 		}
 		return false;
 	}
-
-
 
 }

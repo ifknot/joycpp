@@ -40,6 +40,15 @@ namespace joy {
 		return parse(std::move(token), S);
 	}
 
+	bool parser::is_state_change(token_t& token) {
+		assert(token.second == joy_t::undef_t);
+		auto it = state_change_atoms.find(std::any_cast<std::string>(token.first));
+		if (it != state_change_atoms.end()) {
+			return true;
+		}
+		return false;
+	}
+
 	bool parser::is_context_free(token_t& token) {
 		assert(token.second == joy_t::undef_t);
 		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
@@ -83,10 +92,8 @@ namespace joy {
 		case joy::state_t::set:
 			// TODO:
 			return false;
-			break;
 		case joy::state_t::comment:
 			return true;
-			break;
 		default:
 			throw std::runtime_error("unrecognised state " + to_string(state_stack.top()));
 			break;

@@ -16,7 +16,7 @@ namespace joy {
 		tokens = split_strings(tokens); //split out all the open-close quote sections into string_t tokens 
 		tokens = split_whitespace(tokens); //split remaining undef tokens up into sub tokens by white space
 		tokens = simple_types(tokens);//tokenize any simple types in the fully split list
-		
+		//; eof
 		return tokens;
 	}
 
