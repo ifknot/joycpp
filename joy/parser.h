@@ -31,6 +31,14 @@ namespace joy {
 
 		state_t state() const;
 
+		using lexer::tokenize;
+
+		virtual joy_stack tokenize(joy_stack&& tokens) override;
+
+		virtual bool parse(joy_stack& tokens);
+
+		//virtual void no_conversion(joy_stack& tokens);
+
 		/**
 		* endow anonymous functor behaviour on parser
 		*/
@@ -74,6 +82,16 @@ namespace joy {
 		state_stack_t state_stack;
 
 	private:
+
+		/**
+		* tokenize context free expression Joy command types
+		*/
+		joy_stack tokenize_context_free_types(joy_stack&& tokens);
+
+		/**
+		* operator matching function and execute if match return true otherwise return false
+		*/
+		bool run(token_t& token, joy_stack& S);
 		
 		size_t list_depth{ 0 };
 

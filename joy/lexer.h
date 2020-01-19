@@ -24,6 +24,14 @@ namespace joy {
 
 		lexer(joy_stack& stack, io_device& io, std::string path_to_manual);
 
+		using tokenizer::tokenize;
+
+		virtual joy_stack tokenize(joy_stack&& tokens) override;
+
+		virtual bool parse(joy_stack& tokens);
+
+		virtual void no_conversion(joy_stack& tokens);
+
 		bool is_quit();
 
 		void quit();
@@ -53,6 +61,16 @@ namespace joy {
 	private: 
 
 		/**
+		* tokenize regular expression Joy command types
+		*/
+		joy_stack tokenize_regular_types(joy_stack&& tokens);
+
+		/**
+		* operator matching function and execute if match return true otherwise return false
+		*/
+		bool run(token_t& token, joy_stack& S);
+
+		/**
 		* internal quit flag
 		*/
 		bool quit_{ false };
@@ -76,7 +94,7 @@ namespace joy {
 		* 1. can not be expressed in Joy grammar
 		* 2. offer performance benefit as c++ lambda equivalent
 		*/
-		dictionary_t regular_translation { 
+		dictionary_t regular_atoms { 
 		//non-standard
 		{"?", [&](joy_stack& S) { if (S.has("?", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
 		//stack commands

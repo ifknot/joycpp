@@ -9,20 +9,47 @@
 #include "joy_parser.h"
 
 void run() { // exec loop
-    
+
     joy::io_device io;
     io.colouring(true);
     joy::joy_stack stack;
-    joy::joy_parser parser(stack, io, "joy03.man");
-    io.ok();
-    io.colour(joy::to_colour(parser.state()));
-    io << to_string(parser.state());
+    
+    joy::parser parser(stack, io, "joy03.man");
     while (!parser.is_quit()) {
-        parser.parse(io.readline()); 
-        io.ok();
-        io.colour(joy::to_colour(parser.state()));
-        io << to_string(parser.state());
+
+        auto tokens = parser.tokenize(io.readline());
+        io.colour(RED);
+        for (const auto& t : tokens) {
+            io << joy::to_string(t);
+        }
+        /*
+        if (parser.parse(tokens)) {
+            io.ok();
+            io.colour(to_colour(parser.state()));
+        }
+        else {
+            parser.no_conversion(tokens);
+        }
+        */
     }
+
+    /*
+    joy::lexer lex(stack, io, "joy03.man");
+    while (!lex.is_quit()) {
+
+        auto tokens = lex.tokenize(io.readline());
+        //io.colour(RED);
+        //for (const auto& t : tokens) {
+          //  io << joy::to_string(t);
+        //}
+        if (lex.parse(tokens)) {
+            io.ok();
+        }
+        else {
+            lex.no_conversion(tokens);
+        }
+    }
+    */
     
     /*
     joy::tokenizer tokenizer(io);
@@ -36,6 +63,7 @@ void run() { // exec loop
         io.ok();
     }
     */
+    
     
 }
 

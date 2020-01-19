@@ -9,7 +9,7 @@ namespace joy {
 	}
 
 	void joy_parser::parse(std::string line) {
-		auto tokens = tokenizer::tokenize(line);
+		auto tokens = tokenizer::tokenize(std::move(line));
 		parse_joy(tokens);
 	}
 

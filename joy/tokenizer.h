@@ -22,7 +22,16 @@ namespace joy {
 	
 		tokenizer(io_device& io);
 
-		joy_stack tokenize(std::string line);
+		/**
+		* convert user input line into joy_stack of a single undefined token {line, undef_t}
+		*/
+		joy_stack tokenize(std::string&& line);
+
+		/**
+		* split the line into recognised tokens bool_t, char_t, int_t, double_t, string_t
+		* mark any remainder as undef_t
+		*/
+		virtual joy_stack tokenize(joy_stack&& tokens);
 
 	protected:
 
@@ -30,18 +39,10 @@ namespace joy {
 
 	private:
 
-		bool commenting{ false };
-
 		/**
-		* tokenize simple types 
+		* split out all the open-close quote sections into {std::sting, string_t} tokens 
 		*/
-
-		joy_stack simple_types(joy_stack& tokens);
-
-		/**
-		* split out all the open-close quote sections into string tokens 
-		*/
-		static joy_stack split_strings(joy_stack& tokens);
+		static joy_stack tokenize_strings(joy_stack&& tokens);	
 
 		/**
 		* recursively find and split out sigil enclosed sections into tokens	
@@ -51,7 +52,13 @@ namespace joy {
 		/**
 		* split out all the white space separated sections into string tokens 
 		*/
-		static joy_stack split_whitespace(joy_stack& tokens);
+		static joy_stack split_whitespace(joy_stack&& tokens);
+
+		/**
+		* tokenize bool_t, char_t, int_t, double_t
+		* convert string_t to a aggregate joy_stack of char_t tokens
+		*/
+		static joy_stack tokenize_simple_types(joy_stack&& tokens);
 
 		/**
 		*  removing any leading spaces and/or trailing single line comment
