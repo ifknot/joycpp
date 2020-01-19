@@ -30,18 +30,32 @@ namespace joy {
     * map parser states to text
     */
     std::map<state_t, std::string> state_to_string = {
-        {state_t::parse, " parse"},
+        {state_t::comment, " comment"},
+        {state_t::parse, " ready"},
         {state_t::quote, " quote"},
         {state_t::list, " list"},
-        {state_t::set, " set"}
+        {state_t::set, " set"},
+        {state_t::define, " define"}
     };
 
-    std::string to_string(joy_t match) {
+    /**
+    * map states to colour code
+    */
+    std::map<state_t, std::string> state_to_colour = {
+        {state_t::comment, BOLDBLACK},
+        {state_t::parse, BOLDWHITE},
+        {state_t::quote, BOLDYELLOW},
+        {state_t::list, BOLDCYAN},
+        {state_t::set, BOLDMAGENTA},
+        {state_t::define, WHITE}
+    };
+
+    std::string to_string(const joy_t match) {
         assert(type_to_string.count(match));
         return type_to_string[match];
     }
 
-    std::string to_string(state_t match) {
+    std::string to_string(const state_t match) {
         assert(state_to_string.count(match));
         return state_to_string[match];
     }
@@ -91,6 +105,11 @@ namespace joy {
             result += to_string(token) + " ";
         }
         return result;
+    }
+
+    std::string to_colour(const state_t match) {
+        assert(state_to_colour.count(match));
+        return state_to_colour[match];
     }
 
 }

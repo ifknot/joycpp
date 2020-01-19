@@ -1,5 +1,7 @@
 #include "tokenizer.h"
 
+#include "iostream"
+
 namespace joy {
 
 	tokenizer::tokenizer(io_device& io) : io(io) {}
@@ -13,15 +15,14 @@ namespace joy {
 		tokens.push_back(make_token(line, joy_t::undef_t)); //entire line as a single undef token
 		tokens = split_strings(tokens); //split out all the open-close quote sections into string_t tokens 
 		tokens = split_whitespace(tokens); //split remaining undef tokens up into sub tokens by white space
-		//tokenize any simple types in the fully split list
+		tokens = simple_types(tokens);//tokenize any simple types in the fully split list
+		
+		return tokens;
+	}
+
+	joy_stack tokenizer::simple_types(joy_stack& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			auto match = std::any_cast<std::string>(pattern);
-			if (match == "*)") {
-				if (!commenting) {
-					error(XNOOPENSIGIL, "*)");
-					return joy_stack{};
-				}
-			}
 			if (type == joy_t::string_t) { //convert std::string into a joy_stack of char tokens
 				joy_stack s;
 				for (auto c : match) {
@@ -39,9 +40,8 @@ namespace joy {
 				type = joy_t::char_t;
 				continue;
 			}
-			/* FIX: this breaks chr ord . and .s
 			if (jchar_escape(match)) {
-				switch (match[3]) {
+				switch (match[2]) {
 				case 'n':
 					pattern = '\n';
 					break;
@@ -63,7 +63,6 @@ namespace joy {
 				type = joy_t::char_t;
 				continue;
 			}
-			*/
 			if (jchar(match)) {
 				pattern = match[1];
 				type = joy_t::char_t;

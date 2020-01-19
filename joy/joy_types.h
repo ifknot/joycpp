@@ -36,6 +36,7 @@ namespace joy {
     enum class joy_t { 
         //grouped types
         undef_t,        // an undefined lexeme
+        def_t,          // a definition token 
         any_t,          // any joy type
         numeric_t,      // int_t, char_t double_t
         group_t,        // quote_t, list_t
@@ -58,7 +59,7 @@ namespace joy {
     /**
     * joycpp context free parser states
     */
-    enum class state_t { parse, quote, list, set };
+    enum class state_t { comment, parse, quote, list, set, define };
 
     /**
     * Constructs a token object
@@ -77,12 +78,12 @@ namespace joy {
         return ((match.size() == 2) && (match[0] == '\''));
     }
 
-    //char special cases:
-
+    //char special case space
     inline bool jchar_space(const std::string& match) {
         return ((match.size() == 1) && (match[0] == '\''));
     }
 
+    //char escape
     inline bool jchar_escape(const std::string& match) {
         return ((match.size() == 3) && (match[0] == '\'') && (match[1] == '\\'));
     }

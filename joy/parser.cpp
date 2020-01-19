@@ -10,9 +10,8 @@ namespace joy {
 		state_stack.push(state_t::parse);
 	}
 
-	void parser::parse(std::string line) {
-		auto tokens = tokenizer::tokenize(line);
-		parse(tokens, root_stack);
+	state_t parser::state() const {
+		return state_stack.top();
 	}
 
 	void parser::parse(joy_stack& P, joy_stack& S) {
@@ -25,28 +24,49 @@ namespace joy {
 	}
 
 	void parser::parse(joy_stack&& P, joy_stack& S) {
-		assert(state_stack.top() == state_t::parse);
-		for (auto& token : P) {
-			if (!parse(token, S)) {
-				break;
-			}
-		}
+		parse(std::move(P), S);
 	}
 
 	bool parser::parse(token_t& token, joy_stack& S) {
 		if (jundef(token)) {
-			if (state_change(token, S)) {
-				return true;
-			}
-			if (is_context_free(token) || is_regular(token)) {
-				token.second = joy_t::cmd_t;
-			}
-			else {
-				error(XNOCONVERSION, "command lookup >" + to_string(token) + "< " + to_string(token.second) + " is not recognised");
-				unwind(S);
-				return false;
-			}
+			return parse_undef(token, S);
 		}
+		else {
+			return parse_defined(token, S);
+		}
+	}
+
+	bool parser::parse(token_t&& token, joy_stack& S) {
+		return parse(std::move(token), S);
+	}
+
+	bool parser::is_context_free(token_t& token) {
+		assert(token.second == joy_t::undef_t);
+		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
+		if (it != context_free_atoms.end()) {
+			return true;
+		}
+		return false;
+	}
+
+	bool parser::parse_undef(token_t& token, joy_stack& S) {
+		if (state_change(token, S)) {
+			return true;
+		}
+		if (commenting()) {
+			return true;
+		}
+		if (is_context_free(token) || is_regular(token)) {
+			token.second = joy_t::cmd_t;
+			return parse_defined(token, S);
+		}
+		error(XNOCONVERSION, "command lookup >" + to_string(token) + "< " + to_string(token.second) + " is not recognised");
+		unwind(S);
+		return false;
+	}
+
+	bool parser::parse_defined(token_t& token, joy_stack& S) {
+		//io << to_string(state_stack.top());
 		switch (state_stack.top()) {
 		case joy::state_t::parse:
 			if (jcmd(token)) {
@@ -64,16 +84,13 @@ namespace joy {
 			// TODO:
 			return false;
 			break;
-		}
-	}
-
-	bool parser::is_context_free(token_t& token) {
-		assert(token.second == joy_t::undef_t);
-		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
-		if (it != context_free_atoms.end()) {
+		case joy::state_t::comment:
 			return true;
+			break;
+		default:
+			throw std::runtime_error("unrecognised state " + to_string(state_stack.top()));
+			break;
 		}
-		return false;
 	}
 
 	bool parser::state_change(token_t& token, joy_stack& S) {
@@ -109,6 +126,8 @@ namespace joy {
 			S.push(token);
 			if (token.second == joy_t::cmd_t) {
 				type = joy_t::quote_t; //...unless a joy command is added
+				state_stack.pop();
+				state_stack.push(state_t::quote);
 			}
 		}
 		else {
@@ -118,11 +137,6 @@ namespace joy {
 	}
 
 	void parser::unwind(joy_stack& S) {
-		if (S.size()) {
-			io.colour(RED);
-			io << "deleted: " + to_string(S.top());
-			S.pop();
-		}
 		print_stack(S, io);
 		while (list_depth) {
 			state_stack.pop();

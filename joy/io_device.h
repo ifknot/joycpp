@@ -41,7 +41,7 @@ namespace joy {
         /**
         * send light gray "ok" message and CR to the output stream
         */
-        void ok();
+        void ok(std::string info = "");
 
     private:
 

@@ -5,19 +5,23 @@
 #include <iostream>
 
 #include "io_device.h"
-#include "parser.h"
 #include "joy_stack.h"
+#include "joy_parser.h"
 
 void run() { // exec loop
     
     joy::io_device io;
     io.colouring(true);
     joy::joy_stack stack;
-    joy::parser parser(stack, io, "joy03.man");
+    joy::joy_parser parser(stack, io, "joy03.man");
     io.ok();
+    io.colour(joy::to_colour(parser.state()));
+    io << to_string(parser.state());
     while (!parser.is_quit()) {
         parser.parse(io.readline()); 
         io.ok();
+        io.colour(joy::to_colour(parser.state()));
+        io << to_string(parser.state());
     }
     
     /*

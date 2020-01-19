@@ -29,9 +29,7 @@ namespace joy {
 
 		parser(joy_stack& stack, io_device& io, std::string path_to_manual);
 
-		//testing 
-		// TODO: remove once joy parser implemented
-		void parse(std::string line);
+		state_t state() const;
 
 		/**
 		* endow anonymous functor behaviour on parser
@@ -52,7 +50,21 @@ namespace joy {
 
 		bool parse(token_t& token, joy_stack& S);
 
+		bool parse(token_t&& token, joy_stack& S);
+
 		bool is_context_free(token_t& token);
+
+		bool parse_undef(token_t& token, joy_stack& S);
+
+		bool parse_defined(token_t& token, joy_stack& S);
+
+		inline bool commenting() {
+			return state_stack.top() == state_t::comment;
+		}
+
+		inline bool parsing() {
+			return state_stack.top() == state_t::parse;
+		}
 
 	private:
 
@@ -60,7 +72,7 @@ namespace joy {
 		* push down automata context free stack
 		*/
 		state_stack_t state_stack;
-
+		
 		size_t list_depth{ 0 };
 
 		/**
@@ -95,6 +107,20 @@ namespace joy {
 		* state changing operators
 		*/
 		dictionary_t state_change_atoms {
+		{"(*", [&](joy_stack& S) {
+			if (state_stack.top() != state_t::comment) {
+				state_stack.push(state_t::comment);
+			}
+		}},
+		{"*)", [&](joy_stack& S) {
+			if (state_stack.top() != state_t::comment) {
+				error(XNOOPENSIGIL, "*)");
+			}
+			else {
+				assert(state_stack.top() == state_t::comment);
+				state_stack.pop();
+			}
+		}},
 		{"[", [&](joy_stack& S) { 
 			state_stack.push(state_t::list);
 			nest_list(S, list_depth);

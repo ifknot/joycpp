@@ -27,12 +27,9 @@ namespace joy {
 		return colouring_;
 	}
 
-	void io_device::ok() {
-		colour(BOLDBLACK);
-		ink();
-		output_stream << "ok\n";
-		colour(BOLDWHITE);
-		ink();
+	void io_device::ok(std::string info) {
+		output_stream << RESET << BOLDBLACK;
+		output_stream << "ok " << info;
 	}
 
 	void io_device::ink() {

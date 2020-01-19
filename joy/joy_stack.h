@@ -65,6 +65,7 @@
 namespace joy {
 
 	/**
+	* The joy stack does most of the heavy lifting in joycpp 
 	* Extending std::vector with joy stack manipulators because std::stack hides array access with [] and at ()
 	* Also get the vector member types
 	* Maintain the std::stack ADT idioms

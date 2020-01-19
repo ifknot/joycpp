@@ -33,6 +33,12 @@ namespace joy {
 		bool commenting{ false };
 
 		/**
+		* tokenize simple types 
+		*/
+
+		joy_stack simple_types(joy_stack& tokens);
+
+		/**
 		* split out all the open-close quote sections into string tokens 
 		*/
 		static joy_stack split_strings(joy_stack& tokens);
