@@ -94,7 +94,7 @@ namespace joy {
             result += std::any_cast<std::string>(token.first);
             break;
         }
-        return result + " " + to_string(token.second);
+        return result;// +" " + to_string(token.second);
     }
 
     std::string to_string(const joy_stack& stack) {

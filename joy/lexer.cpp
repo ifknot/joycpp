@@ -13,33 +13,6 @@ namespace joy {
 		return tokenize_regular_types(tokenizer::tokenize(std::move(tokens)));
 	}
 
-	bool lexer::stack_parse(joy_stack& tokens, joy_stack& S) {
-		for(auto token : tokens) {
-			if (!lexer::token_parse(token, S)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	bool lexer::token_parse(token_t& token, joy_stack& S) {
-		switch (token.second) {
-		case joy::joy_t::undef_t:
-			return false;
-		case joy::joy_t::cmd_t:
-			return run(token, S);
-		case joy::joy_t::string_t:
-		case joy::joy_t::bool_t:
-		case joy::joy_t::char_t:
-		case joy::joy_t::int_t:
-		case joy::joy_t::double_t:
-			S.push(token);
-			return true;
-		default:
-			return false;
-		}
-	}
-
 	void lexer::no_conversion(joy_stack& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {
@@ -57,21 +30,6 @@ namespace joy {
 		quit_ = true;
 	}
 
-	bool lexer::regular(token_t& token, joy_stack& S) {
-		auto it = regular_atoms.find(std::any_cast<std::string>(token.first));
-		if (it != regular_atoms.end()) {
-			(it->second)(S);
-			return true;
-		}
-		return false; 
-	}
-
-	bool lexer::is_regular(token_t& token) {
-		assert(token.second == joy_t::undef_t);
-		auto it = regular_atoms.find(std::any_cast<std::string>(token.first));
-		return it != regular_atoms.end();
-	}
-
 	joy_stack lexer::tokenize_regular_types(joy_stack&& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {
@@ -85,7 +43,7 @@ namespace joy {
 		return std::move(tokens);
 	}
 
-	bool lexer::run(token_t& token, joy_stack& S) {
+	bool lexer::exec_regular(token_t& token, joy_stack& S) {
 		auto it = regular_atoms.find(std::any_cast<std::string>(token.first));
 		if (it != regular_atoms.end()) {
 			(it->second)(S);

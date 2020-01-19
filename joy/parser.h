@@ -17,7 +17,7 @@
 // 2 3 4 [ + ] dip
 // [ 1 2 3 ] [ dup * ] step
 // [ 1 2 3 4 ] [ + * ] infra
-// [ [ 1 2 3 ] [ 4 5 6 ] ] [ [ dup dup * * ] map ] map
+// [ [ 1 2 3 ] [ 4 5 6 ] ] [ [ dup dup * * ] map ] map .
 
 namespace joy {
 
@@ -33,40 +33,30 @@ namespace joy {
 
 		using lexer::tokenize;
 
-		inline bool root_parse(joy_stack& tokens) {
-			return stack_parse(tokens, root_stack);
-		}
-
+		/**
+		* cascade tokens to tokenizer type id the simple type 
+		* then lexer type id any regular commands
+		* then parser type id any context free commands
+		*/
 		virtual joy_stack tokenize(joy_stack&& tokens) override;
 
-		virtual bool stack_parse(joy_stack& tokens, joy_stack& S) override;
-
-		virtual bool token_parse(token_t& token, joy_stack& S) override;
+		/**
+		* entry point for tokenized stack
+		*/
+		bool root_parse(joy_stack& tokens);
 
 		/**
 		* unwind the stack then call lexer::no_conversion
+		* then cascade to lexer to print errors
 		*/
-		virtual void no_conversion(joy_stack& tokens);
+		virtual void no_conversion(joy_stack& tokens) override;
 
 		/**
-		* endow anonymous functor behaviour on parser
+		* endow anonymous functor behaviour for context free parsing
+		* so that can use context free libraries eg joy_combinators
 		*/
 		inline void operator()(joy_stack& P, joy_stack& S) {
-			assert(state_stack.top() == state_t::parse);
-			for (auto& token : P) {
-				if (!token_parse(token, S) && !lexer::token_parse(token, S)) {
-					break;
-				}
-			}
-		}
-
-		inline void operator()(joy_stack&& P, joy_stack& S) {
-			assert(state_stack.top() == state_t::parse);
-			for (auto& token : P) {
-				if (!token_parse(token, S) && !lexer::token_parse(token, S)) {
-					break;
-				}
-			}
+			parse(P, S);
 		}
 
 	protected:
@@ -76,9 +66,19 @@ namespace joy {
 		*/
 		state_stack_t state_stack;
 
+	private:
+
 		size_t list_depth{ 0 };
 
-	private:
+		/**
+		* nested parse a quoted program P against a stack S
+		*/
+		bool parse(joy_stack& P, joy_stack& S);
+
+		/**
+		* nested parse a token against a stack S
+		*/
+		bool parse(token_t& token, joy_stack& S);
 
 		/**
 		* tokenize context free expression Joy command types
@@ -88,7 +88,7 @@ namespace joy {
 		/**
 		* operator matching function and execute if match return true otherwise return false
 		*/
-		bool run(token_t& token, joy_stack& S);
+		bool exec_context_free(token_t& token, joy_stack& S);
 
 		/**
 		* recursively descend into nested list to add a new list
@@ -101,16 +101,10 @@ namespace joy {
 		*/
 		void nest_token(token_t& token, joy_stack& S, joy_t& type, size_t depth);
 
-
-		inline bool list_sigil(token_t& token) {
-			if (jcmd(token)) {
-				auto match = std::any_cast<std::string>(token.first);
-				return (match == "[" || match == "]");
-			}
-			else {
-				return false;
-			}
-		}
+		/**
+		* test if the token is either an open or close sigil 
+		*/
+		bool is_sigil(token_t& token, std::string&& open_sigil, std::string&& close_sigil);
 
 		/**
 		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)

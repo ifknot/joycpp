@@ -26,6 +26,10 @@ namespace joy {
 		* convert user input line into joy_stack of a single undefined token {line, undef_t}
 		*/
 		joy_stack tokenize(std::string&& line);
+		
+	protected:
+
+		io_device& io;
 
 		/**
 		* split the line into recognised tokens bool_t, char_t, int_t, double_t, string_t
@@ -33,9 +37,6 @@ namespace joy {
 		*/
 		virtual joy_stack tokenize(joy_stack&& tokens);
 
-	protected:
-
-		io_device& io;
 
 	private:
 

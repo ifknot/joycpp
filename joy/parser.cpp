@@ -18,43 +18,51 @@ namespace joy {
 		return tokenize_context_free_types(lexer::tokenize(std::move(tokens)));
 	}
 
-	bool parser::stack_parse(joy_stack& tokens, joy_stack& S) {
-		for (auto token : tokens) {
-			switch (state_stack.top()) {
-			case joy::state_t::comment:
-				return true;
-			case joy::state_t::parse:
-				if (!token_parse(token, S) && !lexer::token_parse(token, S)) {
-					return false;
-				}
-				break;
-			case joy::state_t::quote:
-			case joy::state_t::list: {
-				if(list_sigil(token)) {
-					run(token, S);
-					break;
-				}
-				nest_token(token, S, root_type, list_depth);
-				break;
-			}
-			case joy::state_t::set:
-				break;
-			default:
-				throw std::runtime_error("unrecognised state " + to_string(state_stack.top()));
-				break;
+	bool parser::root_parse(joy_stack& tokens) {
+		return(parse(tokens, root_stack));
+	}
+
+	bool parser::parse(joy_stack& P, joy_stack& S) {
+		for (auto& token : P) {
+			if (!parse(token, S)) {
+				return false;
 			}
 		}
 		return true;
 	}
 
-	bool parser::token_parse(token_t& token, joy_stack& S) {
-		switch (token.second) {
-		case joy::joy_t::undef_t:
+	bool parser::parse(token_t& token, joy_stack& S) {
+		switch (state_stack.top()) {
+		case joy::state_t::comment:
+			if (is_sigil(token, "(*", "*)")) {
+				exec_context_free(token, root_stack);
+			}
+			return true;
+		case joy::state_t::parse:
+			switch (token.second) {
+			case joy::joy_t::undef_t:
+				return false;
+			case joy::joy_t::cmd_t:
+				return exec_context_free(token, S) || exec_regular(token, S);
+			default:
+				S.push(token);
+				return true;
+			}
+		case joy::state_t::list:
+		case joy::state_t::quote:
+			if (is_sigil(token, "[", "]")) {
+				exec_context_free(token, root_stack);
+				break;
+			}
+			nest_token(token, S, root_type, list_depth);
+			return true;
+		case joy::state_t::set:
+			// TODO:
 			return false;
-		case joy::joy_t::cmd_t:
-			return run(token, S);
+			break;
 		default:
-			return false;
+			throw std::runtime_error("unrecognised state " + to_string(state_stack.top()));
+			break;
 		}
 	}
 
@@ -79,7 +87,7 @@ namespace joy {
 		return std::move(tokens);
 	}
 
-	bool parser::run(token_t& token, joy_stack& S) {
+	bool parser::exec_context_free(token_t& token, joy_stack& S) {
 		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
 		if (it != context_free_atoms.end()) {
 			(it->second)(S);
@@ -110,6 +118,16 @@ namespace joy {
 		else {
 			assert(jgroup(S.top())); 
 			nest_token(token, std::any_cast<joy_stack&>(S.top().first), S.top().second, depth - 1);
+		}
+	}
+
+	bool parser::is_sigil(token_t& token, std::string&& open_sigil, std::string&& close_sigil) {
+		if (jcmd(token)) {
+			auto match = std::any_cast<std::string>(token.first);
+			return (match == open_sigil || match == close_sigil);
+		}
+		else {
+			return false;
 		}
 	}
 

@@ -18,10 +18,6 @@ void run() { // exec loop
     while (!parser.is_quit()) {
 
         auto tokens = parser.tokenize(io.readline());
-        io.colour(RED);
-        for (const auto& t : tokens) {
-            //io << joy::to_string(t);
-        }
         if (parser.root_parse(tokens)) {
             io.ok();
             io.colour(to_colour(parser.state()));
@@ -36,38 +32,6 @@ void run() { // exec loop
         
     }
 
-    /*
-    joy::lexer lex(stack, io, "joy03.man");
-    while (!lex.is_quit()) {
-
-        auto tokens = lex.tokenize(io.readline());
-        //io.colour(RED);
-        //for (const auto& t : tokens) {
-          //  io << joy::to_string(t);
-        //}
-        if (lex.parse(tokens)) {
-            io.ok();
-        }
-        else {
-            lex.no_conversion(tokens);
-        }
-    }
-    */
-    
-    /*
-    joy::tokenizer tokenizer(io);
-    while (true) {
-        
-        auto tokens = tokenizer.tokenize(io.readline());
-        io.colour(RED);
-        for (const auto& t : tokens) {
-            io << to_string(t);
-        }
-        io.ok();
-    }
-    */
-    
-    
 }
 
 /**

@@ -19,26 +19,16 @@ namespace joy {
 
 	public:
 
-		typedef std::function<void(joy_stack& S)> function_t;
-		typedef std::map<std::string, function_t> dictionary_t;
-
 		lexer(joy_stack& stack, io_device& io, std::string path_to_manual);
-
-		using tokenizer::tokenize;
-
-		virtual joy_stack tokenize(joy_stack&& tokens) override;
-
-		virtual bool stack_parse(joy_stack& tokens, joy_stack& S);
-
-		virtual bool token_parse(token_t& token, joy_stack& S);
-
-		virtual void no_conversion(joy_stack& tokens);
 
 		bool is_quit();
 
 		void quit();
 
 	protected:
+
+		typedef std::function<void(joy_stack & S)> function_t;
+		typedef std::map<std::string, function_t> dictionary_t;
 
 		/**
 		* root stack
@@ -50,15 +40,23 @@ namespace joy {
 		*/
 		joy_t root_type{ joy_t::quote_t };
 
-		/**
-		* try to map token to a regular grammar C++ lamda implementation of a regular grammar Joy operator
-		*/
-		bool regular(token_t& token, joy_stack& S);
+		using tokenizer::tokenize;
 
 		/**
-		* test if the token is Joy03 regular grammar
+		* cascade tokens to parent tokenizer::tokenize type id the simple types
+		* then type id any regular commands
 		*/
-		bool is_regular(token_t& token);
+		virtual joy_stack tokenize(joy_stack&& tokens) override;
+
+		/**
+		* display errors for any undefined tokens
+		*/
+		virtual void no_conversion(joy_stack& tokens);
+
+		/**
+		* operator matching function and execute if match return true otherwise return false
+		*/
+		bool exec_regular(token_t& token, joy_stack& S);
 
 	private: 
 
@@ -66,11 +64,6 @@ namespace joy {
 		* tokenize regular expression Joy command types
 		*/
 		joy_stack tokenize_regular_types(joy_stack&& tokens);
-
-		/**
-		* operator matching function and execute if match return true otherwise return false
-		*/
-		bool run(token_t& token, joy_stack& S);
 
 		/**
 		* internal quit flag
