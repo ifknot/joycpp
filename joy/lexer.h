@@ -1,7 +1,9 @@
 /**
 * Chomsky type 3 regular grammar lexer 
 * i.e. can be decided by a finite state automaton
-* Uses a map of string operator to lamda function mapping for Joy operators
+* Uses:
+* 1. root_stack
+* 2. map of string Joy operator to lamda function mapping for regular grammar C++ implemented Joy operators
 */
 #pragma once
 
