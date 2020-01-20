@@ -62,12 +62,17 @@ namespace joy {
 	protected:
 
 		/**
+		* TODO: performance comparison if reserve large stack space on startup
+		* eg quick sort a large file
 		* push down automata context free stack
 		*/
 		state_stack_t state_stack;
 
 	private:
 
+		/**
+		* the number of nested lists/quotes
+		*/
 		size_t list_depth{ 0 };
 
 		/**
