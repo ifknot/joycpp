@@ -62,7 +62,9 @@ namespace joy {
 		static joy_stack tokenize_simple_types(joy_stack&& tokens);
 
 		/**
-		*  removing any leading spaces and/or trailing single line comment
+		* trims 2 things:
+		*  1. remove any leading spaces
+		*  2. remove any trailing single line # comment
 		*/
 		static void trim(std::string& line);
 	};
