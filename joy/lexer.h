@@ -61,6 +61,8 @@ namespace joy {
 
 	private: 
 
+		//TODO: strip_comments()
+		
 		/**
 		* tokenize regular expression Joy command types
 		*/
