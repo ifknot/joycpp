@@ -31,6 +31,7 @@ namespace joy {
 		typedef std::map<std::string, function_t> dictionary_t;
 
 		/**
+		* TODO: test performance if reserve large stack space at construction
 		* root stack
 		*/
 		joy_stack& root_stack;	
