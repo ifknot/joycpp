@@ -121,11 +121,13 @@ namespace joy {
 		* Apart from execution speed, to the user it makes no difference as to which choice has been made.
 		*/
 		dictionary_t context_free_atoms {
+		//TODO: remove this should be marked by tokenizer and removed by lexer
 		{"(*", [&](joy_stack& S) {
 			if (state_stack.top() != state_t::comment) {
 				state_stack.push(state_t::comment);
 			}
 		}},
+		//TODO: reduce this just to error
 		{"*)", [&](joy_stack& S) {
 			if (state_stack.top() != state_t::comment) {
 				error(XNOOPENSIGIL, "*)");
