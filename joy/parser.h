@@ -1,7 +1,10 @@
 ﻿/**
 * Chomsky type 2 context free grammar parser
 * i.e. can be decided by a push down automaton
-* Uses a state stack and a map of string operator to lamda function mapping for CF Joy operators
+* Uses:
+* 1. state stack 
+* 2. nesting depth counter
+* 3. map of string Joy operator to lamda function mapping for context free C++ implemented Joy operators
 */
 #pragma once
 
@@ -91,6 +94,8 @@ namespace joy {
 		joy_stack tokenize_context_free_types(joy_stack&& tokens);
 
 		/**
+		* TODO: rename call()
+		* executes context free Joy operators implemented as C++ lamda
 		* operator matching function and execute if match return true otherwise return false
 		*/
 		bool exec_context_free(token_t& token, joy_stack& S);
