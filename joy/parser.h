@@ -4,7 +4,8 @@
 * Uses:
 * 1. state stack 
 * 2. nesting depth counter
-* 3. map of string Joy operator to lamda function mapping for context free C++ implemented Joy operators
+* 3. root stack and temporary stacks
+* 4. map of string Joy operator to lamda function mapping for context free C++ implemented Joy operators
 */
 #pragma once
 
