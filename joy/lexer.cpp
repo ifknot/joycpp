@@ -7,6 +7,7 @@ namespace joy {
 		root_stack(stack)
 	{
 		load_manual(path_to_manual);
+		// TODO: reserve root_stack space?
 	}
 	  
 	joy_stack lexer::tokenize(joy_stack&& tokens) {
