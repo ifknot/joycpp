@@ -53,7 +53,6 @@ namespace joy {
 	void tokenizer::rec_sigil_split(token_t token, joy_stack& tokens, std::string open_sigil, std::string close_sigil, joy_t sigil_type) {
 		auto k1 = open_sigil.size();
 		auto k2 = close_sigil.size();
-		std::cerr << k1 << " " << k2 << std::endl;
 		if (token.second == joy_t::undef_t) {
 			auto lexeme = std::any_cast<std::string>(token.first);
 			auto i = lexeme.find(open_sigil);
