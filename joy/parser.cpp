@@ -33,11 +33,6 @@ namespace joy {
 
 	bool parser::parse(token_t& token, joy_stack& S) {
 		switch (state_stack.top()) {
-		case joy::state_t::comment:
-			if (is_sigil(token, "(*", "*)")) {
-				exec_context_free(token, root_stack);
-			}
-			return true;
 		case joy::state_t::parse:
 			switch (token.second) {
 			case joy::joy_t::undef_t:
@@ -61,7 +56,7 @@ namespace joy {
 			return false;
 			break;
 		default:
-			throw std::runtime_error("unrecognised state " + to_string(state_stack.top()));
+			throw std::runtime_error("unrecognized state " + to_string(state_stack.top()));
 			break;
 		}
 	}

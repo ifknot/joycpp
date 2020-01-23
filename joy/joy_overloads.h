@@ -28,14 +28,14 @@ namespace joy {
 
     /**
     * ord : C -> I
-    * Integer I is the Ascii value of character C( or logical or integer).
+    * Integer I is the ASCII value of character C( or logical or integer).
     * TODO: logical [] integer []
     */
     token_t ord(token_t token);
 
     /**
     * chr : I -> C
-    * C is the character whose Ascii value is integer I( or logical or character).
+    * C is the character whose ASCII value is integer I( or logical or character).
     * TODO: logical [] integer []
     */
     token_t chr(token_t token);

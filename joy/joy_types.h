@@ -48,7 +48,9 @@ namespace joy {
         set_t,          // aggregate of unique unordered integer type 
         string_t,       // ordered sequence of zero or more characters
         //simple types
-        bool_t, char_t, int_t, double_t    
+        bool_t, char_t, int_t, double_t,
+        //special types
+        comment_t
     };
 
     typedef std::any pattern_t;
@@ -58,7 +60,7 @@ namespace joy {
     /**
     * joycpp context free parser states
     */
-    enum class state_t { comment, parse, quote, list, set };
+    enum class state_t { parse, quote, list, set };
 
     /**
     * Constructs a token object

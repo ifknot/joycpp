@@ -39,18 +39,23 @@ namespace joy {
 
 
 	private:
-		
-		//TODO: tokenize_comments()
 
 		/**
 		* split out all the open-close quote sections into {std::sting, string_t} tokens 
 		*/
 		static joy_stack tokenize_strings(joy_stack&& tokens);	
 
+		static joy_stack tokenize_comments(joy_stack&& tokens);
+
+		/**
+		* filter out comment tokens
+		*/
+		static joy_stack strip_comments(joy_stack&& tokens);
+
 		/**
 		* recursively find and split out sigil enclosed sections into tokens	
 		*/
-		static void rec_sigil_split(token_t token, joy_stack& tokens, char open_sigil, char close_sigil, joy_t sigil_type);
+		static void rec_sigil_split(token_t token, joy_stack& tokens, std::string open_sigil, std::string close_sigil, joy_t sigil_type);
 
 		/**
 		* split out all the white space separated sections into string tokens 
@@ -63,12 +68,13 @@ namespace joy {
 		*/
 		static joy_stack tokenize_simple_types(joy_stack&& tokens);
 
-		/**
-		* trims 2 things:
-		*  1. remove any leading spaces
-		*  2. remove any trailing single line # comment
-		*/
-		static void trim(std::string& line);
+		inline void trim_leading_whitespace(std::string& line) {
+			line = std::regex_replace(line, std::regex("^ +"), "");
+		}
+
+		inline void trim_trailing_comment(std::string& line) {
+			line = line.substr(0, line.find_first_of('#'));
+		}
 	};
 
 }

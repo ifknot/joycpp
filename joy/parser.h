@@ -5,7 +5,7 @@
 * 1. state stack 
 * 2. nesting depth counter
 * 3. root stack and temporary stacks
-* 4. map of string Joy operator to lamda function mapping for context free C++ implemented Joy operators
+* 4. map of string Joy operator to lambda function mapping for context free C++ implemented Joy operators
 */
 #pragma once
 
@@ -56,8 +56,8 @@ namespace joy {
 		virtual void no_conversion(joy_stack& tokens) override;
 
 		/**
-		* endow anonymous functor behaviour for context free parsing
-		* so that can use context free libraries eg joy_combinators
+		* endow anonymous functor behavior for context free parsing
+		* so that can use context free libraries e.g joy_combinators
 		*/
 		inline void operator()(joy_stack& P, joy_stack& S) {
 			parse(P, S);
@@ -67,8 +67,8 @@ namespace joy {
 
 		/**
 		* TODO: performance comparison if reserve large stack space on startup
-		* eg quick sort a large file
-		* push down automata context free stack
+		* e.g. quick sort a large file
+		* push down automata's context free stack
 		*/
 		state_stack_t state_stack;
 
@@ -96,7 +96,7 @@ namespace joy {
 
 		/**
 		* TODO: rename call()
-		* executes context free Joy operators implemented as C++ lamda
+		* executes context free Joy operators implemented as C++ lambda
 		* operator matching function and execute if match return true otherwise return false
 		*/
 		bool exec_context_free(token_t& token, joy_stack& S);
@@ -127,22 +127,7 @@ namespace joy {
 		* Apart from execution speed, to the user it makes no difference as to which choice has been made.
 		*/
 		dictionary_t context_free_atoms {
-		//TODO: remove this should be marked by tokenizer and removed by lexer
-		{"(*", [&](joy_stack& S) {
-			if (state_stack.top() != state_t::comment) {
-				state_stack.push(state_t::comment);
-			}
-		}},
-		//TODO: reduce this just to error
-		{"*)", [&](joy_stack& S) {
-			if (state_stack.top() != state_t::comment) {
-				error(XNOOPENSIGIL, "*)");
-			}
-			else {
-				assert(state_stack.top() == state_t::comment);
-				state_stack.pop();
-			}
-		}},
+		{"*)", [&](joy_stack& S) { error(XNOOPENSIGIL, "*)"); }},
 		{"[", [&](joy_stack& S) {
 			state_stack.push(state_t::list);
 			nest_list(S, list_depth);

@@ -30,7 +30,6 @@ namespace joy {
     * map parser states to text
     */
     std::map<state_t, std::string> state_to_string = {
-        {state_t::comment, " comment"},
         {state_t::parse, " ready"},
         {state_t::quote, " quote"},
         {state_t::list, " list"},
@@ -41,7 +40,6 @@ namespace joy {
     * map states to colour code
     */
     std::map<state_t, std::string> state_to_colour = {
-        {state_t::comment, BOLDBLACK},
         {state_t::parse, BOLDWHITE},
         {state_t::quote, BOLDYELLOW},
         {state_t::list, BOLDCYAN},
@@ -88,8 +86,6 @@ namespace joy {
         case joy::joy_t::double_t:
             result += std::to_string(std::any_cast<double>(token.first));
             break;
-        case joy::joy_t::undef_t:
-        case joy::joy_t::cmd_t:
         default:
             result += std::any_cast<std::string>(token.first);
             break;
