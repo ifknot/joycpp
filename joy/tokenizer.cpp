@@ -13,15 +13,20 @@ namespace joy {
 		if (line.empty()) { //ignore any empty line 
 			return tokens;
 		}
-		tokens.push_back(make_token(line, joy_t::undef_t)); //entire line as a single undef token
+		tokens.push_back(make_token(line, joy_t::undef_t)); //entire line as a single undefined token
 		return tokenize(std::move(tokens)); //split & tokenize 
 	}
 
 	joy_stack tokenizer::tokenize(joy_stack&& tokens) {
-		//split out all the open-close quote sections into string_t tokens 
-		//split remaining undef tokens up into sub tokens by white space
-		//tokenize any simple types in the fully split stack of tokens
-		return tokenize_simple_types(split_whitespace(tokenize_strings(strip_comments(tokenize_comments(std::move(tokens))))));
+		return tokenize_simple_types(
+			split_whitespace(
+				tokenize_strings(
+					strip_comments(
+						tokenize_comments(std::move(tokens))
+					)
+				)
+			)
+		);
 	}
 
 	joy_stack tokenizer::tokenize_strings(joy_stack&& tokens) {

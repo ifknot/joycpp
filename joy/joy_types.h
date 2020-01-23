@@ -3,7 +3,7 @@
 * From a theoretical perspective the denotation of Joy programs maps a syntactic monoid of program concatenation to a semantic monoid of function composition.
 * Instead of lambda abstraction Joy uses program quotation - quoted programs or quotes.
 * A quoted program is an aggregate of any joy type - including quoted programs - and any joy command
-* Higher order functions can be simulated by first order functions which dequote quoted programs.
+* Higher order functions can be simulated by first order functions which de-quote quoted programs.
 * In Joy the quotation of a program is written by enclosing it in square brackets. 
 * Ultimately all programs are built from atomic programs which are not divisible into parts - at least at the Joy language level.
 */
@@ -15,6 +15,8 @@
 #include <map>
 #include <stdexcept>
 #include <regex>
+#include <cassert>
+
 
 namespace joy {    
 
@@ -41,7 +43,7 @@ namespace joy {
         group_t,        // quote_t, list_t
         sequence_t,     // quote, list, string
         aggregate_t,    // quote, list, string & set
-        cmd_t,          // recognised joy command  
+        cmd_t,          // recognized joy command  
         //aggregate types NB all implemented as a joy_stack
         quote_t,        // aggregate of any joy type and any joy command
         list_t,         // quotation of only literal types
@@ -56,11 +58,7 @@ namespace joy {
     typedef std::any pattern_t;
     typedef std::pair<pattern_t, joy_t> token_t;
     typedef std::initializer_list<joy_t> prerequisite_t;
-
-    /**
-    * joycpp context free parser states
-    */
-    enum class state_t { parse, quote, list, set };
+    
 
     /**
     * Constructs a token object
@@ -68,6 +66,7 @@ namespace joy {
     inline token_t make_token(std::any arg, joy_t type) {
         return std::make_pair(arg, type);
     }
+
 
     //string joy primitive matching:
 

@@ -1,6 +1,5 @@
 #include "joy_stack.h"
 #include "error.h"
-#include "to_string.h"
 
 namespace joy {
 	
@@ -136,56 +135,56 @@ namespace joy {
 			size_t i{ 0 };
 			for (const auto& t : argt) { //for each of the joy types in the initializer list
 				switch (t) {
-				case joy::joy_t::bool_t:
-				case joy::joy_t::int_t:
-				case joy::joy_t::char_t:
-				case joy::joy_t::double_t:
-				case joy::joy_t::quote_t:
-				case joy::joy_t::list_t:
-				case joy::joy_t::set_t:
-				case joy::joy_t::string_t:
-				case joy::joy_t::cmd_t:
+				case joy_t::bool_t:
+				case joy_t::int_t:
+				case joy_t::char_t:
+				case joy_t::double_t:
+				case joy_t::quote_t:
+				case joy_t::list_t:
+				case joy_t::set_t:
+				case joy_t::string_t:
+				case joy_t::cmd_t:
 					if (sat(i).second != t) {
-						return error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
 					}
 					break;
-				case joy::joy_t::numeric_t:
+				case joy_t::numeric_t:
 					if (jnumeric(sat(i))) {
 						break;
 					}
 					else {
-						return error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
 					}
 					return false;
-				case joy::joy_t::group_t:
+				case joy_t::group_t:
 					if (jgroup(sat(i))) {
 						break;
 					}
 					else {
-						return error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
 					}
 					return false;
-				case joy::joy_t::sequence_t:
+				case joy_t::sequence_t:
 					if (jsequence(sat(i))) {
 						break;
 					}
 					else {
-						return error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
 					}
 					return false;
-				case joy::joy_t::aggregate_t:
+				case joy_t::aggregate_t:
 					if (jaggregate(sat(i))) {
 						break;
 					}
 					else {
-						return error(XTYPEMISMATCH, op + " arguement at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
 					}
 					return false;
-				case joy::joy_t::any_t:
+				case joy_t::any_t:
 					break;
-				case joy::joy_t::undef_t:
+				case joy_t::undef_t:
 				default:
-					error(XNOCONVERSION, op + " argument conformability checking");
+					error(XNOCONVERSION, op + " argument conformance checking");
 					return false;
 				}
 				++i;
@@ -195,6 +194,56 @@ namespace joy {
 		else {
 			return error(XARGC, op + " expected: " + std::to_string(argt.size()) + " found: " + std::to_string(size()));
 		}
+	}
+
+	std::string joy_stack::to_string(joy_t match) {
+		assert(type_to_string.count(match));
+		return type_to_string[match];
+	}
+
+	std::string joy_stack::to_string(const token_t& token) const {
+		std::string result;
+		switch (token.second) {
+		case joy::joy_t::list_t:
+		case joy::joy_t::quote_t:
+			result += "[ " + joy_stack::to_string(std::any_cast<joy_stack>(token.first)) + "]";
+			break;
+		case joy::joy_t::set_t:
+			break;
+		case joy::joy_t::string_t: {
+			result += "\"";
+			const auto tokens = std::any_cast<joy_stack>(token.first);
+			for (auto t : tokens) {
+				result.push_back(std::any_cast<char>(t.first));
+			}
+			result += "\"";
+			break;
+		}
+		case joy::joy_t::bool_t:
+			result += (std::any_cast<bool>(token.first)) ? "true" : "false";
+			break;
+		case joy::joy_t::char_t:
+			result += "'" + std::string{ std::any_cast<char>(token.first) };
+			break;
+		case joy::joy_t::int_t:
+			result += std::to_string(std::any_cast<int>(token.first));
+			break;
+		case joy::joy_t::double_t:
+			result += std::to_string(std::any_cast<double>(token.first));
+			break;
+		default:
+			result += std::any_cast<std::string>(token.first);
+			break;
+		}
+		return result;// +" " + to_string(token.second);
+	}
+
+	std::string joy_stack::to_string(const joy_stack& stack) const {
+		std::string result;
+		for (const auto& token : stack) {
+			result += to_string(token) + " ";
+		}
+		return result;
 	}
 
 }

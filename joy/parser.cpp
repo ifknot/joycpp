@@ -10,7 +10,7 @@ namespace joy {
 		state_stack.push(state_t::parse);
 	}
 
-	state_t parser::state() const {
+	parser::state_t parser::state() const {
 		return state_stack.top();
 	}
 
@@ -33,7 +33,7 @@ namespace joy {
 
 	bool parser::parse(token_t& token, joy_stack& S) {
 		switch (state_stack.top()) {
-		case joy::state_t::parse:
+		case state_t::parse:
 			switch (token.second) {
 			case joy::joy_t::undef_t:
 				return false;
@@ -43,15 +43,15 @@ namespace joy {
 				S.push(token);
 				return true;
 			}
-		case joy::state_t::list:
-		case joy::state_t::quote:
+		case state_t::list:
+		case state_t::quote:
 			if (is_sigil(token, "[", "]")) {
 				exec_context_free(token, root_stack);
 				break;
 			}
 			nest_token(token, S, root_type, list_depth);
 			return true;
-		case joy::state_t::set:
+		case state_t::set:
 			// TODO:
 			return false;
 			break;
@@ -67,6 +67,16 @@ namespace joy {
 			--list_depth;
 		}
 		lexer::no_conversion(tokens);
+	}
+
+	std::string parser::to_string(const state_t match) {
+		assert(state_to_string.count(match));
+		return state_to_string[match];
+	}
+
+	std::string parser::to_colour(const state_t match) {
+		assert(state_to_colour.count(match));
+		return state_to_colour[match];
 	}
 
 	joy_stack parser::tokenize_context_free_types(joy_stack&& tokens) {

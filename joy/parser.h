@@ -27,6 +27,11 @@ namespace joy {
 
 	class parser : public lexer {
 
+		/**
+		* joycpp context free parser states
+		*/
+		enum class state_t { parse, quote, list, set };
+
 		using state_stack_t = std::stack<state_t>;
 
 	public:
@@ -62,6 +67,17 @@ namespace joy {
 		inline void operator()(joy_stack& P, joy_stack& S) {
 			parse(P, S);
 		}
+
+		/**
+		* Converts a parser state type to its string name ( parse, quote, list, set, string)
+		* May throw std::bad_alloc from the std::string constructor.
+		*/
+		std::string to_string(const state_t match);
+
+		/**
+		* convert a state to its colour code
+		*/
+		std::string to_colour(const state_t match);
 
 	protected:
 
@@ -157,6 +173,26 @@ namespace joy {
 		{"step", [&](joy_stack& S) { if (S.has("step", {joy_t::quote_t, joy_t::aggregate_t})) { step(S, *this); } }},
 		{"dip", [&](joy_stack& S) {if (S.has("dip", {joy_t::quote_t, joy_t::any_t})) { dip(S, *this); }}},
 		{"i", [&](joy_stack& S) { if (S.has("i", {joy_t::group_t})) { i(S, *this); } }}
+		};
+
+		/**
+		* map parser states to text
+		*/
+		std::map<state_t, std::string> state_to_string = {
+			{state_t::parse, " ready"},
+			{state_t::quote, " quote"},
+			{state_t::list, " list"},
+			{state_t::set, " set"}
+		};
+
+		/**
+		* map states to colour code
+		*/
+		std::map<state_t, std::string> state_to_colour = {
+			{state_t::parse, BOLDWHITE},
+			{state_t::quote, BOLDYELLOW},
+			{state_t::list, BOLDCYAN},
+			{state_t::set, BOLDMAGENTA}
 		};
 
 	};

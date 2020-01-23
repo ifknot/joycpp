@@ -20,14 +20,14 @@ void run() { // exec loop
         auto tokens = parser.tokenize(io.readline());
         if (parser.root_parse(tokens)) {
             io.ok();
-            io.colour(to_colour(parser.state()));
-            io << to_string(parser.state());
+            io.colour(parser.to_colour(parser.state()));
+            io << parser.to_string(parser.state());
         }
         else {
             parser.no_conversion(tokens);
             io.ok();
-            io.colour(to_colour(parser.state()));
-            io << to_string(parser.state());
+            io.colour(parser.to_colour(parser.state()));
+            io << parser.to_string(parser.state());
         }
         
     }

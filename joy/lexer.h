@@ -10,7 +10,7 @@
 #include <cassert>
 
 #include "error.h"
-#include "to_string.h"
+#include "joy_stack.h"
 #include "tokenizer.h"
 #include "joy_overloads.h"
 #include "joy_operators.h"

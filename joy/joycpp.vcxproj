@@ -160,7 +160,6 @@
     <ClCompile Include="joy_minimal.cpp" />
     <ClCompile Include="joy_overloads.cpp" />
     <ClCompile Include="joy_stack.cpp" />
-    <ClCompile Include="to_string.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="tokenizer.cpp" />
@@ -174,7 +173,6 @@
     <ClInclude Include="joy_operators.h" />
     <ClInclude Include="joy_minimal.h" />
     <ClInclude Include="joy_overloads.h" />
-    <ClInclude Include="to_string.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_stack.h" />
