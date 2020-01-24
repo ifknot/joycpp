@@ -250,4 +250,54 @@ namespace joy {
         }
     }
 
+	token_t operator==(const token_t& a, const token_t& b) {
+        switch (a.second) {
+        case joy::joy_t::char_t: {
+            auto c = std::any_cast<char>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                return make_token((c == std::any_cast<char>(b.first)) ?true :false, joy_t::bool_t);
+            case joy::joy_t::int_t:
+                return make_token((c == std::any_cast<int>(b.first)) ? true : false, joy_t::bool_t);
+            case joy::joy_t::double_t:
+                return make_token((c == std::any_cast<double>(b.first)) ? true : false, joy_t::bool_t);
+            default:
+                return make_token("", joy_t::undef_t);
+                break;
+            }
+        }
+        case joy::joy_t::int_t: {
+            auto c = std::any_cast<int>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                return make_token((c == std::any_cast<char>(b.first)) ? true : false, joy_t::bool_t);
+            case joy::joy_t::int_t:
+                return make_token((c == std::any_cast<int>(b.first)) ? true : false, joy_t::bool_t);
+            case joy::joy_t::double_t:
+                return make_token((c == std::any_cast<double>(b.first)) ? true : false, joy_t::bool_t);
+            default:
+                return make_token("", joy_t::undef_t);
+                break;
+            }
+        }
+        case joy::joy_t::double_t: {
+            auto c = std::any_cast<double_t>(a.first);
+            switch (b.second) {
+            case joy::joy_t::char_t:
+                return make_token((c == std::any_cast<char>(b.first)) ? true : false, joy_t::bool_t);
+            case joy::joy_t::int_t:
+                return make_token((c == std::any_cast<int>(b.first)) ? true : false, joy_t::bool_t);
+            case joy::joy_t::double_t:
+                return make_token((c == std::any_cast<double>(b.first)) ? true : false, joy_t::bool_t);
+            default:
+                return make_token("", joy_t::undef_t);
+                break;
+            }
+        }
+        default:
+            return make_token("", joy_t::undef_t);
+            break;
+        }
+	}
+
 }

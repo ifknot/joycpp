@@ -161,8 +161,9 @@
     <ClCompile Include="joy_overloads.cpp" />
     <ClCompile Include="joy_stack.cpp" />
     <ClCompile Include="joy_types.cpp" />
-    <ClCompile Include="lexer.cpp" />
-    <ClCompile Include="parser.cpp" />
+    <ClCompile Include="parse_joy.cpp" />
+    <ClCompile Include="parse_regular.cpp" />
+    <ClCompile Include="parse_context_free.cpp" />
     <ClCompile Include="tokenizer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,11 +175,12 @@
     <ClInclude Include="joy_operators.h" />
     <ClInclude Include="joy_minimal.h" />
     <ClInclude Include="joy_overloads.h" />
-    <ClInclude Include="parser.h" />
+    <ClInclude Include="parse_context_free.h" />
     <ClInclude Include="io_device.h" />
     <ClInclude Include="joy_stack.h" />
     <ClInclude Include="joy_types.h" />
-    <ClInclude Include="lexer.h" />
+    <ClInclude Include="parse_joy.h" />
+    <ClInclude Include="parse_regular.h" />
     <ClInclude Include="tokenizer.h" />
   </ItemGroup>
   <ItemGroup>

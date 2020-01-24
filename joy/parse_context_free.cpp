@@ -1,28 +1,24 @@
-#include "parser.h"
+#include "parse_context_free.h"
 
 namespace joy {
 
 
 
-	parser::parser(joy_stack& stack, io_device& io, std::string path_to_manual) :
-		lexer(stack, io, path_to_manual)
+	parse_context_free::parse_context_free(joy_stack& stack, io_device& io, std::string path_to_manual) :
+		parse_regular(stack, io, path_to_manual)
 	{
 		state_stack.push(state_t::parse);
 	}
 
-	parser::state_t parser::state() const {
+	parse_context_free::state_t parse_context_free::state() const {
 		return state_stack.top();
 	}
 
-	joy_stack parser::tokenize(joy_stack&& tokens) {
-		return tokenize_context_free_types(lexer::tokenize(std::move(tokens)));
+	joy_stack parse_context_free::tokenize(joy_stack&& tokens) {
+		return tokenize_context_free_types(parse_regular::tokenize(std::move(tokens)));
 	}
 
-	bool parser::root_parse(joy_stack& tokens) {
-		return(parse(tokens, root_stack));
-	}
-
-	bool parser::parse(joy_stack& P, joy_stack& S) {
+	bool parse_context_free::parse(joy_stack& P, joy_stack& S) {
 		for (auto& token : P) {
 			if (!parse(token, S)) {
 				return false;
@@ -31,7 +27,7 @@ namespace joy {
 		return true;
 	}
 
-	bool parser::parse(token_t& token, joy_stack& S) {
+	bool parse_context_free::parse(token_t& token, joy_stack& S) {
 		switch (state_stack.top()) {
 		case state_t::parse:
 			switch (token.second) {
@@ -61,34 +57,34 @@ namespace joy {
 		}
 	}
 
-	void parser::no_conversion(joy_stack& tokens) {
+	void parse_context_free::no_conversion(joy_stack& tokens) {
 		while (list_depth) {
 			state_stack.pop();
 			--list_depth;
 		}
-		lexer::no_conversion(tokens);
+		parse_regular::no_conversion(tokens);
 	}
 
-	std::string parser::to_string(const state_t match) {
+	std::string parse_context_free::to_string(const state_t match) {
 		assert(state_to_string.count(match));
 		return state_to_string[match];
 	}
 
-	std::string parser::to_colour(const state_t match) {
+	std::string parse_context_free::to_colour(const state_t match) {
 		assert(state_to_colour.count(match));
 		return state_to_colour[match];
 	}
 
-	bool parser::call(token_t& token, joy_stack& S) {
+	bool parse_context_free::call(token_t& token, joy_stack& S) {
 		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
 		if (it != context_free_atoms.end()) {
 			(it->second)(S);
 			return true;
 		}
-		return lexer::call(token, S);
+		return parse_regular::call(token, S);
 	}
 
-	joy_stack parser::tokenize_context_free_types(joy_stack&& tokens) {
+	joy_stack parse_context_free::tokenize_context_free_types(joy_stack&& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {
 				auto match = std::any_cast<std::string>(pattern);
@@ -101,7 +97,7 @@ namespace joy {
 		return std::move(tokens);
 	}
 
-	void parser::nest_list(joy_stack& S, size_t depth) {
+	void parse_context_free::nest_list(joy_stack& S, size_t depth) {
 		if (depth == 0) {
 			S.emplace_back(joy_stack{}, joy_t::list_t); //default to a list type...
 		}
@@ -111,7 +107,7 @@ namespace joy {
 		}
 	}
 
-	void parser::nest_token(token_t& token, joy_stack& S, joy_t& type, size_t depth) {
+	void parse_context_free::nest_token(token_t& token, joy_stack& S, joy_t& type, size_t depth) {
 		if (depth == 0) {
 			S.push(token);
 			if (token.second == joy_t::cmd_t) {
@@ -126,7 +122,7 @@ namespace joy {
 		}
 	}
 
-	bool parser::is_sigil(token_t& token, std::string&& open_sigil, std::string&& close_sigil) {
+	bool parse_context_free::is_sigil(token_t& token, std::string&& open_sigil, std::string&& close_sigil) {
 		if (jcmd(token)) {
 			auto match = std::any_cast<std::string>(token.first);
 			return (match == open_sigil || match == close_sigil);

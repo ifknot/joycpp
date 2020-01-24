@@ -66,7 +66,9 @@ namespace joy {
     // <=
     // >
     // >=
-    // == 
+
+    token_t operator==(const token_t& a, const token_t& b);
+
     // !=
 
 

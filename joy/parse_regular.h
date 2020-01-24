@@ -17,11 +17,11 @@ namespace joy {
 	* 1. root_stack
 	* 2. map of string Joy operator to lambda function mapping for regular grammar C++ implemented Joy operators
 	*/
-	class lexer : public tokenizer {
+	class parse_regular : public tokenizer {
 
 	public:
 
-		lexer(joy_stack& stack, io_device& io, std::string path_to_manual);
+		parse_regular(joy_stack& stack, io_device& io, std::string path_to_manual);
 
 		bool is_quit();
 
@@ -46,8 +46,8 @@ namespace joy {
 		using tokenizer::tokenize;
 
 		/**
-		* cascade tokens to parent tokenizer::tokenize type id the simple types
-		* then type id any regular commands
+		* cascade tokens to tokenizer type id the simple type
+		* then regular grammar type id
 		*/
 		virtual joy_stack tokenize(joy_stack&& tokens) override;
 
@@ -141,7 +141,11 @@ namespace joy {
 				S.pop();
 			}
 		}},
-		{"==", [&](joy_stack& S) { io << "fix me"; }},
+		{"==", [&](joy_stack& S) { 
+			if (S.has("==", {joy_t::numeric_t, joy_t::numeric_t})) {
+				S.push(S.sat(1) == S.top());
+			}
+		}},
 		//aggregates
 		// size  ==  [ pop 1 ]  map  sum
 		{"size", [&](joy_stack& S) { size(S); }},

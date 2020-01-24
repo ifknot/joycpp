@@ -6,7 +6,7 @@
 
 #include "io_device.h"
 #include "joy_stack.h"
-#include "parser.h"
+#include "parse_joy.h"
 
 void run() { // exec loop
 
@@ -14,7 +14,7 @@ void run() { // exec loop
     io.colouring(true);
     joy::joy_stack stack;
     
-    joy::parser parser(stack, io, "joy03.man");
+    joy::parse_joy parser(stack, io, "joy03.man");
     while (!parser.is_quit()) {
 
         auto tokens = parser.tokenize(io.readline());

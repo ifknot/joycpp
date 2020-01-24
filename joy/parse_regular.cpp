@@ -1,8 +1,8 @@
-﻿#include "lexer.h"
+﻿#include "parse_regular.h"
 
 namespace joy {
 
-	lexer::lexer(joy_stack& stack, io_device& io, std::string path_to_manual) :
+	parse_regular::parse_regular(joy_stack& stack, io_device& io, std::string path_to_manual) :
 		tokenizer(io),
 		root_stack(stack)
 	{
@@ -10,11 +10,11 @@ namespace joy {
 		// TODO: reserve root_stack space?
 	}
 	  
-	joy_stack lexer::tokenize(joy_stack&& tokens) {
+	joy_stack parse_regular::tokenize(joy_stack&& tokens) {
 		return tokenize_regular_types(tokenizer::tokenize(std::move(tokens)));
 	}
 
-	void lexer::no_conversion(joy_stack& tokens) {
+	void parse_regular::no_conversion(joy_stack& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {
 				auto culprit = std::any_cast<std::string>(pattern);
@@ -23,15 +23,15 @@ namespace joy {
 		}
 	}
 
-	bool lexer::is_quit() {
+	bool parse_regular::is_quit() {
 		return quit_;
 	}
 
-	void lexer::quit() {
+	void parse_regular::quit() {
 		quit_ = true;
 	}
 
-	joy_stack lexer::tokenize_regular_types(joy_stack&& tokens) {
+	joy_stack parse_regular::tokenize_regular_types(joy_stack&& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {
 				auto match = std::any_cast<std::string>(pattern);
@@ -44,7 +44,7 @@ namespace joy {
 		return std::move(tokens);
 	}
 
-	bool lexer::call(token_t& token, joy_stack& S) {
+	bool parse_regular::call(token_t& token, joy_stack& S) {
 		auto it = regular_atoms.find(std::any_cast<std::string>(token.first));
 		if (it != regular_atoms.end()) {
 			(it->second)(S);
@@ -54,7 +54,7 @@ namespace joy {
 	}
 
 
-	void lexer::load_manual(std::string& path_to_manual) {
+	void parse_regular::load_manual(std::string& path_to_manual) {
 		std::ifstream f(path_to_manual);
 		if (!f) {
 			error(XNOFILE, "load_manual " + path_to_manual + " not found");

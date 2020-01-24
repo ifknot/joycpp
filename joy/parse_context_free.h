@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cassert>
 
-#include "lexer.h"
+#include "parse_regular.h"
 
 #include "joy_minimal.h"
 #include "joy_combinators.h"
@@ -25,7 +25,7 @@ namespace joy {
 	* 3. root stack and temporary stacks
 	* 4. map of string Joy operator to lambda function mapping for context free C++ implemented Joy operators
 	*/
-	class parser : public lexer {
+	class parse_context_free : public parse_regular {
 
 		/**
 		* joycpp context free parser states
@@ -36,23 +36,18 @@ namespace joy {
 
 	public:
 
-		parser(joy_stack& stack, io_device& io, std::string path_to_manual);
+		parse_context_free(joy_stack& stack, io_device& io, std::string path_to_manual);
 
 		state_t state() const;
 
-		using lexer::tokenize;
+		using parse_regular::tokenize;
 
 		/**
 		* cascade tokens to tokenizer type id the simple type 
-		* then lexer type id any regular commands
-		* then parser type id any context free commands
+		* then regular grammar type id 
+		* then context free grammar type id 
 		*/
 		virtual joy_stack tokenize(joy_stack&& tokens) override;
-
-		/**
-		* entry point for tokenized stack
-		*/
-		bool root_parse(joy_stack& tokens);
 
 		/**
 		* unwind the stack then call lexer::no_conversion
@@ -82,6 +77,25 @@ namespace joy {
 	protected:
 
 		/**
+		* TODO: rename call()
+		* executes context free Joy operators implemented as C++ lambda
+		* operator matching function and execute if match return true otherwise return false
+		*/
+		virtual bool call(token_t& token, joy_stack& S) override;
+
+		/**
+		* nested parse a token against a stack S
+		*/
+		virtual  bool parse(token_t& token, joy_stack& S);
+
+		/**
+		* nested parse a quoted program P against a stack S
+		*/
+		bool parse(joy_stack& P, joy_stack& S);
+
+	private:
+
+		/**
 		* TODO: performance comparison if reserve large stack space on startup
 		* e.g. quick sort a large file
 		* push down automata's context free stack
@@ -89,28 +103,9 @@ namespace joy {
 		state_stack_t state_stack;
 
 		/**
-		* TODO: rename call()
-		* executes context free Joy operators implemented as C++ lambda
-		* operator matching function and execute if match return true otherwise return false
-		*/
-		bool call(token_t& token, joy_stack& S) override;
-
-	private:
-
-		/**
 		* the number of nested lists/quotes
 		*/
 		size_t list_depth{ 0 };
-
-		/**
-		* nested parse a quoted program P against a stack S
-		*/
-		bool parse(joy_stack& P, joy_stack& S);
-
-		/**
-		* nested parse a token against a stack S
-		*/
-		bool parse(token_t& token, joy_stack& S);
 
 		/**
 		* tokenize context free expression Joy command types
