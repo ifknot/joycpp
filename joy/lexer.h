@@ -59,7 +59,7 @@ namespace joy {
 		/**
 		* operator matching function and execute if match return true otherwise return false
 		*/
-		bool exec_regular(token_t& token, joy_stack& S);
+		virtual bool call(token_t& token, joy_stack& S);
 
 	private: 
 		

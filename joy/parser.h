@@ -88,6 +88,13 @@ namespace joy {
 		*/
 		state_stack_t state_stack;
 
+		/**
+		* TODO: rename call()
+		* executes context free Joy operators implemented as C++ lambda
+		* operator matching function and execute if match return true otherwise return false
+		*/
+		bool call(token_t& token, joy_stack& S) override;
+
 	private:
 
 		/**
@@ -109,13 +116,6 @@ namespace joy {
 		* tokenize context free expression Joy command types
 		*/
 		joy_stack tokenize_context_free_types(joy_stack&& tokens);
-
-		/**
-		* TODO: rename call()
-		* executes context free Joy operators implemented as C++ lambda
-		* operator matching function and execute if match return true otherwise return false
-		*/
-		bool exec_context_free(token_t& token, joy_stack& S);
 
 		/**
 		* recursively descend into nested list to add a new list

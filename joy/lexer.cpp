@@ -44,7 +44,7 @@ namespace joy {
 		return std::move(tokens);
 	}
 
-	bool lexer::exec_regular(token_t& token, joy_stack& S) {
+	bool lexer::call(token_t& token, joy_stack& S) {
 		auto it = regular_atoms.find(std::any_cast<std::string>(token.first));
 		if (it != regular_atoms.end()) {
 			(it->second)(S);

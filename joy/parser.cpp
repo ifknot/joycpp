@@ -38,7 +38,7 @@ namespace joy {
 			case joy::joy_t::undef_t:
 				return false;
 			case joy::joy_t::cmd_t:
-				return exec_context_free(token, S) || exec_regular(token, S);
+				return call(token, S);
 			default:
 				S.push(token);
 				return true;
@@ -46,7 +46,7 @@ namespace joy {
 		case state_t::list:
 		case state_t::quote:
 			if (is_sigil(token, "[", "]")) {
-				exec_context_free(token, root_stack);
+				call(token, root_stack);
 				break;
 			}
 			nest_token(token, S, root_type, list_depth);
@@ -79,6 +79,15 @@ namespace joy {
 		return state_to_colour[match];
 	}
 
+	bool parser::call(token_t& token, joy_stack& S) {
+		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
+		if (it != context_free_atoms.end()) {
+			(it->second)(S);
+			return true;
+		}
+		return lexer::call(token, S);
+	}
+
 	joy_stack parser::tokenize_context_free_types(joy_stack&& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {
@@ -90,15 +99,6 @@ namespace joy {
 			}
 		}
 		return std::move(tokens);
-	}
-
-	bool parser::exec_context_free(token_t& token, joy_stack& S) {
-		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
-		if (it != context_free_atoms.end()) {
-			(it->second)(S);
-			return true;
-		}
-		return false;
 	}
 
 	void parser::nest_list(joy_stack& S, size_t depth) {
