@@ -97,7 +97,7 @@ namespace joy {
 		M.unstack(); //make the list the stack
 		M.push(P); // push the program [P]
 		//i(M, parse); //execute P
-		{ //inline i to liberate dependency 
+		{ //in-line i to liberate dependency 
 			auto P = std::any_cast<joy_stack&>(M.top().first);
 			M.pop();
 			parse(P, M);
