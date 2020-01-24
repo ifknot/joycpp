@@ -35,9 +35,9 @@ namespace joy {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {
 				auto match = std::any_cast<std::string>(pattern);
-				auto it = regular_atoms.find(match);
-				if (it != regular_atoms.end()) {
-					type = joy_t::cmd_t;
+				auto it = regular_lambda_map.find(match);
+				if (it != regular_lambda_map.end()) {
+					type = joy_t::lamda_t;
 				}
 			}
 		}
@@ -45,8 +45,8 @@ namespace joy {
 	}
 
 	bool parse_regular::call(token_t& token, joy_stack& S) {
-		auto it = regular_atoms.find(std::any_cast<std::string>(token.first));
-		if (it != regular_atoms.end()) {
+		auto it = regular_lambda_map.find(std::any_cast<std::string>(token.first));
+		if (it != regular_lambda_map.end()) {
 			(it->second)(S);
 			return true;
 		}

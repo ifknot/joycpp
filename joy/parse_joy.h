@@ -1,16 +1,20 @@
 #pragma once
 
+#include <string>
+#include <sstream>
+#include <map>
+
 #include "parse_context_free.h"
 
 namespace joy {
 
 	class parse_joy : public parse_context_free {
 
-		enum class defn_state_t{ joy, candidate, define };
+		enum class defn_state_t{ parse, candidate, define };
 
 	public:
 
-		using parse_context_free::parse_context_free;
+		parse_joy(joy_stack& stack, io_device& io, std::string path_to_manual);
 
 		/**
 		* TODO: remove after testing
@@ -34,6 +38,12 @@ namespace joy {
 	protected:
 
 		/**
+		* executes Joy operators defined as Joy operators
+		* operator matching function and execute if match return true otherwise return false
+		*/
+		virtual bool call(token_t& token, joy_stack& S) override;
+
+		/**
 		* nested parse a quoted program P against a stack S
 		*/
 		virtual bool parse(token_t& token, joy_stack& S) override;
@@ -41,6 +51,13 @@ namespace joy {
 	private:
 
 		defn_state_t defn_state;
+
+		joy_stack tokenize_joy_commands(joy_stack&& tokens);
+
+		std::map<std::string, std::string> joy_joy_map {
+			{"cube", "dup dup * *"},
+			{"square", "dup *"}
+		};
 
 
 	};

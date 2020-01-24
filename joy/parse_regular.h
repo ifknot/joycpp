@@ -92,7 +92,7 @@ namespace joy {
 		* 1. can not be expressed in Joy grammar
 		* 2. offer performance benefit as c++ lambda equivalent
 		*/
-		dictionary_t regular_atoms { 
+		dictionary_t regular_lambda_map { 
 		//non-standard
 		{"?", [&](joy_stack& S) { if (S.has("?", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
 		//stack commands

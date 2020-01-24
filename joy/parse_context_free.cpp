@@ -31,9 +31,10 @@ namespace joy {
 		switch (state_stack.top()) {
 		case state_t::parse:
 			switch (token.second) {
-			case joy::joy_t::undef_t:
+			case joy_t::undef_t:
+			case joy_t::joy_t:
 				return false;
-			case joy::joy_t::cmd_t:
+			case joy_t::lamda_t:
 				return call(token, S);
 			default:
 				S.push(token);
@@ -76,8 +77,8 @@ namespace joy {
 	}
 
 	bool parse_context_free::call(token_t& token, joy_stack& S) {
-		auto it = context_free_atoms.find(std::any_cast<std::string>(token.first));
-		if (it != context_free_atoms.end()) {
+		auto it = context_free_lambda_map.find(std::any_cast<std::string>(token.first));
+		if (it != context_free_lambda_map.end()) {
 			(it->second)(S);
 			return true;
 		}
@@ -88,9 +89,9 @@ namespace joy {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {
 				auto match = std::any_cast<std::string>(pattern);
-				auto it = context_free_atoms.find(match);
-				if (it != context_free_atoms.end()) {
-					type = joy_t::cmd_t;
+				auto it = context_free_lambda_map.find(match);
+				if (it != context_free_lambda_map.end()) {
+					type = joy_t::lamda_t;
 				}
 			}
 		}
@@ -110,7 +111,7 @@ namespace joy {
 	void parse_context_free::nest_token(token_t& token, joy_stack& S, joy_t& type, size_t depth) {
 		if (depth == 0) {
 			S.push(token);
-			if (token.second == joy_t::cmd_t) {
+			if (token.second == joy_t::lamda_t) {
 				type = joy_t::quote_t; //...unless a joy command is added
 				state_stack.pop();
 				state_stack.push(state_t::quote);

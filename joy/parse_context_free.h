@@ -77,7 +77,6 @@ namespace joy {
 	protected:
 
 		/**
-		* TODO: rename call()
 		* executes context free Joy operators implemented as C++ lambda
 		* operator matching function and execute if match return true otherwise return false
 		*/
@@ -137,7 +136,7 @@ namespace joy {
 		* For many operators an implementation can choose whether to make it a Joy03 primitive or define it in a library.
 		* Apart from execution speed, to the user it makes no difference as to which choice has been made.
 		*/
-		dictionary_t context_free_atoms {
+		dictionary_t context_free_lambda_map {
 		{"*)", [&](joy_stack& S) { error(XNOOPENSIGIL, "*)"); }},
 		{"[", [&](joy_stack& S) {
 			state_stack.push(state_t::list);

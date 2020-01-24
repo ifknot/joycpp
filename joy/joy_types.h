@@ -42,7 +42,8 @@ namespace joy {
         group_t,        // quote_t, list_t
         sequence_t,     // quote, list, string
         aggregate_t,    // quote, list, string & set
-        cmd_t,          // recognized joy command  
+        lamda_t,        // joy-lambda command 
+        joy_t,          // joy-joy command
         //aggregate types NB all implemented as a joy_stack
         quote_t,        // aggregate of any joy type and any joy command
         list_t,         // quotation of only literal types
@@ -170,7 +171,7 @@ namespace joy {
     }
 
     inline bool jcmd(const token_t& token) {
-        return token.second == joy_t::cmd_t;
+        return token.second == joy_t::lamda_t;
     }
 
     inline bool jgroup(const token_t& token) {

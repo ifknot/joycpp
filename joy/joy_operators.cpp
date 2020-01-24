@@ -38,7 +38,7 @@ namespace joy {
     void helpdetail(const joy_stack& S, std::map<std::string, std::string>& joy_manual, io_device& io) {
         io.colour(YELLOW);
         for (const auto [command, type] : S) {
-            assert(type == joy_t::cmd_t);
+            assert(type == joy_t::lamda_t);
             auto match = std::any_cast<std::string>(command);
             auto it = joy_manual.find(match);
             if (it != joy_manual.end()) {
