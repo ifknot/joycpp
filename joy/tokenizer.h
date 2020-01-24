@@ -32,7 +32,7 @@ namespace joy {
 		io_device& io;
 
 		/**
-		* split the line into recognised tokens bool_t, char_t, int_t, double_t, string_t
+		* split the line into recognized tokens bool_t, char_t, int_t, double_t, string_t
 		* mark any remainder as undef_t
 		*/
 		virtual joy_stack tokenize(joy_stack&& tokens);

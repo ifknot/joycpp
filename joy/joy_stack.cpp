@@ -145,7 +145,7 @@ namespace joy {
 				case joy_t::string_t:
 				case joy_t::cmd_t:
 					if (sat(i).second != t) {
-						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
 					}
 					break;
 				case joy_t::numeric_t:
@@ -153,7 +153,7 @@ namespace joy {
 						break;
 					}
 					else {
-						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
 					}
 					return false;
 				case joy_t::group_t:
@@ -161,7 +161,7 @@ namespace joy {
 						break;
 					}
 					else {
-						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
 					}
 					return false;
 				case joy_t::sequence_t:
@@ -169,7 +169,7 @@ namespace joy {
 						break;
 					}
 					else {
-						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
 					}
 					return false;
 				case joy_t::aggregate_t:
@@ -177,7 +177,7 @@ namespace joy {
 						break;
 					}
 					else {
-						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + to_string(t) + " found: " + to_string(sat(i).second));
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
 					}
 					return false;
 				case joy_t::any_t:
@@ -196,12 +196,7 @@ namespace joy {
 		}
 	}
 
-	std::string joy_stack::to_string(joy_t match) {
-		assert(type_to_string.count(match));
-		return type_to_string[match];
-	}
-
-	std::string joy_stack::to_string(const token_t& token) const {
+	std::string joy_stack::to_string(const token_t& token) {
 		std::string result;
 		switch (token.second) {
 		case joy::joy_t::list_t:
@@ -238,7 +233,7 @@ namespace joy {
 		return result;// +" " + to_string(token.second);
 	}
 
-	std::string joy_stack::to_string(const joy_stack& stack) const {
+	std::string joy_stack::to_string(const joy_stack& stack) {
 		std::string result;
 		for (const auto& token : stack) {
 			result += to_string(token) + " ";

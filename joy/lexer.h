@@ -3,7 +3,7 @@
 * i.e. can be decided by a finite state automaton
 * Uses:
 * 1. root_stack
-* 2. map of string Joy operator to lamda function mapping for regular grammar C++ implemented Joy operators
+* 2. map of string Joy operator to lambda function mapping for regular grammar C++ implemented Joy operators
 */
 #pragma once
 
@@ -62,8 +62,6 @@ namespace joy {
 		bool exec_regular(token_t& token, joy_stack& S);
 
 	private: 
-
-		//TODO: strip_comments()
 		
 		/**
 		* tokenize regular expression Joy command types
@@ -76,7 +74,7 @@ namespace joy {
 		bool quit_{ false };
 
 		/**
-		* load a Joy manual in Thun's orginal manual format but with the addition of:
+		* load a Joy manual in Thun's original manual format but with the addition of:
 		* # a line must start with # to be a comment in a manual file
 		* "JOY - compiled at 16: 57: 51 on Mar 17 2003(BDW) Copyright 2001 by Manfred von Thun"
 		* Manual entry format:

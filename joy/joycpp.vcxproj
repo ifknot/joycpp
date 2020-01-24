@@ -160,6 +160,7 @@
     <ClCompile Include="joy_minimal.cpp" />
     <ClCompile Include="joy_overloads.cpp" />
     <ClCompile Include="joy_stack.cpp" />
+    <ClCompile Include="joy_types.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="tokenizer.cpp" />

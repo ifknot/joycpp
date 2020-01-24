@@ -15,7 +15,7 @@ namespace joy {
 
     void print_top(const joy_stack& S, io_device& io) {
         io.colour(GREEN);
-        io << S.to_string(S.top());
+        io << joy_stack::to_string(S.top());
     }
 
     void print_stack(const joy_stack& S, io_device& io) {
@@ -23,7 +23,7 @@ namespace joy {
         std::string dump{ ">" + std::to_string(S.size()) + "<\n" };
         for (size_t i{ 0 }; i < S.size(); ++i) {
             const auto& t = S.sat(i);
-            dump += S.to_string(t) + "\n";
+            dump += joy_stack::to_string(t) + "\n";
         }
         io << dump;
     }

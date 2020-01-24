@@ -38,7 +38,7 @@ namespace joy {
 	* The dip combinator expects a quotation parameter (which it will consume), and below that one more element.
 	* It saves that element away, executes the quotation on whatever of the stack is left, and then restores the saved element.
 	* So 2 3 4 [+] dip is the same as 5 4.
-	* This single combinator was inspired by several special purpose optimising combinators S', B' and C' in the combinatory calculus, see Peyton Jones (1987, sections 16.2.5 and 16.2.6).
+	* This single combinator was inspired by several special purpose optimizing combinators S', B' and C' in the combinatory calculus, see Peyton Jones (1987, sections 16.2.5 and 16.2.6).
 	*
 	* a [f]│dip      →       │f a
 	* dip: X [P] -> ... X
@@ -74,7 +74,7 @@ namespace joy {
 	* [a b ...] [p]│step     →     │a p b p ...
 	* step: A [P] -> ...
 	* Sequentially putting members of aggregate A onto a stack M
-	* pasring M that executes P for each member of A stack the result
+	* parsing M that executes P for each member of A stack the result
 	*/
 	template<typename parser_t>
 	void step(joy_stack& S, parser_t& parse) {
@@ -97,7 +97,7 @@ namespace joy {
 	* The elements of the new aggregate are computed by applying the quoted program to each element of the original aggregate.
 	* [a b ...] [f]│map     →       [f¨a b ...]│
 	* map: A [P] -> B
-	* Executes P on each member of aggregate A, collects results in sametype aggregate B.
+	* Executes P on each member of aggregate A, collects results in same type aggregate B.
 	*/
 	template<typename parser_t>
 	void map(joy_stack& S, parser_t& parse) {

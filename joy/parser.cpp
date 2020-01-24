@@ -52,12 +52,12 @@ namespace joy {
 			nest_token(token, S, root_type, list_depth);
 			return true;
 		case state_t::set:
-			// TODO:
+			// TODO: implement Joy sets
 			return false;
 			break;
 		default:
 			throw std::runtime_error("unrecognized state " + to_string(state_stack.top()));
-			break;
+			return false; 
 		}
 	}
 

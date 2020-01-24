@@ -18,7 +18,7 @@ namespace joy {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {
 				auto culprit = std::any_cast<std::string>(pattern);
-				error(XNOCONVERSION, "command lookup >" + culprit + "< " + tokens.to_string(type) + " is not recognized");
+				error(XNOCONVERSION, "command lookup >" + culprit + "< " + to_string(type) + " is not recognized");
 			}
 		}
 	}

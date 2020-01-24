@@ -70,9 +70,9 @@ namespace joy {
 	* Also get the vector member types
 	* Maintain the std::stack ADT idioms
 	*/
-	class joy_stack : public  std::vector<token_t> {
+	struct joy_stack : public  std::vector<token_t> {
 
-	public:
+		typedef std::initializer_list<joy_t> prerequisite_t;
 
 		using vector::vector; // get all the vector constructors for free
 
@@ -193,47 +193,16 @@ namespace joy {
 		void push(value_type&& val);
 
 		/**
-		* Convert a joy type to its string name (boolean, int, char, double, list, quote, set, string)
-		*/
-		std::string to_string(joy_t match);
-
-		/**
 		* Converts a joy token's std::any to std::string as defined by the tokens joy type for all joy types
 		* May throw std::bad_alloc from the std::string constructor.
 		*/
-		std::string to_string(const token_t& token) const;
+		static std::string to_string(const token_t& token);
 
 		/**
 		* Converts a joy stack to std::string as defined by its tokens joy type for all joy types
 		* May throw std::bad_alloc from the std::string constructor.
 		*/
-		std::string to_string(const joy_stack& stack) const;
-
-	private:
-
-		/**
-		* map joy types to text
-		*/
-		std::map<joy_t, std::string> type_to_string = {
-			//grouped types
-			{joy_t::undef_t, "undefined"},
-			{joy_t::any_t, "any"},
-			{joy_t::numeric_t, "numeric"},
-			{joy_t::group_t, "group"},
-			{joy_t::sequence_t, "sequence"},
-			{joy_t::aggregate_t, "aggregate"},
-			{joy_t::cmd_t, "command"},
-			//simple types
-			{joy_t::bool_t, "boolean"},
-			{joy_t::int_t, "int"},
-			{joy_t::char_t, "char"},
-			{joy_t::double_t, "double"},
-			//aggregate types
-			{joy_t::list_t, "list"},
-			{joy_t::quote_t, "quote"},
-			{joy_t::set_t, "set"},
-			{joy_t::string_t, "string"},
-		};
+		static std::string to_string(const joy_stack& stack);
 
 	};
 }
