@@ -1,13 +1,4 @@
-﻿/**
-* Chomsky type 2 context free grammar parser
-* i.e. can be decided by a push down automaton
-* Uses:
-* 1. state stack 
-* 2. nesting depth counter
-* 3. root stack and temporary stacks
-* 4. map of string Joy operator to lambda function mapping for context free C++ implemented Joy operators
-*/
-#pragma once
+﻿#pragma once
 
 #include <stack>
 #include <algorithm>
@@ -25,6 +16,15 @@
 
 namespace joy {
 
+	/**
+	* Chomsky type 2 context free grammar parser
+	* i.e. can be decided by a push down automaton
+	* Uses:
+	* 1. state stack
+	* 2. nesting depth counter
+	* 3. root stack and temporary stacks
+	* 4. map of string Joy operator to lambda function mapping for context free C++ implemented Joy operators
+	*/
 	class parser : public lexer {
 
 		/**

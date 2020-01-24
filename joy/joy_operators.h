@@ -1,4 +1,9 @@
-﻿/**
+﻿#pragma once
+
+#include "joy_stack.h"
+#include "io_device.h"
+
+/**
 * Joy03 Operators Library
 *
 * It is useful to classify Joy atomic programs into categories depending on what kind of function they denote.
@@ -7,9 +12,9 @@
 * 2. the operators
 * 3. the combinators.
 *
-* The operator atoms are those which look like n-ary operators in other languages. 
-* They include the operations such as for addition and the other arithmetical operations, and for the various operations on other types. 
-* Like all programs, operators denote functions from states to states, but the functions are not defined on all states. 
+* The operator atoms are those which look like n-ary operators in other languages.
+* They include the operations such as for addition and the other arithmetical operations, and for the various operations on other types.
+* Like all programs, operators denote functions from states to states, but the functions are not defined on all states.
 * An n-ary operator (such as the binary addition operator) denotes a function which is defined only on states whose stack component has n items (such as two integers) on top.
 * The function yields as value another state which is like the argument state except that the n items on the stack have been replaced by the result (such as the sum).
 *
@@ -28,11 +33,6 @@
 *                 [a ...]│size     →                 ≢⍵│
 *
 */
-#pragma once
-
-#include "joy_stack.h"
-#include "io_device.h"
-
 namespace joy {
 
     /**

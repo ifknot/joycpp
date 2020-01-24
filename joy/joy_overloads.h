@@ -1,4 +1,8 @@
-﻿/**
+﻿#pragma once
+
+#include "joy_types.h"
+
+/**
 * Joy token to C++ arithmetic operator overloading
 *
 * supported operators ──┐
@@ -18,10 +22,6 @@
 *                   m n│!=       →                m≠n│
 *                     b│not      →               {!⍵}│
 */
-#pragma once
-
-#include "joy_types.h"
-
 namespace joy {
 
     //unary token overloads

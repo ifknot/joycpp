@@ -1,12 +1,3 @@
-/**
-* Joy is a functional programming language which is not based on the application of functions to arguments but on the composition of functions. 
-* From a theoretical perspective the denotation of Joy programs maps a syntactic monoid of program concatenation to a semantic monoid of function composition.
-* Instead of lambda abstraction Joy uses program quotation - quoted programs or quotes.
-* A quoted program is an aggregate of any joy type - including quoted programs - and any joy command
-* Higher order functions can be simulated by first order functions which unquote quoted programs.
-* In Joy the quotation of a program is written by enclosing it in square brackets. 
-* Ultimately all programs are built from atomic programs which are not divisible into parts - at least at the Joy language level.
-*/
 #pragma once
 
 #include <any>
@@ -17,7 +8,15 @@
 #include <regex>
 #include <cassert>
 
-
+/**
+* Joy is a functional programming language which is not based on the application of functions to arguments but on the composition of functions.
+* From a theoretical perspective the denotation of Joy programs maps a syntactic monoid of program concatenation to a semantic monoid of function composition.
+* Instead of lambda abstraction Joy uses program quotation - quoted programs or quotes.
+* A quoted program is an aggregate of any joy type - including quoted programs - and any joy command
+* Higher order functions can be simulated by first order functions which unquote quoted programs.
+* In Joy the quotation of a program is written by enclosing it in square brackets.
+* Ultimately all programs are built from atomic programs which are not divisible into parts - at least at the Joy language level.
+*/
 namespace joy {    
 
     /**

@@ -1,6 +1,3 @@
-/**
-* Converts an input line string into a list (vector) of tokens <any, type> split by wrapped in quotes then split by whitespace
-*/
 #pragma once
 
 #include <string>
@@ -15,7 +12,9 @@
 
 namespace joy {
 
-	
+	/**
+	* Converts an input line string into a list (vector) of tokens <any, type> split by wrapped in quotes then split by whitespace
+	*/
 	class tokenizer {
 	
 	public:

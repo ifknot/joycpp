@@ -1,5 +1,5 @@
 /**
-* @brief Joy Language Interpreter
+* Joy Language Interpreter
 * 2020.01.03 re-factor (std:any)
 */
 #include <iostream>

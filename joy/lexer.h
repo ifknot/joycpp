@@ -1,10 +1,3 @@
-/**
-* Chomsky type 3 regular grammar lexer 
-* i.e. can be decided by a finite state automaton
-* Uses:
-* 1. root_stack
-* 2. map of string Joy operator to lambda function mapping for regular grammar C++ implemented Joy operators
-*/
 #pragma once
 
 #include <cassert>
@@ -17,6 +10,13 @@
 
 namespace joy {
 
+	/**
+	* Chomsky type 3 regular grammar lexer
+	* i.e. can be decided by a finite state automaton
+	* Uses:
+	* 1. root_stack
+	* 2. map of string Joy operator to lambda function mapping for regular grammar C++ implemented Joy operators
+	*/
 	class lexer : public tokenizer {
 
 	public:

@@ -1,60 +1,4 @@
-﻿/**
-* A Joy stack is not simply a sequence of values but also contains operators and combinators.
-* So, strictly speaking the stack is always a quotation and can contain all of the Joy types.
-* The stack is also central to argument conformance checking with the has(...) member function
-*
-* Stack Operators are those atoms denoting structural functions of the stack component.
-* For performance the general unary operators are defined for stacks containing at least one element:
-*
-*        pop     dup
-*  
-* The top element does not have to satisfy any particular condition, it can be of any_t. 
-* The pop operator removes the top element. 
-* The dup operator pushes a duplicate on top, so it replaces the one original by two copies.
-* 
-* The following binary operators are defined for stacks containing at least two elements:
-*
-*        swap    popd    popop    dupd
-*  
-* The swap operator interchanges the top two elements. 
-* The popd operator removes the second element. 
-* The pop2 operator removes the first and the second element. 
-* The dupd operator duplicates the second element.
-*
-* The following ternary operators are defined for stack stacks containing at least three elements:
-*
-*       swapd    rollup    rolldown
-*  
-* The swapd operator interchanges the second and third elements but leaves the first element in place. 
-* The rollup operator moves the third and second element into second and third position and moves the first element into third position. 
-* The rolldown operator moves the second and first element into third and second position and moves the third element into first position.
-*
-* Thus, the joy_stack class list of supported operators:
-* (Those marked "?" could implemented in Joy but for performance and convenience are implemented as joy stack memeber functions)
-*
-* supported operators ──┐
-*     top of stack ───┐ │
-*                     ↓ ↓
-*                     a│dup      →                a a│
-* ?                 b a│dupd     →              b b a│
-*                   b a│pop      →                  b│
-* ?                 b a│popd     →                  a│
-* ?               c b a│pop2     →                  c│
-* ?                   a│unit     →                [a]│
-*                   b a│swap     →                a b│
-* ?               c b a│swapd    →              b c a│
-* ?               c b a│rotate   →              a b c│
-* ?               c b a│rollup   →              a c b│
-* ?               c b a│rolldown →              b a c│
-*
-* 3 further stack operators are central to how Joy works:
-*
-* newstack	- deletes the entire stack and replaces it with a new, empty one
-* stack		- pushes onto the stack a list containing all the elements of the stack
-* unstack	- expects a quotation on the stack and makes that the new stack
-*
-*/
-#pragma once
+﻿#pragma once
 
 #include <vector>
 #include <algorithm>
@@ -65,15 +9,71 @@
 namespace joy {
 
 	/**
-	* The joy stack does most of the heavy lifting in joycpp 
-	* Extending std::vector with joy stack manipulators because std::stack hides array access with [] and at ()
-	* Also get the vector member types
-	* Maintain the std::stack ADT idioms
+	* A Joy stack is not simply a sequence of values but also contains operators and combinators.
+	* So, strictly speaking the stack is always a quotation and can contain all of the Joy types.
+	* The stack is also central to argument conformance checking with the has(...) member function
+	*
+	* Stack Operators are those atoms denoting structural functions of the stack component.
+	* For performance the general unary operators are defined for stacks containing at least one element:
+	*
+	*        pop     dup
+	*
+	* The top element does not have to satisfy any particular condition, it can be of any_t.
+	* The pop operator removes the top element.
+	* The dup operator pushes a duplicate on top, so it replaces the one original by two copies.
+	*
+	* The following binary operators are defined for stacks containing at least two elements:
+	*
+	*        swap    popd    popop    dupd
+	*
+	* The swap operator interchanges the top two elements.
+	* The popd operator removes the second element.
+	* The pop2 operator removes the first and the second element.
+	* The dupd operator duplicates the second element.
+	*
+	* The following ternary operators are defined for stack stacks containing at least three elements:
+	*
+	*       swapd    rollup    rolldown
+	*
+	* The swapd operator interchanges the second and third elements but leaves the first element in place.
+	* The rollup operator moves the third and second element into second and third position and moves the first element into third position.
+	* The rolldown operator moves the second and first element into third and second position and moves the third element into first position.
+	*
+	* Thus, the joy_stack class list of supported operators:
+	* (Those marked "?" could implemented in Joy but for performance and convenience are implemented as joy stack memeber functions)
+	*
+	* supported operators ──┐
+	*     top of stack ───┐ │
+	*                     ↓ ↓
+	*                     a│dup      →                a a│
+	* ?                 b a│dupd     →              b b a│
+	*                   b a│pop      →                  b│
+	* ?                 b a│popd     →                  a│
+	* ?               c b a│pop2     →                  c│
+	* ?                   a│unit     →                [a]│
+	*                   b a│swap     →                a b│
+	* ?               c b a│swapd    →              b c a│
+	* ?               c b a│rotate   →              a b c│
+	* ?               c b a│rollup   →              a c b│
+	* ?               c b a│rolldown →              b a c│
+	*
+	* 3 further stack operators are central to how Joy works:
+	*
+	* newstack	- deletes the entire stack and replaces it with a new, empty one
+	* stack		- pushes onto the stack a list containing all the elements of the stack
+	* unstack	- expects a quotation on the stack and makes that the new stack
+	*
 	*/
 	struct joy_stack : public  std::vector<token_t> {
 
 		typedef std::initializer_list<joy_t> prerequisite_t;
 
+		/**
+		* The joy stack does most of the heavy lifting in joycpp
+		* Extending std::vector with joy stack manipulators because std::stack hides array access with [] and at ()
+		* Also get the vector member types
+		* Maintain the std::stack ADT idioms
+		*/
 		using vector::vector; // get all the vector constructors for free
 
 		/**

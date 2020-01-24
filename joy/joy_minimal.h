@@ -1,4 +1,13 @@
-﻿/**
+﻿#pragma once
+
+#include <string>
+#include <stdexcept>
+#include <regex>
+
+#include "joy_types.h"
+#include "joy_stack.h"
+
+/**
 * Joy language primitives - minimal required C++ implementations
 * The minimal set of Joy operators from which the remainder of the language can be built:
 *	Basic: uncons, swap, dup, pop, choice, infra, stack, unstack
@@ -6,7 +15,7 @@
 *	Type: logical, char, integer, string, list
 * However, joycpp implements an extended joy stack class wherein all of the stack operators are implemented in C++
 * The IO operators require an environment and are best as parser class member functions
-* The remaining primitives then fall into 2 groups 
+* The remaining primitives then fall into 2 groups
 *	1. act on a stack (for swap, dup, pop, stack, unstack see joy_stack.h)
 *
 *  minimal operators ──┐
@@ -15,9 +24,9 @@
 *				 [a b]│uncons   →              a [b]│
 *				B T F │choice   →					│ T or F
 *			   [a] [f]│infra    →                  [│a f]
-* 
+*
 *	2. joy type enquiry take a token X as an argument and return a boolean (extended minimal):
-*		
+*
 *		jlogical	tests whether X is a logical
 *       jchar	    tests whether X is a character
 *       jdouble		tests whether X is a double
@@ -33,15 +42,6 @@
 *
 * NB argument conformability checking is not done at the primitive level but, in preference, a parser class role
 */
-#pragma once
-
-#include <string>
-#include <stdexcept>
-#include <regex>
-
-#include "joy_types.h"
-#include "joy_stack.h"
-
 namespace joy {
 
     /**

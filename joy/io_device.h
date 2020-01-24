@@ -1,8 +1,3 @@
-/**
- * IO Devices access
- * Interface between an ascii input stream (e.g. std::cin or a file)
- * and a, possibly colourised, ascii output stream (e.g. std::cout or a file)
- */
 #pragma once
 
 #include <iostream>
@@ -13,6 +8,11 @@
 
 namespace joy {
 
+    /**
+     * IO Devices access
+     * Interface between an ascii input stream (e.g. std::cin or a file)
+     * and a, possibly colourised, ascii output stream (e.g. std::cout or a file)
+     */
     class io_device {
 
     public:
