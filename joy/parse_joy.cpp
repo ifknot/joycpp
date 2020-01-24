@@ -17,14 +17,11 @@ namespace joy {
 			std::stringstream ss(it->second);
 			std::string s;
 			while (ss >> s) {
-				io << s;
 				tokens.push_back(make_token(s, joy_t::undef_t));
 			}
 			//TODO: tokenize &
 			tokens = tokenize(std::move(tokens));
-			for(const auto& t : tokens) { io << "pj call" << joy_stack::to_string(t); }
-			auto f = parse_context_free::parse(tokens, S);
-			io << ((f) ? "T" : "F");
+			return parse_context_free::parse(tokens, S);
 		}
 		return parse_context_free::call(token, S);
 	}
