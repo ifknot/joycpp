@@ -64,10 +64,19 @@ namespace joy {
     std::string to_string(const joy_t match);
 
     /**
-    * Constructs a token object
+    * Constructs a token object from a type T
     */
-    inline token_t make_token(std::any arg, joy_t type) {
+    template<typename T>
+    inline token_t make_token(T arg, joy_t type) {
         return std::make_pair(arg, type);
+    }
+
+    /**
+    * Constructs a token object from a std::any cast to type T
+    */
+    template<typename T>
+    inline token_t make_token(std::any arg, joy_t type) {
+        return std::make_pair(std::any_cast<T>(arg, type));
     }
 
 
