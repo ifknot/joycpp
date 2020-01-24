@@ -20,7 +20,10 @@ namespace joy {
 		* TODO: remove after testing
 		*/
 		inline bool root_parse(joy_stack& tokens) {
-			return(parse_context_free::parse(tokens, root_stack));
+			auto f = parse_context_free::parse(tokens, root_stack);
+			io.colour(RED);
+			io << ((f) ? "TRUE" : "FALSE");
+			return f;
 		}
 
 		using tokenizer::tokenize;
@@ -55,8 +58,9 @@ namespace joy {
 		joy_stack tokenize_joy_commands(joy_stack&& tokens);
 
 		std::map<std::string, std::string> joy_joy_map {
+			{"sqcu", "square fcube true"},
 			{"cube", "dup dup * *"},
-			{"square", "dup *"}
+			{"sq", "fdup *"}
 		};
 
 

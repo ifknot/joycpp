@@ -15,10 +15,19 @@ namespace joy {
 	}
 
 	void parse_regular::no_conversion(joy_stack& tokens) {
+		io << "reg no " + std::to_string(tokens.size());
 		for (auto& [pattern, type] : tokens) {
-			if (type == joy_t::undef_t) {
+			io << joy_stack::to_string(make_token(pattern, type));
+			switch (type) {
+			case joy::joy_t::undef_t:
+			case joy::joy_t::lamda_t:
+			case joy::joy_t::joy_t: {
 				auto culprit = std::any_cast<std::string>(pattern);
 				error(XNOCONVERSION, "command lookup >" + culprit + "< " + to_string(type) + " is not recognized");
+				break;
+			}
+			default:
+				break;
 			}
 		}
 	}
@@ -45,11 +54,14 @@ namespace joy {
 	}
 
 	bool parse_regular::call(token_t& token, joy_stack& S) {
+		io << "reg call";
 		auto it = regular_lambda_map.find(std::any_cast<std::string>(token.first));
 		if (it != regular_lambda_map.end()) {
 			(it->second)(S);
+			io << "true";
 			return true;
 		}
+		io << "false";
 		return false;
 	}
 

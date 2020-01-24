@@ -28,13 +28,15 @@ namespace joy {
 	}
 
 	bool parse_context_free::parse(token_t& token, joy_stack& S) {
+		io << "cf parse";
 		switch (state_stack.top()) {
 		case state_t::parse:
 			switch (token.second) {
 			case joy_t::undef_t:
-			case joy_t::joy_t:
+				io << "undef" << std::any_cast<std::string>(token.first);
 				return false;
 			case joy_t::lamda_t:
+				io << "->call" << std::any_cast<std::string>(token.first);
 				return call(token, S);
 			default:
 				S.push(token);
@@ -59,6 +61,7 @@ namespace joy {
 	}
 
 	void parse_context_free::no_conversion(joy_stack& tokens) {
+		io << "cf no";
 		while (list_depth) {
 			state_stack.pop();
 			--list_depth;
@@ -77,6 +80,7 @@ namespace joy {
 	}
 
 	bool parse_context_free::call(token_t& token, joy_stack& S) {
+		io << "cf call" << joy_stack::to_string(token);
 		auto it = context_free_lambda_map.find(std::any_cast<std::string>(token.first));
 		if (it != context_free_lambda_map.end()) {
 			(it->second)(S);
