@@ -43,7 +43,7 @@ namespace joy {
 			switch (token.second) {
 			case joy_t::undef_t:
 				return false;
-			case joy_t::lamda_t:
+			case joy_t::lambda_t:
 				return call(token, S);
 			default:
 				S.push(token);
@@ -51,7 +51,7 @@ namespace joy {
 			}
 		case state_t::list:
 		case state_t::quote:
-			if (is_sigil(token, "[", "]")) {
+			if (token == "[" || token == "]") {
 				call(token, root_stack);
 				break;
 			}
@@ -91,7 +91,7 @@ namespace joy {
 				auto match = std::any_cast<std::string>(pattern);
 				auto it = context_free_lambda_map.find(match);
 				if (it != context_free_lambda_map.end()) {
-					type = joy_t::lamda_t;
+					type = joy_t::lambda_t;
 				}
 			}
 		}
@@ -111,7 +111,7 @@ namespace joy {
 	void parse_context_free::nest_token(token_t& token, joy_stack& S, joy_t& type, size_t depth) {
 		if (depth == 0) {
 			S.push(token);
-			if (token.second == joy_t::lamda_t) {
+			if (token.second == joy_t::lambda_t) {
 				type = joy_t::quote_t; //...unless a joy command is added
 				state_stack.pop();
 				state_stack.push(state_t::quote);
@@ -120,16 +120,6 @@ namespace joy {
 		else {
 			assert(jgroup(S.top())); 
 			nest_token(token, std::any_cast<joy_stack&>(S.top().first), S.top().second, depth - 1);
-		}
-	}
-
-	bool parse_context_free::is_sigil(token_t& token, std::string&& open_sigil, std::string&& close_sigil) {
-		if (jcmd(token)) {
-			auto match = std::any_cast<std::string>(token.first);
-			return (match == open_sigil || match == close_sigil);
-		}
-		else {
-			return false;
 		}
 	}
 

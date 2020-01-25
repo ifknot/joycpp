@@ -143,7 +143,7 @@ namespace joy {
 				case joy_t::list_t:
 				case joy_t::set_t:
 				case joy_t::string_t:
-				case joy_t::lamda_t:
+				case joy_t::lambda_t:
 					if (sat(i).second != t) {
 						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
 					}

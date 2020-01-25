@@ -124,11 +124,6 @@ namespace joy {
 		void nest_token(token_t& token, joy_stack& S, joy_t& type, size_t depth);
 
 		/**
-		* test if the token is either an open or close sigil 
-		*/
-		bool is_sigil(token_t& token, std::string&& open_sigil, std::string&& close_sigil);
-
-		/**
 		* Joy03 (language specs as per Manfred von Thun 16:57.51 on Mar 17 2003)
 		* translate Joy context free grammar commands into their c++ lambda equivalents only Joy grammar that either:
 		* 1. can not be expressed in Joy grammar

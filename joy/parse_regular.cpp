@@ -43,7 +43,7 @@ namespace joy {
 				auto match = std::any_cast<std::string>(pattern);
 				auto it = regular_lambda_map.find(match);
 				if (it != regular_lambda_map.end()) {
-					type = joy_t::lamda_t;
+					type = joy_t::lambda_t;
 				}
 			}
 		}

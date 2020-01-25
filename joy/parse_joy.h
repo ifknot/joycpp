@@ -14,6 +14,9 @@ namespace joy {
 
 		enum class defn_state_t{ parse, candidate, define };
 
+		std::string BEGINDEF{ "==" };
+		std::string ENDDEF{ "." };
+
 	public:
 
 		parse_joy(joy_stack& stack, io_device& io, std::string path_to_manual);
@@ -58,6 +61,8 @@ namespace joy {
 		std::string definition;
 
 		joy_stack tokenize_joy_commands(joy_stack&& tokens);
+
+		//todo joy_lambda_map DEFINE PUBLIC PRIVATE LIBRA
 
 		std::map<std::string, std::string> joy_joy_map {
 			{"cube", "dup dup * *"},

@@ -7,6 +7,7 @@ namespace joy {
 	{}
 
 	joy_stack parse_joy::tokenize(joy_stack&& tokens) {
+		//tokenize joy_lamda_map
 		return tokenize_joy_commands(parse_context_free::tokenize(std::move(tokens)));
 	}
 
@@ -33,7 +34,6 @@ namespace joy {
 			case joy_t::undef_t:
 				defn_state = defn_state_t::candidate;
 				command = std::any_cast<std::string>(token.first);
-				io << command;
 				return true;
 			case joy_t::joy_t:
 				return call(token, S);
@@ -41,7 +41,8 @@ namespace joy {
 				return parse_context_free::parse(token, S);
 			}
 		case defn_state_t::candidate:
-			if (token.second == joy_t::lamda_t && std::any_cast<std::string>(token.first) == "==") {
+			io << joy::to_string(token.second);
+			if (token == BEGINDEF) {
 				defn_state = defn_state_t::define;
 				return true;
 			}
@@ -50,7 +51,7 @@ namespace joy {
 				return false;
 			}
 		case defn_state_t::define: 
-			if (token.second == joy_t::lamda_t && std::any_cast<std::string>(token.first) == ".") {
+			if (token == ENDDEF){
 				joy_joy_map[command] = definition;
 				defn_state = defn_state_t::parse;
 			}
