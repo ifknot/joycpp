@@ -6,6 +6,8 @@
 
 #include "parse_context_free.h"
 
+// [ [ 1 2 3 ] [ 4 5 6 ] ] [ [ cube ] map ] map .
+
 namespace joy {
 
 	class parse_joy : public parse_context_free {
@@ -56,7 +58,7 @@ namespace joy {
 
 		std::map<std::string, std::string> joy_joy_map {
 			{"cube", "dup dup * *"},
-			{"sq", "dup f*"}
+			{"square", "dup *"}
 		};
 
 

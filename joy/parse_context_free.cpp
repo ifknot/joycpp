@@ -21,10 +21,20 @@ namespace joy {
 	bool parse_context_free::parse(joy_stack& P, joy_stack& S) {
 		for (auto& token : P) {
 			if (!parse(token, S)) {
+				no_conversion(P);
 				return false;
 			}
 		}
 		return true;
+	}
+
+	bool parse_context_free::call(token_t& token, joy_stack& S) {
+		auto it = context_free_lambda_map.find(std::any_cast<std::string>(token.first));
+		if (it != context_free_lambda_map.end()) {
+			(it->second)(S);
+			return true;
+		}
+		return parse_regular::call(token, S);
 	}
 
 	bool parse_context_free::parse(token_t& token, joy_stack& S) {
@@ -73,15 +83,6 @@ namespace joy {
 	std::string parse_context_free::to_colour(const state_t match) {
 		assert(state_to_colour.count(match));
 		return state_to_colour[match];
-	}
-
-	bool parse_context_free::call(token_t& token, joy_stack& S) {
-		auto it = context_free_lambda_map.find(std::any_cast<std::string>(token.first));
-		if (it != context_free_lambda_map.end()) {
-			(it->second)(S);
-			return true;
-		}
-		return parse_regular::call(token, S);
 	}
 
 	joy_stack parse_context_free::tokenize_context_free_types(joy_stack&& tokens) {

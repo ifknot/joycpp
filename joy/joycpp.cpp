@@ -24,7 +24,7 @@ void run() { // exec loop
             io << parser.to_string(parser.state());
         }
         else {
-            parser.no_conversion(tokens);
+            //parser.no_conversion(tokens);
             io.ok();
             io.colour(parser.to_colour(parser.state()));
             io << parser.to_string(parser.state());
