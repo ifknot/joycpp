@@ -31,19 +31,35 @@ namespace joy {
 		case defn_state_t::parse: 
 			switch (token.second) {
 			case joy_t::undef_t:
-				//candidate
-				return false;
+				defn_state = defn_state_t::candidate;
+				command = std::any_cast<std::string>(token.first);
+				io << command;
+				return true;
 			case joy_t::joy_t:
 				return call(token, S);
 			default:
 				return parse_context_free::parse(token, S);
 			}
 		case defn_state_t::candidate:
-			break;
-		case defn_state_t::define:
-			break;
+			if (token.second == joy_t::lamda_t && std::any_cast<std::string>(token.first) == "==") {
+				defn_state = defn_state_t::define;
+				return true;
+			}
+			else {
+				defn_state = defn_state_t::parse;
+				return false;
+			}
+		case defn_state_t::define: 
+			if (token.second == joy_t::lamda_t && std::any_cast<std::string>(token.first) == ".") {
+				joy_joy_map[command] = definition;
+				defn_state = defn_state_t::parse;
+			}
+			else {
+				definition += " " + joy_stack::to_string(token);
+			}
+			return true;
 		default:
-			break;
+			return false;
 		}
 		
 	}

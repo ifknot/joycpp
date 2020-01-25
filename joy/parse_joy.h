@@ -54,6 +54,9 @@ namespace joy {
 
 		defn_state_t defn_state;
 
+		std::string command;
+		std::string definition;
+
 		joy_stack tokenize_joy_commands(joy_stack&& tokens);
 
 		std::map<std::string, std::string> joy_joy_map {
