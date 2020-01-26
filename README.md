@@ -134,7 +134,7 @@ input/output      : c++
 4. ~~bdd test joy_stack~~
 5. ~~joy type handling functions and make helpers~~
 6. ~~bdd test joy types and tools~~
-7. lexer layer (regular grammar)
-8. parser layer (context free)
-9. joy layer
+7. ~~lexer layer (regular grammar)~~
+8. ~~parser layer (context free)~~
+9. ~~joy layer~~
 10. finish joycpp using joy
