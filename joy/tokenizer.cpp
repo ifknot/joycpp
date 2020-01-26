@@ -21,11 +21,8 @@ namespace joy {
 		return tokenize_simple_types(
 				strip_comments(
 					split_whitespace(
-						//tokenize_reserved(
-						tokenize_strings(
-							tokenize_reserved(
-								std::move(tokens)
-							)
+					 tokenize_reserved(
+						tokenize_strings(std::move(tokens))
 						)
 					)
 				)
@@ -42,8 +39,19 @@ namespace joy {
 
 	joy_stack tokenizer::tokenize_reserved(joy_stack&& tokens) {
 		joy_stack result;
-		for (const auto& token : tokens) {  //examine all the tokens
-			rec_char_split(token, result, ';', joy_t::end_t); //recursively find and split out open-close quotes into tokens
+		for (const auto& token : tokens) { 
+			//rec_char_split(token, result, '[', joy_t::undef_t);
+			rec_char_split(token, result, ']', joy_t::undef_t);
+			//rec_char_split(token, result, ';', joy_t::end_t); 
+			//rec_char_split(token, result, '.', joy_t::end_t);
+		}
+		tokens = result;
+		result.clear();
+		for (const auto& token : tokens) {
+			rec_char_split(token, result, '[', joy_t::undef_t);
+			//rec_char_split(token, result, ']', joy_t::undef_t);
+			//rec_char_split(token, result, ';', joy_t::end_t); 
+			//rec_char_split(token, result, '.', joy_t::end_t);
 		}
 		return result;
 	}
@@ -53,11 +61,10 @@ namespace joy {
 			auto lexeme = std::any_cast<std::string>(token.first);
 			auto i = lexeme.find(ch);
 			if (i < lexeme.size()) { //found a special char
-				std::cerr << ("found >" + lexeme.substr(i, 1) + "<\n");
-				
-				std::cerr << "< " << lexeme.substr(0, i) << std::endl;
-				std::cerr << "| " << lexeme.substr(i, 1) << std::endl;
-				std::cerr << "> " << lexeme.substr(i + 1, lexeme.size() - i) << std::endl;
+				//std::cerr << ("found >" + lexeme.substr(i, 1) + "<\n");
+				//std::cerr << "< " << lexeme.substr(0, i) << std::endl;
+				//std::cerr << "| " << lexeme.substr(i, 1) << std::endl;
+				//std::cerr << "> " << lexeme.substr(i + 1, lexeme.size() - i) << std::endl;
 				tokens.push_back(make_token(lexeme.substr(0, i), joy_t::undef_t));
 				tokens.push_back(make_token(lexeme.substr(i, 1), char_type));
 				if (i < lexeme.size() - 1) {
@@ -156,7 +163,6 @@ namespace joy {
 	joy_stack tokenizer::tokenize_simple_types(joy_stack&& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			auto match = std::any_cast<std::string>(pattern);
-			std::cerr << match << "\n";
 			if (type == joy_t::string_t) { //convert std::string into a joy_stack of char tokens
 				joy_stack s;
 				for (auto c : match) {

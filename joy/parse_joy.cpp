@@ -14,13 +14,7 @@ namespace joy {
 		auto it = joy_joy_map.find(std::any_cast<std::string>(token.first));
 		if (it != joy_joy_map.end()) {
 			joy_stack tokens;
-			std::stringstream ss(it->second);
-			std::string s;
-			while (ss >> s) {
-				tokens.push_back(make_token(s, joy_t::undef_t));
-			}
-			//TODO: tokenize &
-			tokens = tokenize(std::move(tokens));
+			tokens = tokenize(std::move(it->second));
 			return parse_context_free::parse(tokens, S);
 		}
 		return parse_context_free::call(token, S);
@@ -37,10 +31,10 @@ namespace joy {
 				io << "define " + command;
 				return true;
 			case joy_t::cmd_t:
-				return call(token, S);
-			case joy_t::end_t:
-				error(XAGGSIGIL, ";");
-				return false;
+				return this->call(token, S);
+			//case joy_t::end_t:
+				//error(XAGGSIGIL, std::any_cast<std::string>(token.first));
+				//return false;
 			default:
 				return parse_context_free::parse(token, S);
 			}

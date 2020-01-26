@@ -22,6 +22,8 @@ namespace joy {
 	
 		tokenizer(io_device& io);
 
+		//TODO: joy_stack tokenize(std::string& line);
+
 		/**
 		* convert user input line into joy_stack of a single undefined token {line, undef_t}
 		*/
@@ -42,13 +44,25 @@ namespace joy {
 
 		bool comment_block{ false };
 
+		std::vector<char> reserved = { '[', ']', '{', '}', ';', '.' };
+
 		/**
 		* split out all the open-close quote sections into {std::sting, string_t} tokens 
 		*/
 		static joy_stack tokenize_strings(joy_stack&& tokens);	
 
+		/**
+		* An input line consists of a number of tokens. 
+		* Some of these are single characters, the reserved characters. 
+		* They are the two (square) brackets [ and ] , the two (curly) braces { and }, the semicolon ; and the period . :
+		*
+        *      "["  |  "]"  |  "{"  |  "}"  |  ";"  |  "."
+		*/
 		static joy_stack tokenize_reserved(joy_stack&& tokens);
 
+		/**
+		* recursively find and split reserved character and assign type
+		*/
 		static void rec_char_split(token_t token, joy_stack& tokens, char ch, joy_t char_type);
 
 		/**
