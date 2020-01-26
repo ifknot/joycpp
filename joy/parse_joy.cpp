@@ -11,10 +11,21 @@ namespace joy {
 	}
 
 	bool parse_joy::call(token_t& token, joy_stack& S) {
-		auto it = joy_joy_map.find(std::any_cast<std::string>(token.first));
-		if (it != joy_joy_map.end()) {
+		auto it = joy_lambda_map.find(std::any_cast<std::string>(token.first));
+		if (it != joy_lambda_map.end()) {
+			(it->second)(S);
+			return true;
+		}
+		auto jt = public_joy_joy_map.find(std::any_cast<std::string>(token.first));
+		if (jt != public_joy_joy_map.end()) {
 			joy_stack tokens;
-			tokens = tokenize(std::move(it->second));
+			tokens = tokenize(std::move(jt->second));
+			return parse_context_free::parse(tokens, S);
+		}
+		jt = private_joy_joy_map.find(std::any_cast<std::string>(token.first));
+		if (jt != private_joy_joy_map.end()) {
+			joy_stack tokens;
+			tokens = tokenize(std::move(jt->second));
 			return parse_context_free::parse(tokens, S);
 		}
 		return parse_context_free::call(token, S);
@@ -32,9 +43,6 @@ namespace joy {
 				return true;
 			case joy_t::cmd_t:
 				return this->call(token, S);
-			//case joy_t::end_t:
-				//error(XAGGSIGIL, std::any_cast<std::string>(token.first));
-				//return false;
 			default:
 				return parse_context_free::parse(token, S);
 			}
@@ -48,9 +56,9 @@ namespace joy {
 				return false;
 			}
 		case defn_state_t::define: 
-			if (token.second == joy_t::end_t){
+			if (token == "." || token == ";"){
 				io << definition << "end";
-				joy_joy_map[command] = definition;
+				public_joy_joy_map[command] = definition;
 				definition.clear();
 				defn_state = defn_state_t::parse;
 			}
@@ -68,9 +76,20 @@ namespace joy {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {
 				auto match = std::any_cast<std::string>(pattern);
-				auto it = joy_joy_map.find(match);
-				if (it != joy_joy_map.end()) {
+				auto it = joy_lambda_map.find(match);
+				if (it != joy_lambda_map.end()) {
 					type = joy_t::cmd_t;
+					continue;
+				}
+				auto jt = public_joy_joy_map.find(match);
+				if (jt != public_joy_joy_map.end()) {
+					type = joy_t::cmd_t;
+					continue;
+				}
+				jt = private_joy_joy_map.find(match);
+				if (jt != private_joy_joy_map.end()) {
+					type = joy_t::cmd_t;
+					continue;
 				}
 			}
 		}

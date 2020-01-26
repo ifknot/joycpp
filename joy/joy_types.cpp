@@ -25,8 +25,6 @@ namespace joy {
 		{joy_t::quote_t, "quote"},
 		{joy_t::set_t, "set"},
 		{joy_t::string_t, "string"},
-		//special types
-		{joy_t::end_t, "end"},
 	};
 
 	std::string to_string(const joy_t match) {

@@ -51,8 +51,6 @@ namespace joy {
         string_t,       // ordered sequence of zero or more characters
         //simple types
         bool_t, char_t, int_t, double_t,
-        //special types
-        end_t           // reserved characters that mark end of a definition
     };
 
     typedef std::any pattern_t;

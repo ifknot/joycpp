@@ -59,14 +59,26 @@ namespace joy {
 
 		std::string command;
 		std::string definition;
+		std::string module;
 
 		joy_stack tokenize_joy_commands(joy_stack&& tokens);
 
 		//todo joy_lambda_map DEFINE PUBLIC PRIVATE LIBRA
 
-		std::map<std::string, std::string> joy_joy_map {
+		dictionary_t joy_lambda_map{
+			{"include", [&](joy_stack& S) { 
+				if (S.has("include", {joy_t::string_t})) { io << "ooh"; }
+			}},
+		};
+
+		std::map<std::string, std::string> public_joy_joy_map {
 			{"cube", "dup dup * *"},
 			{"square", "dup *"}
+		};
+
+		std::map<std::string, std::string> private_joy_joy_map{
+			{"Q", "dup dup * *"},
+			{"S", "dup *"}
 		};
 
 

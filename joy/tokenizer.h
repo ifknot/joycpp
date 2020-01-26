@@ -44,7 +44,7 @@ namespace joy {
 
 		bool comment_block{ false };
 
-		std::vector<char> reserved = { '[', ']', '{', '}', ';', '.' };
+		std::vector<char> reserved = { '[', ']', '{', '}', ';'}; //manage '.' separately 
 
 		/**
 		* split out all the open-close quote sections into {std::sting, string_t} tokens 
@@ -58,7 +58,7 @@ namespace joy {
 		*
         *      "["  |  "]"  |  "{"  |  "}"  |  ";"  |  "."
 		*/
-		static joy_stack tokenize_reserved(joy_stack&& tokens);
+		joy_stack tokenize_reserved(joy_stack&& tokens);
 
 		/**
 		* recursively find and split reserved character and assign type
