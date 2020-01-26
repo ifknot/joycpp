@@ -19,14 +19,12 @@ namespace joy {
 
 	joy_stack tokenizer::tokenize(joy_stack&& tokens) {
 		return tokenize_simple_types(
-			split_whitespace(
-				tokenize_strings(
-					strip_comments(
-						tokenize_comments(std::move(tokens))
+				strip_comments(
+					split_whitespace(
+						tokenize_strings(std::move(tokens))
 					)
 				)
-			)
-		);
+			);
 	}
 
 	joy_stack tokenizer::tokenize_strings(joy_stack&& tokens) {
@@ -37,19 +35,22 @@ namespace joy {
 		return result;
 	}
 
-	joy_stack tokenizer::tokenize_comments(joy_stack&& tokens) {
-		joy_stack result;
-		for (const auto& token : tokens) {  //examine all the tokens
-			rec_sigil_split(token, result, "(", ")", joy_t::comment_t); //recursively find and split out joy comments (* ... *) into tokens
-		}
-		return result;
-	}
-
 	joy_stack tokenizer::strip_comments(joy_stack&& tokens) {
 		joy_stack result;
 		for (const auto& token : tokens) {  //examine all the tokens
-			if (token.second != joy_t::comment_t) { 
-				result.push_back(token); 
+			if (comment_block) {
+				if (token == "*)") {
+					comment_block = false;
+					continue;
+				}
+			}
+			if (!comment_block) {
+				if (token == "(*") {
+					comment_block = true;
+				}
+				else {
+					result.push_back(token);
+				}
 			}
 		}
 		return result;

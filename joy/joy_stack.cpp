@@ -230,7 +230,7 @@ namespace joy {
 			result += std::any_cast<std::string>(token.first);
 			break;
 		}
-		return result;// +" " + joy::to_string(token.second);
+		return result + " " + joy::to_string(token.second);
 	}
 
 	std::string joy_stack::to_string(const joy_stack& stack) {

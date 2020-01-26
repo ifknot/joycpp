@@ -8,6 +8,7 @@
 #include "error.h"
 #include "joy_types.h"
 #include "joy_stack.h"
+#include "joy_overloads.h"
 
 
 namespace joy {
@@ -39,17 +40,17 @@ namespace joy {
 
 	private:
 
+		bool comment_block{ false };
+
 		/**
 		* split out all the open-close quote sections into {std::sting, string_t} tokens 
 		*/
 		static joy_stack tokenize_strings(joy_stack&& tokens);	
 
-		static joy_stack tokenize_comments(joy_stack&& tokens);
-
 		/**
 		* filter out comment tokens
 		*/
-		static joy_stack strip_comments(joy_stack&& tokens);
+		joy_stack strip_comments(joy_stack&& tokens);
 
 		/**
 		* recursively find and split out sigil enclosed sections into tokens	

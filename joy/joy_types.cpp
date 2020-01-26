@@ -13,8 +13,9 @@ namespace joy {
 		{joy_t::group_t, "group"},
 		{joy_t::sequence_t, "sequence"},
 		{joy_t::aggregate_t, "aggregate"},
-		{joy_t::lambda_t, "lambda"},
-		{joy_t::joy_t, "command"},
+		{joy_t::lambda_t, "c++ lambda"},
+		{joy_t::joy_t, "joy command"},
+		{joy_t::comment_t, "comment"},
 		//simple types
 		{joy_t::bool_t, "boolean"},
 		{joy_t::int_t, "int"},

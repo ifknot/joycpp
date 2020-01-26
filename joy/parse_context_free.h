@@ -133,7 +133,6 @@ namespace joy {
 		* Apart from execution speed, to the user it makes no difference as to which choice has been made.
 		*/
 		dictionary_t context_free_lambda_map {
-		{"*)", [&](joy_stack& S) { error(XNOOPENSIGIL, "*)"); }},
 		{"[", [&](joy_stack& S) {
 			state_stack.push(state_t::list);
 			nest_list(S, list_depth);
