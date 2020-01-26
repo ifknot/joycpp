@@ -14,8 +14,7 @@ namespace joy {
 		{joy_t::sequence_t, "sequence"},
 		{joy_t::aggregate_t, "aggregate"},
 		{joy_t::lambda_t, "c++ lambda"},
-		{joy_t::joy_t, "joy command"},
-		{joy_t::comment_t, "comment"},
+		{joy_t::cmd_t, "joy command"},
 		//simple types
 		{joy_t::bool_t, "boolean"},
 		{joy_t::int_t, "int"},
@@ -26,6 +25,8 @@ namespace joy {
 		{joy_t::quote_t, "quote"},
 		{joy_t::set_t, "set"},
 		{joy_t::string_t, "string"},
+		//special types
+		{joy_t::end_t, "end"},
 	};
 
 	std::string to_string(const joy_t match) {

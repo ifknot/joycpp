@@ -301,7 +301,7 @@ namespace joy {
 	}
 
 	bool operator==(const token_t& a, const std::string& b) {
-        if (a.second == joy_t::lambda_t || a.second == joy_t::undef_t || a.second == joy_t::joy_t || a.second == joy_t::comment_t) {
+        if (a.second == joy_t::lambda_t || a.second == joy_t::undef_t || a.second == joy_t::cmd_t ) {
             return std::any_cast<std::string>(a.first) == b;
         }
         else {

@@ -17,8 +17,8 @@ namespace joy {
 	void parse_regular::no_conversion(joy_stack& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			switch (type) {
-			case joy::joy_t::undef_t:
-			case joy::joy_t::joy_t: {
+			case joy_t::undef_t:
+			case joy_t::cmd_t: {
 				auto culprit = std::any_cast<std::string>(pattern);
 				error(XNOCONVERSION, "command lookup >" + culprit + "< " + to_string(type) + " is not recognized");
 				break;

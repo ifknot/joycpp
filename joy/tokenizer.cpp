@@ -21,7 +21,12 @@ namespace joy {
 		return tokenize_simple_types(
 				strip_comments(
 					split_whitespace(
-						tokenize_strings(std::move(tokens))
+						//tokenize_reserved(
+						tokenize_strings(
+							tokenize_reserved(
+								std::move(tokens)
+							)
+						)
 					)
 				)
 			);
@@ -35,31 +40,43 @@ namespace joy {
 		return result;
 	}
 
-	joy_stack tokenizer::strip_comments(joy_stack&& tokens) {
+	joy_stack tokenizer::tokenize_reserved(joy_stack&& tokens) {
 		joy_stack result;
 		for (const auto& token : tokens) {  //examine all the tokens
-			if (comment_block) {
-				if (token == "*)") {
-					comment_block = false;
-					continue;
-				}
-			}
-			if (!comment_block) {
-				if (token == "(*") {
-					comment_block = true;
-				}
-				else {
-					result.push_back(token);
-				}
-			}
+			rec_char_split(token, result, ';', joy_t::end_t); //recursively find and split out open-close quotes into tokens
 		}
 		return result;
+	}
+
+	void tokenizer::rec_char_split(token_t token, joy_stack& tokens, char ch, joy_t char_type) {
+		if (jundef(token)) {
+			auto lexeme = std::any_cast<std::string>(token.first);
+			auto i = lexeme.find(ch);
+			if (i < lexeme.size()) { //found a special char
+				std::cerr << ("found >" + lexeme.substr(i, 1) + "<\n");
+				
+				std::cerr << "< " << lexeme.substr(0, i) << std::endl;
+				std::cerr << "| " << lexeme.substr(i, 1) << std::endl;
+				std::cerr << "> " << lexeme.substr(i + 1, lexeme.size() - i) << std::endl;
+				tokens.push_back(make_token(lexeme.substr(0, i), joy_t::undef_t));
+				tokens.push_back(make_token(lexeme.substr(i, 1), char_type));
+				if (i < lexeme.size() - 1) {
+					rec_char_split(make_token(lexeme.substr(i + 1, lexeme.size() - i), joy_t::undef_t), tokens, ch, char_type);
+				}
+			}
+			else { //no push unmodified token
+				tokens.push_back(token);
+			}
+		}
+		else { //not an undef so push unmodified token
+			tokens.push_back(token);
+		}
 	}
 
 	void tokenizer::rec_sigil_split(token_t token, joy_stack& tokens, std::string open_sigil, std::string close_sigil, joy_t sigil_type) {
 		auto k1 = open_sigil.size();
 		auto k2 = close_sigil.size();
-		if (token.second == joy_t::undef_t) {
+		if (jundef(token)) {
 			auto lexeme = std::any_cast<std::string>(token.first);
 			auto i = lexeme.find(open_sigil);
 			if (i < lexeme.size()) { //found an opening sigil
@@ -98,6 +115,27 @@ namespace joy {
 		}
 	}
 
+	joy_stack tokenizer::strip_comments(joy_stack&& tokens) {
+		joy_stack result;
+		for (const auto& token : tokens) {  //examine all the tokens
+			if (comment_block) {
+				if (token == "*)") {
+					comment_block = false;
+					continue;
+				}
+			}
+			if (!comment_block) {
+				if (token == "(*") {
+					comment_block = true;
+				}
+				else {
+					result.push_back(token);
+				}
+			}
+		}
+		return result;
+	}
+
 	joy_stack tokenizer::split_whitespace(joy_stack&& tokens) {
 		joy_stack result;
 		for (const auto& t : tokens) { //examine all the tokens
@@ -118,6 +156,7 @@ namespace joy {
 	joy_stack tokenizer::tokenize_simple_types(joy_stack&& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			auto match = std::any_cast<std::string>(pattern);
+			std::cerr << match << "\n";
 			if (type == joy_t::string_t) { //convert std::string into a joy_stack of char tokens
 				joy_stack s;
 				for (auto c : match) {

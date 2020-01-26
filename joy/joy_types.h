@@ -43,7 +43,7 @@ namespace joy {
         sequence_t,     // quote, list, string
         aggregate_t,    // quote, list, string & set
         lambda_t,        // joy-lambda command 
-        joy_t,          // joy-joy command
+        cmd_t,          // joy-joy command
         //aggregate types NB all implemented as a joy_stack
         quote_t,        // aggregate of any joy type and any joy command
         list_t,         // quotation of only literal types
@@ -52,7 +52,7 @@ namespace joy {
         //simple types
         bool_t, char_t, int_t, double_t,
         //special types
-        comment_t
+        end_t
     };
 
     typedef std::any pattern_t;

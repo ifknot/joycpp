@@ -47,15 +47,19 @@ namespace joy {
 		*/
 		static joy_stack tokenize_strings(joy_stack&& tokens);	
 
-		/**
-		* filter out comment tokens
-		*/
-		joy_stack strip_comments(joy_stack&& tokens);
+		static joy_stack tokenize_reserved(joy_stack&& tokens);
+
+		static void rec_char_split(token_t token, joy_stack& tokens, char ch, joy_t char_type);
 
 		/**
-		* recursively find and split out sigil enclosed sections into tokens	
+		* recursively find and split out sigil enclosed sections into tokens
 		*/
 		static void rec_sigil_split(token_t token, joy_stack& tokens, std::string open_sigil, std::string close_sigil, joy_t sigil_type);
+
+		/**
+		* comments are not further processed but are treated just like blank space.
+		*/
+		joy_stack strip_comments(joy_stack&& tokens);
 
 		/**
 		* split out all the white space separated sections into string tokens 
@@ -68,10 +72,16 @@ namespace joy {
 		*/
 		static joy_stack tokenize_simple_types(joy_stack&& tokens);
 
+		/**
+		* regex "^ +"
+		*/
 		inline void trim_leading_whitespace(std::string& line) {
 			line = std::regex_replace(line, std::regex("^ +"), "");
 		}
 
+		/**
+		* comments are not further processed but are treated just like blank space.
+		*/
 		inline void trim_trailing_comment(std::string& line) {
 			line = line.substr(0, line.find_first_of('#'));
 		}
