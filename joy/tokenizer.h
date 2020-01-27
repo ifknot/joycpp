@@ -44,7 +44,7 @@ namespace joy {
 
 		bool comment_block{ false };
 
-		std::vector<char> reserved = { '[', ']', '{', '}', ';'}; //manage '.' separately 
+		std::vector<char> reserved = { '[', ']', '{', '}', ';' };//, '.'}; 
 
 		/**
 		* split out all the open-close quote sections into {std::sting, string_t} tokens 

@@ -96,8 +96,8 @@ namespace joy {
 		//non-standard
 		{"?", [&](joy_stack& S) { if (S.has("?", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
 		//stack commands
-		{".s", [&](joy_stack& S) { print_stack(S, io); }},
-		{".", [&](joy_stack& S) { if (S.has(".", {joy_t::any_t})) { print_top(S, io); } }},
+		{"s", [&](joy_stack& S) { print_stack(S, io); }},
+		{"/", [&](joy_stack& S) { if (S.has(".", {joy_t::any_t})) { print_top(S, io); } }},
 		{"newstack", [&](joy_stack& S) { S.newstack(); }},
 		{"stack", [&](joy_stack& S) { S.stack(); }},
 		{"unstack", [&](joy_stack& S) { S.unstack(); }},

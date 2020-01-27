@@ -14,15 +14,20 @@ namespace joy {
 			return tokens;
 		}
 		tokens.push_back(make_token(line, joy_t::undef_t)); //entire line as a single undefined token
-		return tokenize(std::move(tokens)); //split & tokenize 
+		tokens = tokenize(std::move(tokens)); //split & tokenize 
+		for (const auto& t : tokens) {
+			io << joy_stack::to_string(t);
+		}
+		return tokens;
 	}
 
 	joy_stack tokenizer::tokenize(joy_stack&& tokens) {
-		return tokenize_simple_types(
+		return 		
+			tokenize_simple_types(
 				strip_comments(
 					split_whitespace(
-					 tokenize_reserved(
-						tokenize_strings(std::move(tokens))
+						tokenize_strings(
+							tokenize_reserved(std::move(tokens))
 						)
 					)
 				)

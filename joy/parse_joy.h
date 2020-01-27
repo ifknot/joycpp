@@ -13,14 +13,11 @@ namespace joy {
 
 	class parse_joy : public parse_context_free {
 
-		enum class defn_state_t{ parse, candidate, define };
-
-		std::string BEGINDEF{ "==" };
-		std::string ENDDEF{ "." };
+		enum class joy_state_t{ parse, candidate, define };
 
 	public:
 
-		parse_joy(joy_stack& stack, io_device& io, std::string path_to_manual);
+		using parse_context_free::parse_context_free;
 
 		/**
 		* TODO: remove after testing
@@ -56,13 +53,15 @@ namespace joy {
 
 	private:
 
-		defn_state_t defn_state;
+		joy_state_t joy_state{ joy_state_t::parse };
 
 		std::string command;
 		std::string definition;
 		std::string module;
 
 		joy_stack tokenize_joy_commands(joy_stack&& tokens);
+
+		bool validate_tokens(joy_stack&& tokens);
 
 		void include(std::string&& path);
 

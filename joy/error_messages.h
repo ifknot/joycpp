@@ -30,9 +30,10 @@ namespace joy {
 	* The MESSAGE is often the same for many operators or combinators. It can be one of the following:
 */
 	static std::map<size_t, std::string> joy_error_messages = {
+		{XDEFNREJECTED, "definition rejected valid Joy syntax "},
 		{XNOFILE, "valid file "},
 		{XAGGSIGIL, "opening bracket "},
-		{XARGC, "more arguements "},
+		{XARGC, "more arguments "},
 		{XTYPEMISMATCH, "correct type "},
 		{XNOCONVERSION, "Joy03 syntax "},
 		{XNOOPENSIGIL, "opening sigil "},
