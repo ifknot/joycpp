@@ -2,8 +2,8 @@
 
 namespace joy {
 
-	joy_stack parse_joy::tokenize(joy_stack&& tokens) {
-		return tokenize_joy_commands(parse_context_free::tokenize(std::move(tokens)));
+	joy_stack parse_joy::tokenize(joy_stack& tokens) {
+		return tokenize_joy_commands(parse_context_free::tokenize(tokens));
 	}
 
 	bool parse_joy::call(token_t& token, joy_stack& S) {
@@ -15,13 +15,13 @@ namespace joy {
 		auto jt = public_joy_joy_map.find(std::any_cast<std::string>(token.first));
 		if (jt != public_joy_joy_map.end()) {
 			joy_stack tokens;
-			tokens = tokenize(std::move(jt->second));
+			tokens = tokenize(jt->second);
 			return parse_context_free::parse(tokens, S);
 		}
 		jt = private_joy_joy_map.find(std::any_cast<std::string>(token.first));
 		if (jt != private_joy_joy_map.end()) {
 			joy_stack tokens;
-			tokens = tokenize(std::move(jt->second));
+			tokens = tokenize(jt->second);
 			return parse_context_free::parse(tokens, S);
 		}
 		return parse_context_free::call(token, S);
@@ -48,20 +48,20 @@ namespace joy {
 				return true;
 			}
 			else {
+				error(XDEFNREJECTED, command + " missing ==");
 				joy_state = joy_state_t::parse;
 				return false;
 			}
 		case joy_state_t::define: 
 			if (token == "." || token == ";"){
 				io << definition << "end";
-				if (validate_tokens(tokenizer::tokenize(std::move(definition)))) {
+				if (validate_tokens(tokenizer::tokenize(definition))) {
 					public_joy_joy_map[command] = definition;
-					definition.clear();
 				}
 				else {
 					error(XDEFNREJECTED, command);
-					definition.clear();
 				}
+				definition.clear();
 				joy_state = joy_state_t::parse;
 			}
 			else {
@@ -72,6 +72,16 @@ namespace joy {
 			return false;
 		}
 		
+	}
+
+	bool parse_joy::parse(joy_stack& P, joy_stack& S) {
+		for (auto& token : P) {
+			if (!parse(token, S)) {
+				no_conversion(P);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	joy_stack parse_joy::tokenize_joy_commands(joy_stack&& tokens) {
@@ -115,8 +125,21 @@ namespace joy {
 		io << path;
 		std::ifstream f(path);
 		for (std::string line; std::getline(f, line); ) {
-			auto tokens = tokenize(std::move(line));
+			auto tokens = tokenize(line);
 			root_parse(tokens);
+		}
+	}
+
+	void parse_joy::autoput(joy_stack& S) {
+		switch (autoput_state) {
+		case autoput_state_t::top:
+			print_top(S, io);
+			break;
+		case autoput_state_t::stack:
+			print_stack(S, io);
+			break;
+		default:
+			break;
 		}
 	}
 

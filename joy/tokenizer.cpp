@@ -6,6 +6,17 @@ namespace joy {
 
 	tokenizer::tokenizer(io_device& io) : io(io) {}
 
+	joy_stack tokenizer::tokenize(std::string& line) {
+		joy_stack tokens;
+		trim_leading_whitespace(line);
+		trim_trailing_comment(line);
+		if (line.empty()) { //ignore any empty line 
+			return tokens;
+		}
+		tokens.push_back(make_token(line, joy_t::undef_t)); //entire line as a single undefined token
+		return tokenize(tokens); 
+	}
+
 	joy_stack tokenizer::tokenize(std::string&& line) {
 		joy_stack tokens;
 		trim_leading_whitespace(line);
@@ -14,13 +25,22 @@ namespace joy {
 			return tokens;
 		}
 		tokens.push_back(make_token(line, joy_t::undef_t)); //entire line as a single undefined token
-		tokens = tokenize(std::move(tokens)); //split & tokenize 
-		for (const auto& t : tokens) {
-			io << joy_stack::to_string(t);
-		}
-		return tokens;
+		return tokenize(tokens);
 	}
 
+	joy_stack tokenizer::tokenize(joy_stack& tokens) {
+		return
+			tokenize_simple_types(
+				strip_comments(
+					split_whitespace(
+						tokenize_strings(
+							tokenize_reserved(std::move(tokens))
+						)
+					)
+				)
+			);
+	}
+/*
 	joy_stack tokenizer::tokenize(joy_stack&& tokens) {
 		return 		
 			tokenize_simple_types(
@@ -33,7 +53,7 @@ namespace joy {
 				)
 			);
 	}
-
+*/
 	joy_stack tokenizer::tokenize_strings(joy_stack&& tokens) {
 		joy_stack result;
 		for (const auto& token : tokens) {  //examine all the tokens

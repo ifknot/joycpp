@@ -14,8 +14,8 @@ namespace joy {
 		return state_stack.top();
 	}
 
-	joy_stack parse_context_free::tokenize(joy_stack&& tokens) {
-		return tokenize_context_free_types(parse_regular::tokenize(std::move(tokens)));
+	joy_stack parse_context_free::tokenize(joy_stack& tokens) {
+		return tokenize_context_free_types(parse_regular::tokenize(tokens));
 	}
 
 	bool parse_context_free::parse(joy_stack& P, joy_stack& S) {

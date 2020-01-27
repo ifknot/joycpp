@@ -47,7 +47,7 @@ namespace joy {
 		* then regular grammar type id 
 		* then context free grammar type id 
 		*/
-		virtual joy_stack tokenize(joy_stack&& tokens) override;
+		virtual joy_stack tokenize(joy_stack& tokens) override;
 
 		/**
 		* unwind the stack then call lexer::no_conversion
@@ -91,7 +91,7 @@ namespace joy {
 		* TODO: &&
 		* nested parse a quoted program P against a stack S
 		*/
-		bool parse(joy_stack& P, joy_stack& S);
+		virtual bool parse(joy_stack& P, joy_stack& S);
 
 	private:
 

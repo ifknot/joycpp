@@ -15,6 +15,8 @@ namespace joy {
 
 		enum class joy_state_t{ parse, candidate, define };
 
+		enum class autoput_state_t { none, top, stack };
+
 	public:
 
 		using parse_context_free::parse_context_free;
@@ -23,7 +25,15 @@ namespace joy {
 		* TODO: remove after testing
 		*/
 		inline bool root_parse(joy_stack& tokens) {
-			return parse_context_free::parse(tokens, root_stack);
+			auto result = parse_context_free::parse(tokens, root_stack);
+			autoput(root_stack);
+			return result;
+		}
+
+		inline bool root_parse(joy_stack&& tokens) {
+			auto result = parse_context_free::parse(tokens, root_stack);
+			autoput(root_stack);
+			return result;
 		}
 
 		using tokenizer::tokenize;
@@ -36,7 +46,7 @@ namespace joy {
 		* then context free grammar type id
 		* then eol and eof type id
 		*/
-		virtual joy_stack tokenize(joy_stack&& tokens) override;
+		virtual joy_stack tokenize(joy_stack& tokens) override;
 
 	protected:
 
@@ -51,9 +61,13 @@ namespace joy {
 		*/
 		virtual bool parse(token_t& token, joy_stack& S) override;
 
+		virtual bool parse(joy_stack& P, joy_stack& S) override;
+
 	private:
 
 		joy_state_t joy_state{ joy_state_t::parse };
+
+		autoput_state_t autoput_state{ autoput_state_t::top };
 
 		std::string command;
 		std::string definition;
@@ -65,6 +79,8 @@ namespace joy {
 
 		void include(std::string&& path);
 
+		void autoput(joy_stack& S);
+
 		//TODO: joy_lambda_map MODULE PUBLIC PRIVATE END LIBRA DEFINE
 		//DEFINE can over-ride
 		//see userlib.joy DEFINE verbose == true. (* Example of over-riding  inilib.joy *)
@@ -75,6 +91,27 @@ namespace joy {
 					include(joy_stack::to_string(S.top()));
 				}
 			}},
+			{"setautoput", [&](joy_stack& S) { 
+				if (S.has("setautoput", {joy_t::int_t})) { 
+					auto state = std::any_cast<int>(S.top().first);
+					S.pop();
+					switch (state) {
+					case 0:
+						autoput_state = autoput_state_t::none;
+						break;
+					case 1:
+						autoput_state = autoput_state_t::top;
+						break;
+					case 2:
+						autoput_state = autoput_state_t::stack;
+						break;
+					default:
+						//invalid input error
+						break;
+					}
+				} 
+			}},
+			{".", [&](joy_stack& S) { }},
 		};
 
 		std::map<std::string, std::string> public_joy_joy_map {
@@ -82,9 +119,7 @@ namespace joy {
 			{"square", "dup *"}
 		};
 
-		std::map<std::string, std::string> private_joy_joy_map{
-			{"Q", "dup dup * *"},
-			{"S", "dup *"}
+		std::map<std::string, std::string> private_joy_joy_map {
 		};
 
 

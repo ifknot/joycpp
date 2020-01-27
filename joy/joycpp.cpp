@@ -17,8 +17,7 @@ void run() { // exec loop
     joy::parse_joy parser(stack, io, "joy03.man");
     while (!parser.is_quit()) {
 
-        auto tokens = parser.tokenize(io.readline());
-        if (parser.root_parse(tokens)) {
+        if (parser.root_parse(parser.tokenize(io.readline()))) {
             io.ok();
             io.colour(parser.to_colour(parser.state()));
             io << parser.to_string(parser.state());

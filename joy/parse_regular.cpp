@@ -10,8 +10,8 @@ namespace joy {
 		// TODO: reserve root_stack space?
 	}
 	  
-	joy_stack parse_regular::tokenize(joy_stack&& tokens) {
-		return tokenize_regular_types(tokenizer::tokenize(std::move(tokens)));
+	joy_stack parse_regular::tokenize(joy_stack& tokens) {
+		return tokenize_regular_types(tokenizer::tokenize(tokens));
 	}
 
 	void parse_regular::no_conversion(joy_stack& tokens) {
