@@ -2,6 +2,7 @@
 
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <map>
 
 #include "parse_context_free.h"
@@ -63,11 +64,17 @@ namespace joy {
 
 		joy_stack tokenize_joy_commands(joy_stack&& tokens);
 
-		//todo joy_lambda_map DEFINE PUBLIC PRIVATE LIBRA
+		void include(std::string&& path);
+
+		//TODO: joy_lambda_map MODULE PUBLIC PRIVATE END LIBRA DEFINE
+		//DEFINE can over-ride
+		//see userlib.joy DEFINE verbose == true. (* Example of over-riding  inilib.joy *)
 
 		dictionary_t joy_lambda_map{
 			{"include", [&](joy_stack& S) { 
-				if (S.has("include", {joy_t::string_t})) { io << "ooh"; }
+				if (S.has("include", {joy_t::string_t})) {
+					include(joy_stack::to_string(S.top()));
+				}
 			}},
 		};
 

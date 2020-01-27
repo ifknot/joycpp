@@ -42,7 +42,7 @@ namespace joy {
 				io << "define " + command;
 				return true;
 			case joy_t::cmd_t:
-				return this->call(token, S);
+				return call(token, S);
 			default:
 				return parse_context_free::parse(token, S);
 			}
@@ -94,6 +94,16 @@ namespace joy {
 			}
 		}
 		return std::move(tokens);
+	}
+
+	void parse_joy::include(std::string&& path) {
+		path = path.substr(1, path.size() - 2);
+		io << path;
+		std::ifstream f(path);
+		for (std::string line; std::getline(f, line); ) {
+			auto tokens = tokenize(std::move(line));
+			root_parse(tokens);
+		}
 	}
 
 }
