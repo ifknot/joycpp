@@ -151,7 +151,7 @@ namespace joy {
 		{"size", [&](joy_stack& S) { size(S); }},
 		//environment
 		{"manual", [&](joy_stack& S) { manual(joy_manual, io); }},
-		{"quit", [&](joy_stack& S) { quit(); io << ". . ."; }}
+		{"quit", [&](joy_stack& S) { quit(); io << ". . ."; }},
 		};
 
 		/**

@@ -10,4 +10,5 @@ namespace joy {
 	constexpr size_t XAGGSIGIL = 6;
 	constexpr size_t XNOFILE = 7;
 	constexpr size_t XDEFNREJECTED = 8;
+	constexpr size_t XSYNTAX = 9;
 }

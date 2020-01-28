@@ -61,6 +61,12 @@ namespace joy {
 		joy_stack tokenize_reserved(joy_stack&& tokens);
 
 		/**
+		* special case handling for "." reserved character to enable correct decimal point recognition
+		* for any lexeme over 2 chars in size exclude '. and then test and split an trailing .
+		*/
+		joy_stack tokenize_period(joy_stack&& tokens);
+
+		/**
 		* recursively find and split reserved character and assign type
 		*/
 		static void rec_char_split(token_t token, joy_stack& tokens, char ch, joy_t char_type);

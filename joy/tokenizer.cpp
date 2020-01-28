@@ -14,7 +14,7 @@ namespace joy {
 			return tokens;
 		}
 		tokens.push_back(make_token(line, joy_t::undef_t)); //entire line as a single undefined token
-		return tokenize(tokens); 
+		return tokenize(tokens);
 	}
 
 	joy_stack tokenizer::tokenize(std::string&& line) {
@@ -31,12 +31,14 @@ namespace joy {
 	joy_stack tokenizer::tokenize(joy_stack& tokens) {
 		return
 			tokenize_simple_types(
+				tokenize_period (
 				strip_comments(
 					split_whitespace(
 						tokenize_strings(
 							tokenize_reserved(std::move(tokens))
 						)
 					)
+				)
 				)
 			);
 	}
@@ -72,6 +74,22 @@ namespace joy {
 			result.clear();
 		}
 		return tokens;
+	}
+
+	joy_stack tokenizer::tokenize_period(joy_stack&& tokens) {
+		joy_stack result;
+		for (const auto& token : tokens) {
+			auto lexeme = std::any_cast<std::string>(token.first);
+			if (lexeme.size() > 1 && lexeme[0] != '\'' && lexeme[lexeme.size() - 1] == '.') { 
+				//split into 2 tokens - lexeme and its trailing '.'
+				result.push_back(make_token(lexeme.substr(0, lexeme.size() - 1), joy_t::undef_t));
+				result.push_back(make_token(lexeme.substr(lexeme.size() - 1, 1), joy_t::undef_t));
+			}
+			else {
+				result.push_back(token);
+			}
+		}
+		return result;;
 	}
 
 	void tokenizer::rec_char_split(token_t token, joy_stack& tokens, char ch, joy_t char_type) {

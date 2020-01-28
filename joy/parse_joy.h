@@ -25,13 +25,13 @@ namespace joy {
 		* TODO: remove after testing
 		*/
 		inline bool root_parse(joy_stack& tokens) {
-			auto result = parse_context_free::parse(tokens, root_stack);
+			auto result = parse(tokens, root_stack);
 			autoput(root_stack);
 			return result;
 		}
 
 		inline bool root_parse(joy_stack&& tokens) {
-			auto result = parse_context_free::parse(tokens, root_stack);
+			auto result = parse(tokens, root_stack);
 			autoput(root_stack);
 			return result;
 		}
@@ -111,12 +111,12 @@ namespace joy {
 					}
 				} 
 			}},
-			{".", [&](joy_stack& S) { }},
+			{";", [&](joy_stack& S) { error(XSYNTAX, "; (ignored)"); }},
+			{"END", [&](joy_stack& S) {}}, //break out of parse loop
+			{".", [&](joy_stack& S) {}} //break out of parse loop
 		};
 
 		std::map<std::string, std::string> public_joy_joy_map {
-			{"cube", "dup dup * *"},
-			{"square", "dup *"}
 		};
 
 		std::map<std::string, std::string> private_joy_joy_map {
