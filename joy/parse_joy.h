@@ -14,8 +14,8 @@ namespace joy {
 	class parse_joy : public parse_context_free {
 
 		enum class joy_state_t{ parse, candidate, define, module };
-
 		enum class autoput_state_t { none, top, stack };
+		enum class echo_state_t { none, echo, tab, linenumber};
 
 	public:
 
@@ -73,8 +73,8 @@ namespace joy {
 	private:
 
 		joy_state_t joy_state{ joy_state_t::parse };
-
 		autoput_state_t autoput_state{ autoput_state_t::top };
+		echo_state_t echo_state{ echo_state_t::none };
 
 		bool break_out{ false };
 		bool public_def{ true };
@@ -91,6 +91,8 @@ namespace joy {
 
 		void autoput(joy_stack& S);
 
+		void echo(size_t line_number, std::string line);
+		
 		//TODO: override definitions
 
 		dictionary_t joy_lambda_map{
@@ -115,29 +117,48 @@ namespace joy {
 					case 2:
 						autoput_state = autoput_state_t::stack;
 						break;
-					default:
-						//invalid input error
+					default: //invalid input error
 						break;
 					}
 				} 
 			}},
+			{"setecho", [&](joy_stack& S) { 
+				if (S.has("setecho", {joy_t::int_t})) {
+					auto state = std::any_cast<int>(S.top().first);
+					S.pop();
+					switch (state) {
+					case 0:
+						echo_state = echo_state_t::none;
+						break;
+					case 1:
+						echo_state = echo_state_t::echo;
+						break;
+					case 2:
+						echo_state = echo_state_t::tab;
+						break;
+					case 3:
+						echo_state = echo_state_t::linenumber;
+						break;
+					default: //invalid input error
+						break;
+					};
+				}
+			}},
 			{"MODULE", [&](joy_stack& S) { 
-				io.colour(BOLDYELLOW);
-				io << "MODULE";
 				joy_state = joy_state_t::module; 
 			}},
 			{"PUBLIC", [&](joy_stack& S) { 
-				io.colour(BOLDYELLOW);
-				io << "PUBLIC";
 				public_def = true; 
 			}},
 			{"PRIVATE", [&](joy_stack& S) { 
-				io.colour(BOLDYELLOW);
-				io << "PRIVATE";
 				public_def = false; 
 			}},
 			{";", [&](joy_stack& S) { error(XRESERVED, "; (ignored)"); }},
-			{".", [&](joy_stack& S) { break_out = true;  io << "break";  }} //break out of parse loop
+			{".", [&](joy_stack& S) { 
+				io.colour(BOLDBLACK);
+				io << "break";  
+				break_out = true;
+			}} 
 		};
 
 		std::map<std::string, std::string> public_joy_joy_map {};

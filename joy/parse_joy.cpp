@@ -38,8 +38,6 @@ namespace joy {
 			switch (token.second) {
 			case joy_t::undef_t:
 				command = module_name + std::any_cast<std::string>(token.first);
-				io.colour(BOLDYELLOW);
-				io << command + "==";
 				joy_state = joy_state_t::candidate;
 				return true;
 			case joy_t::cmd_t:
@@ -70,9 +68,7 @@ namespace joy {
 				else {
 					error(XDEFNREJECTED, command);
 				}
-				io << definition;
 				if (token == "." || token == "END") {
-					io << "END";
 					module_name.clear();
 				}
 				definition.clear();
@@ -85,7 +81,6 @@ namespace joy {
 		case joy_state_t::module:
 			assert(jundef(token));
 			module_name = std::any_cast<std::string>(token.first) + ".";
-			io << module_name;
 			joy_state = joy_state_t::parse;
 			return true;
 		default:
@@ -146,8 +141,10 @@ namespace joy {
 
 	void parse_joy::include(std::string&& path) {
 		std::ifstream f(path);
+		size_t line_number{ 1 };
 		if (f) {
 			for (std::string line; std::getline(f, line); ) {
+				echo(line_number++, line);
 				auto tokens = tokenize(line);
 				root_parse(tokens);
 			}
@@ -167,6 +164,25 @@ namespace joy {
 		case autoput_state_t::stack:
 			print_stack(S, io);
 			break;
+		case autoput_state_t::none:
+		default:
+			break;
+		}
+	}
+
+	void parse_joy::echo(size_t line_number, std::string line) {
+		io.colour(BOLDYELLOW);
+		switch (echo_state) {
+		case echo_state_t::linenumber:
+			io << std::to_string(line_number) + "\t" + line;
+			break;
+		case echo_state_t::tab:
+			io << "\t" + line;
+			break;
+		case echo_state_t::echo:
+			io << line;
+			break;
+		case echo_state_t::none:
 		default:
 			break;
 		}

@@ -98,6 +98,7 @@ namespace joy {
 		//stack commands
 		{".s", [&](joy_stack& S) { print_stack(S, io); }},
 		{"put", [&](joy_stack& S) { if (S.has(".", {joy_t::any_t})) { print_top(S, io); S.pop(); } }},
+		//putch
 		{"newstack", [&](joy_stack& S) { S.newstack(); }},
 		{"stack", [&](joy_stack& S) { S.stack(); }},
 		{"unstack", [&](joy_stack& S) { S.unstack(); }},
