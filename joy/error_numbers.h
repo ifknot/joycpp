@@ -11,4 +11,5 @@ namespace joy {
 	constexpr size_t XNOFILE = 7;
 	constexpr size_t XDEFNREJECTED = 8;
 	constexpr size_t XSYNTAX = 9;
+	constexpr size_t XRESERVED = 10;
 }

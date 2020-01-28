@@ -13,7 +13,7 @@ namespace joy {
 
 	class parse_joy : public parse_context_free {
 
-		enum class joy_state_t{ parse, candidate, define };
+		enum class joy_state_t{ parse, candidate, define, module };
 
 		enum class autoput_state_t { none, top, stack };
 
@@ -44,7 +44,7 @@ namespace joy {
 		* cascade tokens to tokenizer type id the simple type
 		* then regular grammar type id
 		* then context free grammar type id
-		* then eol and eof type id
+		* then joy lambda grammar
 		*/
 		virtual joy_stack tokenize(joy_stack& tokens) override;
 
@@ -69,9 +69,12 @@ namespace joy {
 
 		autoput_state_t autoput_state{ autoput_state_t::top };
 
+		bool break_out{ false };
+		bool public_def{ true };
+
 		std::string command;
 		std::string definition;
-		std::string module;
+		std::string module_name;
 
 		joy_stack tokenize_joy_commands(joy_stack&& tokens);
 
@@ -81,9 +84,7 @@ namespace joy {
 
 		void autoput(joy_stack& S);
 
-		//TODO: joy_lambda_map MODULE PUBLIC PRIVATE END LIBRA DEFINE
-		//DEFINE can over-ride
-		//see userlib.joy DEFINE verbose == true. (* Example of over-riding  inilib.joy *)
+		//TODO: override definitions
 
 		dictionary_t joy_lambda_map{
 			{"include", [&](joy_stack& S) { 
@@ -111,15 +112,22 @@ namespace joy {
 					}
 				} 
 			}},
-			{";", [&](joy_stack& S) { error(XSYNTAX, "; (ignored)"); }},
-			{"END", [&](joy_stack& S) {}}, //break out of parse loop
-			{".", [&](joy_stack& S) {}} //break out of parse loop
+			{"MODULE", [&](joy_stack& S) { joy_state = joy_state_t::module; }},
+			{"PUBLIC", [&](joy_stack& S) { public_def = true; }},
+			{"PRIVATE", [&](joy_stack& S) { public_def = false; }},
+			{";", [&](joy_stack& S) { error(XRESERVED, "; (ignored)"); }},
+			{".", [&](joy_stack& S) { break_out = true; }} //break out of parse loop
 		};
 
-		std::map<std::string, std::string> public_joy_joy_map {
-		};
+		std::map<std::string, std::string> public_joy_joy_map {};
 
 		std::map<std::string, std::string> private_joy_joy_map {
+			{"END", " ."},
+			//for backwards compatibility
+			{"HIDE", " PRIVATE"},
+			{"IN", " PUBLIC"},
+			{"LIBRA", " PUBLIC"},
+			{"DEFINE", " PUBLIC"}
 		};
 
 

@@ -32,10 +32,10 @@ namespace joy {
 		case joy_state_t::parse: 
 			switch (token.second) {
 			case joy_t::undef_t:
-				joy_state = joy_state_t::candidate;
-				command = std::any_cast<std::string>(token.first);
+				command = module_name + std::any_cast<std::string>(token.first);
 				io.colour(BOLDYELLOW);
 				io << "DEFINE " + command;
+				joy_state = joy_state_t::candidate;
 				return true;
 			case joy_t::cmd_t:
 				return call(token, S);
@@ -53,13 +53,22 @@ namespace joy {
 				return false;
 			}
 		case joy_state_t::define: 
-			if (token == "." || token == ";" || token == "END"){
-				io << definition << "END";
+			if (token == "." || token == ";" || token == "END") {
 				if (validate_tokens(tokenizer::tokenize(definition))) {
-					public_joy_joy_map[command] = definition;
+					if (public_def) {
+						public_joy_joy_map[command] = definition;
+					}
+					else {
+						private_joy_joy_map[command] = definition;
+					}
 				}
 				else {
 					error(XDEFNREJECTED, command);
+				}
+				io << definition;
+				if (token == "." || token == "END") {
+					io << "END";
+					module_name.clear();
 				}
 				definition.clear();
 				joy_state = joy_state_t::parse;
@@ -68,6 +77,12 @@ namespace joy {
 				definition += " " + joy_stack::to_string(token);
 			}
 			return true;
+		case joy_state_t::module:
+			assert(jundef(token));
+			module_name = std::any_cast<std::string>(token.first) + ".";
+			io << module_name;
+			joy_state = joy_state_t::parse;
+			return true;
 		default:
 			return false;
 		}
@@ -75,14 +90,14 @@ namespace joy {
 	}
 
 	bool parse_joy::parse(joy_stack& P, joy_stack& S) {
+		break_out = false;
 		for (auto& token : P) {
-			if (token == "." || token == "END") { //breaks out of the parsing loop
-				parse(token, S);
-				break;
-			}
 			if (!parse(token, S)) {
 				no_conversion(P);
 				return false;
+			}
+			if (break_out) { //breaks out of the parsing loop
+				break;
 			}
 		}
 		return true;

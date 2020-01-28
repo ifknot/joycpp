@@ -141,7 +141,7 @@ namespace joy {
 				S.pop();
 			}
 		}},
-		{"==", [&](joy_stack& S) { 
+		{"=", [&](joy_stack& S) { 
 			if (S.has("==", {joy_t::numeric_t, joy_t::numeric_t})) {
 				S.push(S.sat(1) == S.top());
 			}
