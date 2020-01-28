@@ -2,6 +2,11 @@
 
 namespace joy {
 
+	parse_joy::parse_joy(joy_stack& stack, io_device& io, std::string path_to_manual) :
+		parse_context_free(stack, io, path_to_manual)
+	{
+		include("inilib.joy");
+	}
 	joy_stack parse_joy::tokenize(joy_stack& tokens) {
 		return tokenize_joy_commands(parse_context_free::tokenize(tokens));
 	}
@@ -34,7 +39,7 @@ namespace joy {
 			case joy_t::undef_t:
 				command = module_name + std::any_cast<std::string>(token.first);
 				io.colour(BOLDYELLOW);
-				io << "DEFINE " + command;
+				io << command + "==";
 				joy_state = joy_state_t::candidate;
 				return true;
 			case joy_t::cmd_t:
@@ -140,12 +145,15 @@ namespace joy {
 	}
 
 	void parse_joy::include(std::string&& path) {
-		path = path.substr(1, path.size() - 2);
-		io << path;
 		std::ifstream f(path);
-		for (std::string line; std::getline(f, line); ) {
-			auto tokens = tokenize(line);
-			root_parse(tokens);
+		if (f) {
+			for (std::string line; std::getline(f, line); ) {
+				auto tokens = tokenize(line);
+				root_parse(tokens);
+			}
+		}
+		else {
+			error(XNOFILE, "include " + path);
 		}
 	}
 

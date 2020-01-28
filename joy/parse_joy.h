@@ -19,11 +19,18 @@ namespace joy {
 
 	public:
 
-		using parse_context_free::parse_context_free;
-
 		/**
-		* TODO: remove after testing
+		* On startup Joy will first determine whether there is a file usrlib.joy in the current directory. 
+		* If there is, it is opened for reading. 
+		* When the end is reached, or when there is no such file, the terminal or the designated input file is used. 
+		* For any particular user this file might look very different:
+		* + it might be empty
+		* + might contain just a directive to include inilib.joy 
+		* + it might contain fewer or it might contain more definitions
+		* + it might contain definitions of a very different kind
 		*/
+		parse_joy(joy_stack& stack, io_device& io, std::string path_to_manual);
+
 		inline bool root_parse(joy_stack& tokens) {
 			auto result = parse(tokens, root_stack);
 			autoput(root_stack);
@@ -89,7 +96,9 @@ namespace joy {
 		dictionary_t joy_lambda_map{
 			{"include", [&](joy_stack& S) { 
 				if (S.has("include", {joy_t::string_t})) {
-					include(joy_stack::to_string(S.top()));
+					auto path = joy_stack::to_string(S.top());
+					S.pop();
+					include(path.substr(1, path.size() - 2));
 				}
 			}},
 			{"setautoput", [&](joy_stack& S) { 
@@ -112,11 +121,23 @@ namespace joy {
 					}
 				} 
 			}},
-			{"MODULE", [&](joy_stack& S) { joy_state = joy_state_t::module; }},
-			{"PUBLIC", [&](joy_stack& S) { public_def = true; }},
-			{"PRIVATE", [&](joy_stack& S) { public_def = false; }},
+			{"MODULE", [&](joy_stack& S) { 
+				io.colour(BOLDYELLOW);
+				io << "MODULE";
+				joy_state = joy_state_t::module; 
+			}},
+			{"PUBLIC", [&](joy_stack& S) { 
+				io.colour(BOLDYELLOW);
+				io << "PUBLIC";
+				public_def = true; 
+			}},
+			{"PRIVATE", [&](joy_stack& S) { 
+				io.colour(BOLDYELLOW);
+				io << "PRIVATE";
+				public_def = false; 
+			}},
 			{";", [&](joy_stack& S) { error(XRESERVED, "; (ignored)"); }},
-			{".", [&](joy_stack& S) { break_out = true; }} //break out of parse loop
+			{".", [&](joy_stack& S) { break_out = true;  io << "break";  }} //break out of parse loop
 		};
 
 		std::map<std::string, std::string> public_joy_joy_map {};
