@@ -33,12 +33,20 @@ namespace joy {
 		
 	protected:
 
+		enum class echo_state_t { none, echo, tab, linenumber };
+
+		//TODO: fix nested line numbers
+		size_t line_number{ 0 };
+
+		echo_state_t echo_state{ echo_state_t::none };
+
 		io_device& io;
 
 		virtual joy_stack tokenize(joy_stack& tokens);
 
 		//virtual joy_stack tokenize(joy_stack&& tokens);
 
+		void echo(size_t line_number, const std::string& line);
 
 	private:
 

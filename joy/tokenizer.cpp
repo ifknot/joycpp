@@ -7,6 +7,7 @@ namespace joy {
 	tokenizer::tokenizer(io_device& io) : io(io) {}
 
 	joy_stack tokenizer::tokenize(std::string& line) {
+		echo(line_number++, line);
 		joy_stack tokens;
 		trim_leading_whitespace(line);
 		trim_trailing_comment(line);
@@ -18,6 +19,7 @@ namespace joy {
 	}
 
 	joy_stack tokenizer::tokenize(std::string&& line) {
+		echo(line_number++, line);
 		joy_stack tokens;
 		trim_leading_whitespace(line);
 		trim_trailing_comment(line);
@@ -56,6 +58,24 @@ namespace joy {
 			);
 	}
 */
+	void tokenizer::echo(size_t line_number, const std::string& line) {
+		io.colour(BOLDYELLOW);
+		switch (echo_state) {
+		case echo_state_t::linenumber:
+			io << std::to_string(line_number) + "\t" + line;
+			break;
+		case echo_state_t::tab:
+			io << "\t" + line;
+			break;
+		case echo_state_t::echo:
+			io << line;
+			break;
+		case echo_state_t::none:
+		default:
+			break;
+		}
+	}
+
 	joy_stack tokenizer::tokenize_strings(joy_stack&& tokens) {
 		joy_stack result;
 		for (const auto& token : tokens) {  //examine all the tokens

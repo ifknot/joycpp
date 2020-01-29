@@ -15,7 +15,6 @@ namespace joy {
 
 		enum class joy_state_t{ parse, candidate, define, module };
 		enum class autoput_state_t { none, top, stack };
-		enum class echo_state_t { none, echo, tab, linenumber};
 
 	public:
 
@@ -74,9 +73,8 @@ namespace joy {
 
 		joy_state_t joy_state{ joy_state_t::parse };
 		autoput_state_t autoput_state{ autoput_state_t::top };
-		echo_state_t echo_state{ echo_state_t::none };
 
-		bool break_out{ false };
+		bool abort{ false };
 		bool public_def{ true };
 
 		std::string command;
@@ -90,8 +88,6 @@ namespace joy {
 		void include(std::string&& path);
 
 		void autoput(joy_stack& S);
-
-		void echo(size_t line_number, std::string line);
 		
 		//TODO: override definitions
 
@@ -101,6 +97,48 @@ namespace joy {
 					auto path = joy_stack::to_string(S.top());
 					S.pop();
 					include(path.substr(1, path.size() - 2));
+				}
+			}},
+			{"autoput", [&](joy_stack& S) {
+				switch (autoput_state) {
+				case autoput_state_t::none:
+					S.push(make_token(0, joy_t::int_t));
+					break;
+				case autoput_state_t::top:
+					S.push(make_token(1, joy_t::int_t));
+					break;
+				case autoput_state_t::stack:
+					S.push(make_token(2, joy_t::int_t));
+					break;
+				}
+			}},
+			{"body", [&](joy_stack& S) {
+				auto match = joy_stack::to_string(S.top());
+				match = match.substr(1, match.size() - 2);
+				S.pop();
+				auto jt = public_joy_joy_map.find(match);
+				if (jt != public_joy_joy_map.end()) {
+					io.colour(BOLDYELLOW);
+					io << match + " == " + public_joy_joy_map[match];
+				}
+				else {
+					error(XDEFNREJECTED, match + " not found");
+				}
+			}},
+			{"echo", [&](joy_stack& S) {
+				switch (echo_state) {
+				case echo_state_t::none:
+					S.push(make_token(0, joy_t::int_t));
+					break;
+				case echo_state_t::echo:
+					S.push(make_token(1, joy_t::int_t));
+					break;
+				case echo_state_t::tab:
+					S.push(make_token(2, joy_t::int_t));
+					break;
+				case echo_state_t::linenumber:
+					S.push(make_token(3, joy_t::int_t));
+					break;
 				}
 			}},
 			{"setautoput", [&](joy_stack& S) { 
@@ -153,12 +191,9 @@ namespace joy {
 			{"PRIVATE", [&](joy_stack& S) { 
 				public_def = false; 
 			}},
+			{"==", [&](joy_stack& S) { error(XRESERVED, "== (ignored)"); }},
 			{";", [&](joy_stack& S) { error(XRESERVED, "; (ignored)"); }},
-			{".", [&](joy_stack& S) { 
-				io.colour(BOLDBLACK);
-				io << "break";  
-				break_out = true;
-			}} 
+			{".", [&](joy_stack& S) { }} 
 		};
 
 		std::map<std::string, std::string> public_joy_joy_map {};
