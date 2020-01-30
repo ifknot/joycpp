@@ -103,7 +103,7 @@ namespace joy {
 		//stack commands
 		{".s", [&](joy_stack& S) { print_stack(S, io); }},
 		{"put", [&](joy_stack& S) { if (S.has("put", {joy_t::any_t})) { print_top(S, io); S.pop(); } }},
-		{"putch", [&](joy_stack& S) { if (S.has("putch", {joy_t::char_t})) { io.putch(std::any_cast<char>(S.top().first)); S.pop(); } }},
+		{"putch", [&](joy_stack& S) { if (S.has("putch", {joy_t::char_t})) { io.colour(GREEN); io.putch(std::any_cast<char>(S.top().first)); S.pop(); } }},
 		{"get", [&](joy_stack& S) { input_stack(S, io); }},
 		{"newstack", [&](joy_stack& S) { S.newstack(); }},
 		{"stack", [&](joy_stack& S) { S.stack(); }},

@@ -33,6 +33,7 @@ namespace joy {
 	}
 
 	void io_device::putch(char c) {
+		ink();
 		output_stream << c;
 	}
 

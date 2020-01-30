@@ -2,33 +2,41 @@
  * This initial library contains a disparate collection of operators and combinators that are widely useful. 
  * Most are not dependent on particular types. 
  * Contents:
- * + explicit input and output 
- * + dates and times
- * + operators on predicates
- * + library utilities 
+ 
  *
  * N.B. All other libraries will ensure that this library is also loaded.
  *
  *)
 
-3 setecho
+#3 setecho
 
 PUBLIC
 
 _inilib == true;
 
-(* - - - - -  I N P U T   O U T P U T  - - - - *)
+(* - - - - - IO Operators  - - - - *)
 
     newline == '\n putch;
     putln == put newline;
     space == '\032 putch;
     bell == '\007 putch;
-(* TODO: lambda primitive *)
     putchars == [putch] step;
     putstrings == [putchars] step;
 
-    ask == "Please " putchars putchars newline get;
+    ask == "Please " putchars putchars space get;
 
-END
+(* - - - - -  Boolean and Mathematic Operators  - - - - *)
 
-0 setecho
+    pred == 1 -;
+    succ == 1 +;
+
+(* - - - - - List Operators  - - - - *)
+
+    sum == 0.0 swap [+] step;
+    product == 1.0 swap [*] step;
+    #destructive size == 0.0 swap [pop succ] step;
+    jsize == dup 0.0 swap [pop succ] step;
+
+"inilib is loaded" putchars.
+
+#0 setecho

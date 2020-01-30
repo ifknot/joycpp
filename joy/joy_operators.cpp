@@ -29,6 +29,7 @@ namespace joy {
     }
 
 	void input_stack(joy_stack& S, io_device& io) {
+        io.colour(BOLDYELLOW);
         io.putch('?');
         io.putch(' ');
         S.push(make_token(io.input(), joy_t::undef_t));

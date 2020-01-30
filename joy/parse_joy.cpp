@@ -6,6 +6,10 @@ namespace joy {
 		parse_context_free(stack, io, path_to_manual)
 	{
 		include("inilib.joy");
+		io.putch('\n');
+		io.ok();
+		io.colour(BOLDWHITE);
+		io.putch('\n');
 	}
 	joy_stack parse_joy::tokenize(joy_stack& tokens) {
 		return tokenize_joy_commands(parse_context_free::tokenize(tokens));
