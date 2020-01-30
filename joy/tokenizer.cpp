@@ -213,7 +213,8 @@ namespace joy {
 	}
 
 	joy_stack tokenizer::tokenize_simple_types(joy_stack&& tokens) {
-		for (auto& [pattern, type] : tokens) {
+		for (auto& token : tokens) {
+			auto& [pattern, type] = token;
 			auto match = std::any_cast<std::string>(pattern);
 			if (type == joy_t::string_t) { //convert std::string into a joy_stack of char tokens
 				joy_stack s;
@@ -222,56 +223,11 @@ namespace joy {
 				}
 				pattern = s;
 			}
-			if (jlogical(match)) {
-				pattern = (match == "true") ? true : false;
-				type = joy_t::bool_t;
-				continue;
-			}
-			if (jchar_space(match)) {
-				pattern = ' ';
-				type = joy_t::char_t;
-				continue;
-			}
-			if (jchar_escape(match)) {
-				switch (match[2]) {
-				case 'n':
-					pattern = '\n';
-					break;
-				case 't':
-					pattern = '\t';
-					break;
-				case 'b':
-					pattern = '\b';
-					break;
-				case 'r':
-					pattern = '\r';
-					break;
-				case 'f':
-					pattern = '\f';
-					break;
-				default:
-					break;
-				}
-				type = joy_t::char_t;
-				continue;
-			}
-			if (jchar(match)) {
-				pattern = match[1];
-				type = joy_t::char_t;
-				continue;
-			}
-			if (jinteger(match)) {
-				pattern = stoi(match);
-				type = joy_t::int_t;
-				continue;
-			}
-			if (jdouble(match)) {
-				pattern = stod(match);
-				type = joy_t::double_t;
-				continue;
+			else {
+				convert_simple(token);
 			}
 		}
-		return tokens;
+		return std::move(tokens);
 	}
 
 }

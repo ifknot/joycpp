@@ -28,6 +28,12 @@ namespace joy {
         io << dump;
     }
 
+	void input_stack(joy_stack& S, io_device& io) {
+        io.putch('?');
+        io.putch(' ');
+        S.push(make_token(io.input(), joy_t::undef_t));
+    }
+
     void manual(std::map<std::string, std::string>& joy_manual, io_device& io) {
         io.colour(YELLOW);
         for (const auto& [cmd, info] : joy_manual) {

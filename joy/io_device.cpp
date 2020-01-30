@@ -32,6 +32,16 @@ namespace joy {
 		output_stream << "ok " << info;
 	}
 
+	void io_device::putch(char c) {
+		output_stream << c;
+	}
+
+	std::string io_device::input() {
+		std::string result;
+		input_stream >> result;
+		return result;
+	}
+
 	void io_device::ink() {
 		if (colouring()) {
 			output_stream << RESET << ink_colour;

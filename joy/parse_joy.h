@@ -13,7 +13,7 @@ namespace joy {
 
 	class parse_joy : public parse_context_free {
 
-		enum class joy_state_t{ parse, candidate, define, module };
+		enum class joy_state_t{ parse, in, hide, candidate, define, module };
 		enum class autoput_state_t { none, top, stack };
 
 	public:
@@ -57,6 +57,16 @@ namespace joy {
 	protected:
 
 		/**
+		* string list of all defined symbols
+		*/
+		virtual std::string help() override;
+
+		/**
+		* string list of all private defined symbols
+		*/
+		std::string _help();
+
+		/**
 		* executes Joy operators defined as Joy operators
 		* operator matching function and execute if match return true otherwise return false
 		*/
@@ -75,7 +85,7 @@ namespace joy {
 		autoput_state_t autoput_state{ autoput_state_t::top };
 
 		bool abort{ false };
-		bool public_def{ true };
+		bool private_access{ false };
 
 		std::string command;
 		std::string definition;
@@ -92,6 +102,10 @@ namespace joy {
 		//TODO: override definitions
 
 		dictionary_t joy_lambda_map{
+			{"help", [&](joy_stack& S) {
+				io.colour(YELLOW);
+				io << help();			
+			}},
 			{"include", [&](joy_stack& S) { 
 				if (S.has("include", {joy_t::string_t})) {
 					auto path = joy_stack::to_string(S.top());
@@ -186,25 +200,27 @@ namespace joy {
 				joy_state = joy_state_t::module; 
 			}},
 			{"PUBLIC", [&](joy_stack& S) { 
-				public_def = true; 
+				private_access = false; 
 			}},
 			{"PRIVATE", [&](joy_stack& S) { 
-				public_def = false; 
+				private_access = true; 
 			}},
 			{"==", [&](joy_stack& S) { error(XRESERVED, "== (ignored)"); }},
 			{";", [&](joy_stack& S) { error(XRESERVED, "; (ignored)"); }},
 			{".", [&](joy_stack& S) { }} 
 		};
 
-		std::map<std::string, std::string> public_joy_joy_map {};
-
-		std::map<std::string, std::string> private_joy_joy_map {
+		std::map<std::string, std::string> public_joy_joy_map {
 			{"END", " ."},
 			//for backwards compatibility
 			{"HIDE", " PRIVATE"},
 			{"IN", " PUBLIC"},
 			{"LIBRA", " PUBLIC"},
 			{"DEFINE", " PUBLIC"}
+		};
+
+		std::map<std::string, std::string> private_joy_joy_map {
+			
 		};
 
 

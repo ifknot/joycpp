@@ -64,6 +64,8 @@ namespace joy {
     */
     void print_stack(const joy_stack& S, io_device& io);
 
+    void input_stack(joy_stack& S, io_device& io);
+
     /**
     * manual: ->
     * Writes the loaded manual of all Joy primitives to an io device.

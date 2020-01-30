@@ -28,6 +28,14 @@ namespace joy {
 		return true;
 	}
 
+	std::string parse_context_free::help() {
+		std::string result;
+		for (const auto& [key, lamda] : context_free_lambda_map) {
+			result += key + " ";
+		}
+		return result + parse_regular::help();
+	}
+
 	bool parse_context_free::call(token_t& token, joy_stack& S) {
 		auto it = context_free_lambda_map.find(std::any_cast<std::string>(token.first));
 		if (it != context_free_lambda_map.end()) {

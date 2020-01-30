@@ -37,6 +37,14 @@ namespace joy {
 		quit_ = true;
 	}
 
+	std::string parse_regular::help() {
+		std::string result;
+		for (const auto& [key, lamda] : regular_lambda_map) {
+			result += key + " ";
+		}
+		return result;
+	}
+
 	joy_stack parse_regular::tokenize_regular_types(joy_stack&& tokens) {
 		for (auto& [pattern, type] : tokens) {
 			if (type == joy_t::undef_t) {

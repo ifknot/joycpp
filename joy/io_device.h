@@ -43,6 +43,16 @@ namespace joy {
         */
         void ok(std::string info = "");
 
+        /**
+        * send character to output stream
+        */
+        void putch(char c);
+
+        /**
+        * get an input from the input stream
+        */
+        std::string input();
+
     private:
 
         std::string ink_colour{ BOLDWHITE };

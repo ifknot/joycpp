@@ -77,6 +77,11 @@ namespace joy {
 	protected:
 
 		/**
+		* string list of all defined symbols
+		*/
+		virtual std::string help() override;
+
+		/**
 		* executes context free Joy operators implemented as C++ lambda
 		* operator matching function and execute if match return true otherwise return false
 		*/

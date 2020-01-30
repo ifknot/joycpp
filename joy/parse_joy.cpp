@@ -11,6 +11,28 @@ namespace joy {
 		return tokenize_joy_commands(parse_context_free::tokenize(tokens));
 	}
 
+	std::string parse_joy::help() {
+		std::string result;
+		for (const auto& [key, lamda] : joy_lambda_map) {
+			result += key + " ";
+		}
+		for (const auto& [key, lexeme] : public_joy_joy_map) {
+			result += key + " ";
+		}
+		return result + parse_context_free::help();
+	}
+
+	std::string parse_joy::_help() {
+		std::string result;
+		for (const auto& [key, lambda] : joy_lambda_map) {
+			result += key + " ";
+		}
+		for (const auto& [key, lexeme] : private_joy_joy_map) {
+			result += key + " ";
+		}
+		return result + parse_context_free::help();
+	}
+
 	bool parse_joy::call(token_t& token, joy_stack& S) {
 		auto it = joy_lambda_map.find(std::any_cast<std::string>(token.first));
 		if (it != joy_lambda_map.end()) {
@@ -58,18 +80,17 @@ namespace joy {
 		case joy_state_t::define: 
 			if (token == "." || token == ";" || token == "END") {
 				if (validate_tokens(tokenizer::tokenize(definition))) {
-					if (public_def) {
-						public_joy_joy_map[command] = definition;
+					if (private_access) {
+						private_joy_joy_map[command] = definition;
 					}
 					else {
-						private_joy_joy_map[command] = definition;
+						public_joy_joy_map[command] = definition;
 					}
 				}
 				else {
 					error(XDEFNREJECTED, command);
 				}
 				if (token == "." || token == "END") {
-					io.colour(BOLDYELLOW);
 					module_name.clear();
 				}
 				definition.clear();
@@ -119,7 +140,7 @@ namespace joy {
 					continue;
 				}
 				jt = private_joy_joy_map.find(match);
-				if (jt != private_joy_joy_map.end()) {
+				if (private_access & jt != private_joy_joy_map.end()) {
 					type = joy_t::cmd_t;
 					continue;
 				}

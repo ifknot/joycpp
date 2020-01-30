@@ -33,6 +33,11 @@ namespace joy {
 		typedef std::map<std::string, function_t> dictionary_t;
 
 		/**
+		* string list of all defined symbols
+		*/
+		virtual std::string help();
+
+		/**
 		* TODO: test performance if reserve large stack space at construction
 		* root stack
 		*/
@@ -92,13 +97,14 @@ namespace joy {
 		* 1. can not be expressed in Joy grammar
 		* 2. offer performance benefit as c++ lambda equivalent
 		*/
-		dictionary_t regular_lambda_map { 
+		dictionary_t regular_lambda_map{
 		//non-standard
 		{"?", [&](joy_stack& S) { if (S.has("?", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
 		//stack commands
 		{".s", [&](joy_stack& S) { print_stack(S, io); }},
-		{"put", [&](joy_stack& S) { if (S.has(".", {joy_t::any_t})) { print_top(S, io); S.pop(); } }},
-		//putch
+		{"put", [&](joy_stack& S) { if (S.has("put", {joy_t::any_t})) { print_top(S, io); S.pop(); } }},
+		{"putch", [&](joy_stack& S) { if (S.has("putch", {joy_t::char_t})) { io.putch(std::any_cast<char>(S.top().first)); S.pop(); } }},
+		{"get", [&](joy_stack& S) { input_stack(S, io); }},
 		{"newstack", [&](joy_stack& S) { S.newstack(); }},
 		{"stack", [&](joy_stack& S) { S.stack(); }},
 		{"unstack", [&](joy_stack& S) { S.unstack(); }},

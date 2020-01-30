@@ -32,4 +32,62 @@ namespace joy {
 		return type_to_string[match];
 	}
 
+	void convert_simple(token_t& token) {
+		auto& [pattern, type] = token;
+		auto match = std::any_cast<std::string>(pattern);	
+		if (jlogical(match)) {
+			pattern = (match == "true") ? true : false;
+			type = joy_t::bool_t;
+			return;
+		}
+		if (jchar_space(match)) {
+			pattern = ' ';
+			type = joy_t::char_t;
+			return;
+		}
+		if (jchar_escape(match)) {
+			switch (match[2]) {
+			case 'n':
+				pattern = '\n';
+				break;
+			case 't':
+				pattern = '\t';
+				break;
+			case 'b':
+				pattern = '\b';
+				break;
+			case 'r':
+				pattern = '\r';
+				break;
+			case 'f':
+				pattern = '\f';
+				break;
+			default:
+				break;
+			}
+			type = joy_t::char_t;
+			return;
+		}
+		if (jchar_decimal(match)) {
+			pattern = static_cast<char>(stoi(match.substr(2, 3)));
+			type = joy_t::char_t;
+			return;
+		}
+		if (jchar(match)) {
+			pattern = match[1];
+			type = joy_t::char_t;
+			return;
+		}
+		if (jinteger(match)) {
+			pattern = stoi(match);
+			type = joy_t::int_t;
+			return;
+		}
+		if (jdouble(match)) {
+			pattern = stod(match);
+			type = joy_t::double_t;
+			return;
+		}
+	}
+
 }

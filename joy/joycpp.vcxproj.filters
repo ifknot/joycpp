@@ -106,5 +106,8 @@
     <None Include="test1.joy">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="inilib.joy">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

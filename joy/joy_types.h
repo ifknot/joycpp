@@ -77,6 +77,10 @@ namespace joy {
         return std::make_pair(std::any_cast<T>(arg, type));
     }
 
+    /**
+    * in place conversion bool, char, int, double & special chars '\ '\111
+    */
+    void convert_simple(token_t& token);
 
     //string joy primitive matching:
 
@@ -84,21 +88,26 @@ namespace joy {
         return ((match == "true") || (match == "false"));
     }
 
-    inline bool jchar(const std::string& match) {
-        return ((match.size() == 2) && (match[0] == '\''));
-    }
-
-    //char special case space
-    inline bool jchar_space(const std::string& match) {
-        return ((match.size() == 1) && (match[0] == '\''));
-    }
-
-    //char escape
-    inline bool jchar_escape(const std::string& match) {
-        return ((match.size() == 3) && (match[0] == '\'') && (match[1] == '\\'));
-    }
-
     inline bool jdouble(const std::string& match) {
+        //prevent stod from parsing the joy combinator infra as infinity and daft things like 3] 4} as doubles
+        if (std::regex_match(match, std::regex("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"))) {
+            try {
+                auto x = std::stod(match);
+                return true;
+            }
+            catch (std::invalid_argument) {
+                return false;
+            }
+            catch (std::out_of_range) {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    inline bool jdouble(const std::string&& match) {
         //prevent stod from parsing the joy combinator infra as infinity and daft things like 3] 4} as doubles
         if (std::regex_match(match, std::regex("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"))) {
             try {
@@ -124,6 +133,34 @@ namespace joy {
         else {
             return false;
         }
+    }
+
+    inline bool jinteger(const std::string&& match) {
+        if (jdouble(match)) {
+            return match.find_first_not_of("+-0123456789") == std::string::npos;
+        }
+        else {
+            return false;
+        }
+    }
+
+    inline bool jchar(const std::string& match) {
+        return ((match.size() == 2) && (match[0] == '\''));
+    }
+
+    //char special case space
+    inline bool jchar_space(const std::string& match) {
+        return ((match.size() == 1) && (match[0] == '\''));
+    }
+
+    //char escape
+    inline bool jchar_escape(const std::string& match) {
+        return ((match.size() == 3) && (match[0] == '\'') && (match[1] == '\\'));
+    }
+
+    //char decimal
+    inline bool jchar_decimal (const std::string& match) {
+        return ((match.size() == 5) && (match[0] == '\'') && (match[1] == '\\'));
     }
 
     //token joy type matching

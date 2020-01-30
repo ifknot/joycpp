@@ -1,0 +1,34 @@
+(* 
+ * This initial library contains a disparate collection of operators and combinators that are widely useful. 
+ * Most are not dependent on particular types. 
+ * Contents:
+ * + explicit input and output 
+ * + dates and times
+ * + operators on predicates
+ * + library utilities 
+ *
+ * N.B. All other libraries will ensure that this library is also loaded.
+ *
+ *)
+
+3 setecho
+
+PUBLIC
+
+_inilib == true;
+
+(* - - - - -  I N P U T   O U T P U T  - - - - *)
+
+    newline == '\n putch;
+    putln == put newline;
+    space == '\032 putch;
+    bell == '\007 putch;
+(* TODO: lambda primitive *)
+    putchars == [putch] step;
+    putstrings == [putchars] step;
+
+    ask == "Please " putchars putchars newline get;
+
+END
+
+0 setecho
