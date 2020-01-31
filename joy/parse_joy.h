@@ -216,7 +216,8 @@ namespace joy {
 			{"HIDE", " PRIVATE"},
 			{"IN", " PUBLIC"},
 			{"LIBRA", " PUBLIC"},
-			{"DEFINE", " PUBLIC"}
+			{"DEFINE", " PUBLIC"},
+			{"?", "helpdetail"}
 		};
 
 		std::map<std::string, std::string> private_joy_joy_map {

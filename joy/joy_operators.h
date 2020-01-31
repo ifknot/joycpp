@@ -35,12 +35,29 @@
 */
 namespace joy {
 
+    // List operators core C++ performance
+
+    /**
+    * X A -> B
+    * Aggregate B is A with a new member X (first member for sequences).
+    *
+    * a [b]│cons     →     [a b]│
+    */
+    void cons(joy_stack& S);
+
+    /**
+    * [a b] [f] g│shunt    →                   │a f g b f g
+    */
+
     /**
     * [a b c]│reverse  →   [c b a]│
     */
     void reverse(joy_stack& S);
 
     /**
+    * A -> I
+    * Integer I is the number of elements of aggregate A.
+    *
     * [a ...]│size    →   ≢⍵│
     */
     void size(joy_stack& S);

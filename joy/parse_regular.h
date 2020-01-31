@@ -99,7 +99,7 @@ namespace joy {
 		*/
 		dictionary_t regular_lambda_map{
 		//non-standard
-		{"?", [&](joy_stack& S) { if (S.has("?", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
+		{"helpdetail", [&](joy_stack& S) { if (S.has("helpdetail", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
 		//stack commands
 		{".s", [&](joy_stack& S) { print_stack(S, io); }},
 		{"put", [&](joy_stack& S) { if (S.has("put", {joy_t::any_t})) { print_top(S, io); S.pop(); } }},

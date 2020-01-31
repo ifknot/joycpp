@@ -2,7 +2,15 @@
 
 namespace joy {
 
-	void reverse(joy_stack& stack) {
+    void cons(joy_stack& S) {
+        S.swap();
+        auto X = S.top();
+        S.pop();
+        auto& A = std::any_cast<joy_stack&>(S.top().first);
+        A.insert(A.begin(), X);
+    }
+
+    void reverse(joy_stack& stack) {
         auto& A = std::any_cast<joy_stack&>(stack.top().first);
         std::reverse(A.begin(), A.end());
     }

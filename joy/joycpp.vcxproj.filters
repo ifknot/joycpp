@@ -106,10 +106,13 @@
     <None Include="test1.joy">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="inilib.joy">
+    <None Include="usrlib.joy">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="usrlib.joy">
+    <None Include="joy03_inilib.joy">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="extra_inilib.joy">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

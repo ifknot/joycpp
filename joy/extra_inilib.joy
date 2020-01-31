@@ -1,0 +1,73 @@
+(* 
+ * This initial library contains a collection of extra operators and combinators that extend Joy03 language base
+ * Contents:
+ *
+ *)
+
+#3 setecho
+
+PUBLIC
+
+
+
+_extra_inilib == true;
+
+(* - - - - -  Boolean and Mathematic Operators  - - - - *)
+
+
+(* - - - - - Stack Manipulation Operators  - - - - *)
+
+    # dup2
+    popop == pop2;
+
+(* - - - - - General Combinators  - - - - *)
+
+    i2 == [dip] dip i;
+    #shunt == [swons] step;   # [a b] [f] g|shunt   ->  |a f g b f g
+    # k
+    # w
+    # c
+
+(* - - - - - List Operators  - - - - *)
+
+    # nulld
+    # unpair
+    # pairlist
+    # nulld
+    # consd
+    # swonsd
+    # unconsd
+    # unswonsd 
+    # null2
+    # cons2
+    # uncons2
+    # swons2
+    # zip
+    # sum
+    # product
+    # size
+    # size2
+    
+(* - - - - - List Operators  - - - - *)
+
+    second  == rest first;
+    third   == rest second;
+    quote   == [] cons;    
+
+    sum == 0.0 swap [+] step;
+    product == 1.0 swap [*] step;
+    #destructive size == 0.0 swap [pop succ] step;
+
+(* - - - - - IO Operators  - - - - *)
+    
+    newline == LF putch;
+    putln == put newline;
+    space == '\032 putch;
+    bell == BEL putch;
+    putstrings == [putchars] step;
+
+    ask == "Please " putchars putchars space get;
+
+"extra_inilib is loaded" putchars newline.
+
+#0 setecho

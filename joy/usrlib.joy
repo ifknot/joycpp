@@ -9,7 +9,7 @@
  * + might contain more or less definitions
  *)
 
-"inilib.joy" include.
+"joy03_inilib.joy" include.
 
 PUBLIC
 

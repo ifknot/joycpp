@@ -161,6 +161,7 @@ namespace joy {
 		{"infra", [&](joy_stack& S) { if (S.has("infra", {joy_t::quote_t, joy_t::group_t})) { infra(S, *this); } }},
 		//list operators
 		{"uncons", [&](joy_stack& S) { if (S.has("uncons", {joy_t::aggregate_t}))  { uncons(S); } }},
+		{"cons", [&](joy_stack& S) { if (S.has("cons", {joy_t::aggregate_t, joy_t::any_t})) { cons(S); } }},
 		//general operators
 		//ternary
 		{"choice", [&](joy_stack& S) { if (S.has("choice", {joy_t::any_t, joy_t::any_t, joy_t::bool_t})) { choice(S); } }},
