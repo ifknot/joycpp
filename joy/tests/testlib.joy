@@ -1,0 +1,15 @@
+MODULE test
+
+PUBLIC
+
+primitive == putchars " " putchars ["pass" putchars newline] ["fail" putchars newline] branch;
+
+satisfies == swap putchars [] swap infra;
+
+?	==	infra uncons pop 
+		["pass" putchars newline] ["fail" putchars newline]
+		choice [] swap infra pop;
+
+END
+
+"testlib is loaded"  putchars newline.

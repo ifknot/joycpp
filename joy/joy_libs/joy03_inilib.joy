@@ -8,8 +8,6 @@
  *
  *)
 
-#3 setecho
-
 PUBLIC
 
 _inilib == true;
@@ -107,5 +105,3 @@ _inilib == true;
 "joy03_inilib is loaded" putchars LF putch.
 
 "joy_libs/extra_inilib.joy" include.
-
-#0 setecho

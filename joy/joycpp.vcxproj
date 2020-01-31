@@ -188,6 +188,10 @@
     <None Include="joy_libs\joy03_inilib.joy" />
     <None Include="joy_libs\usrlib.joy" />
     <None Include="joy_manuals\joy03.man" />
+    <None Include="tests\testlib.joy" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="tests\test_primitives.joy" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

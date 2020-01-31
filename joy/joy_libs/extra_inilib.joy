@@ -4,11 +4,7 @@
  *
  *)
 
-#3 setecho
-
 PUBLIC
-
-
 
 _extra_inilib == true;
 
@@ -68,6 +64,6 @@ _extra_inilib == true;
 
     ask == "Please " putchars putchars space get;
 
-"extra_inilib is loaded" putchars newline.
+END
 
-#0 setecho
+"extra_inilib is loaded" putchars newline.

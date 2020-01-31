@@ -59,7 +59,7 @@ namespace joy {
 	}
 */
 	void tokenizer::echo(size_t line_number, const std::string& line) {
-		io.colour(BOLDYELLOW);
+		io.colour(YELLOW);
 		switch (echo_state) {
 		case echo_state_t::linenumber:
 			io << std::to_string(line_number) + "\t" + line;

@@ -112,5 +112,13 @@
     <None Include="joy_manuals\joy03.man">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="tests\testlib.joy">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="tests\test_primitives.joy">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
