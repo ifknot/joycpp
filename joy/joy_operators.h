@@ -52,6 +52,14 @@ namespace joy {
         return static_cast<int>(std::any_cast<joy_stack>(token.first).size());
     }
 
+    // IO operators core C++ performance 
+
+    /**
+    * N ->
+    * N : numeric, writes character whose ASCII is N.
+    */
+    void putch(joy_stack& S, io_device& io);
+
     /**
     * Joy . operator
     * print top of stack S in left:right format to an io device

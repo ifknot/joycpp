@@ -5,11 +5,10 @@ namespace joy {
 	parse_joy::parse_joy(joy_stack& stack, io_device& io, std::string path_to_manual) :
 		parse_context_free(stack, io, path_to_manual)
 	{
-		include("inilib.joy");
-		io.putch('\n');
+		include("usrlib.joy");
 		io.ok();
 		io.colour(BOLDWHITE);
-		io.putch('\n');
+		io << " ready";
 	}
 	joy_stack parse_joy::tokenize(joy_stack& tokens) {
 		return tokenize_joy_commands(parse_context_free::tokenize(tokens));

@@ -32,9 +32,9 @@ namespace joy {
 		output_stream << "ok " << info;
 	}
 
-	void io_device::putch(char c) {
+	void io_device::put_string(std::string s) {
 		ink();
-		output_stream << c;
+		output_stream << s;
 	}
 
 	std::string io_device::input() {

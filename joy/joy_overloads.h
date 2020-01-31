@@ -67,7 +67,6 @@ namespace joy {
     // >
     // >=
 
-    // TODO: fix for booleans
     token_t operator==(const token_t& a, const token_t& b);
 
     bool operator==(const token_t& a, const std::string& b);

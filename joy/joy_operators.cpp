@@ -2,7 +2,7 @@
 
 namespace joy {
 
-    void reverse(joy_stack& stack) {
+	void reverse(joy_stack& stack) {
         auto& A = std::any_cast<joy_stack&>(stack.top().first);
         std::reverse(A.begin(), A.end());
     }
@@ -11,6 +11,12 @@ namespace joy {
         if (S.has("size", { joy_t::aggregate_t })) {
             S.push(make_token(size(S.top()), joy_t::int_t));
         }
+    }
+
+    void putch(joy_stack& S, io_device& io) {
+        auto ch = static_cast<char>(std::any_cast<char>(S.top().first));
+        auto s = std::string{ ch };
+        io.put_string(s);
     }
 
     void print_top(const joy_stack& S, io_device& io) {
@@ -30,8 +36,7 @@ namespace joy {
 
 	void input_stack(joy_stack& S, io_device& io) {
         io.colour(BOLDYELLOW);
-        io.putch('?');
-        io.putch(' ');
+        io.put_string("? ");
         S.push(make_token(io.input(), joy_t::undef_t));
     }
 

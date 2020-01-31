@@ -187,6 +187,7 @@
     <None Include="inilib.joy" />
     <None Include="joy03.man" />
     <None Include="test1.joy" />
+    <None Include="usrlib.joy" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,0 +1,21 @@
+(*
+ * This user library is intended to be just an example of what a personalized file usrlib.joy might look like. 
+ * When Joy is run with input coming from the standard input stream, on startup Joy will first determine whether there is a file usrlib.joy in the current directory. 
+ * If there is, it is opened for reading. 
+ * When the end is reached, or when there is no such file, the terminal or the designated input file is used. 
+ * For any particular user this file might look very different:
+ * + might be empty
+ * + might contain just a directive to include the inilib.joy library 
+ * + might contain more or less definitions
+ *)
+
+"inilib.joy" include.
+
+PUBLIC
+
+     _usrlib == true;
+
+END
+
+"usrlib is loaded"  putchars newline.
+

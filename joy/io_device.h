@@ -44,9 +44,10 @@ namespace joy {
         void ok(std::string info = "");
 
         /**
-        * send character to output stream
+        * send characters to output stream
         */
-        void putch(char c);
+        void put_string(std::string s);
+
 
         /**
         * get an input from the input stream
