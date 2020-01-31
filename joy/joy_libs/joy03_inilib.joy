@@ -85,7 +85,7 @@ _inilib == true;
     app2 == dup rollup i [i] dip; # Obsolescent. == unary2
     app3 == dup rollup i [app2] dip; # Obsolescent. == unary3
 
-    fold = swapd step; # [a b ...] i [f]|fold  ->   [f/i,a b ...]|
+    fold == swapd step; # [a b ...] i [f]|fold  ->   [f/i,a b ...]|
 
 (* - - - - - List Operators  needing Combinators above- - - - *)
 
@@ -106,6 +106,6 @@ _inilib == true;
 
 "joy03_inilib is loaded" putchars LF putch.
 
-"extra_inilib.joy" include.
+"joy_libs/extra_inilib.joy" include.
 
 #0 setecho

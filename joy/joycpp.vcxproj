@@ -184,11 +184,10 @@
     <ClInclude Include="tokenizer.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="extra_inilib.joy" />
-    <None Include="joy03.man" />
-    <None Include="joy03_inilib.joy" />
-    <None Include="test1.joy" />
-    <None Include="usrlib.joy" />
+    <None Include="joy_libs\extra_inilib.joy" />
+    <None Include="joy_libs\joy03_inilib.joy" />
+    <None Include="joy_libs\usrlib.joy" />
+    <None Include="joy_manuals\joy03.man" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

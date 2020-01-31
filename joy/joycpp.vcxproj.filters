@@ -100,19 +100,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="joy03.man">
+    <None Include="joy_libs\extra_inilib.joy">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="test1.joy">
+    <None Include="joy_libs\joy03_inilib.joy">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="usrlib.joy">
+    <None Include="joy_libs\usrlib.joy">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="joy03_inilib.joy">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="extra_inilib.joy">
+    <None Include="joy_manuals\joy03.man">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

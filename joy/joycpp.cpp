@@ -14,7 +14,7 @@ void run() { // exec loop
     io.colouring(true);
     joy::joy_stack stack;
     
-    joy::parse_joy parser(stack, io, "joy03.man");
+    joy::parse_joy parser(stack, io, "joy_manuals/joy03.man");
     while (!parser.is_quit()) {
 
         if (parser.root_parse(parser.tokenize(io.readline()))) {

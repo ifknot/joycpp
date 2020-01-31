@@ -5,7 +5,7 @@ namespace joy {
 	parse_joy::parse_joy(joy_stack& stack, io_device& io, std::string path_to_manual) :
 		parse_context_free(stack, io, path_to_manual)
 	{
-		include("usrlib.joy");
+		include("joy_libs/usrlib.joy");
 		io.ok();
 		io.colour(BOLDWHITE);
 		io << " ready";
