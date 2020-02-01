@@ -11,10 +11,55 @@
 
 namespace joy {
 
+	/**
+	* The parse_joy class is the final layer of the joycpp interpreter providing:
+	* + Chomsky type 2 context free Joy grammar parser dual Joy-Joy and Joy-C++
+	* + the ability to load libraries of Joy code
+	* + the ability to define Joy grammar from a mixture Joy C++ primitives and Joy definitions
+	* + the ability to build modules of public and private Joy code that use both pure Joy and Joy C++ primitives to build the Joy language
+	* + the ability to extend the language with user definitions.
+	*
+	* joycpp uses an OOP hierarchy to add layers of functionality:
+	* + tokenizer class 
+	* + regular grammar parser Joy primitives to core C++ implementations
+	* + context free grammar parser Joy primitives to core C++ implementations
+	* + context free grammar parser Joy to Joy primitives
+	* 
+	* The Joy language can be concatenate built from a very minimal set of Joy primitives expressed in C++.
+	* joycpp extends that minimal set of C++ primitives where it makes sense from a performance and OS perspective.
+	*
+	*/
 	class parse_joy : public parse_context_free {
 
-		enum class joy_state_t{ parse, in, hide, candidate, define, module };
-		enum class autoput_state_t { none, top, stack };
+		/**
+		* The Joy programming language is a concatenation functional stack language and by these virtues
+		* does not need to employ a parse tree for its execution - rather it can be parsed using stacks.
+		* Joy consists of parts with different rules of parsing: 
+		* + keywords like PUBLIC or include don’t make sense inside strings
+		* + strings may contain backslash-escaped symbols like \n 
+		* + comments usually don’t contain anything interesting except the end of the comment
+		*
+		* In joycpp such parts are represented as states where each state consists of:
+		* + starting condition
+		* + state actions
+		* + state changing condition
+		* + ending condition
+		*/
+		enum class joy_state_t{ parse,	/// map Joy keywords to Joy and C++ implementations
+								in,		/// build public definition
+								hide,	/// build private definition
+								candidate,	/// potential keyword 
+								define,		/// build the definition for the confirmed keyword
+								module		/// place definitions inside a module name
+							};
+
+		/**
+		* Joy has an autoput feature that can select automatic output options when an interpret cycle has completed:
+		*/
+		enum class autoput_state_t {	none,	/// no output
+										top,	/// the item of the top of stack is printed to the iostream
+										stack	/// the enitre stack is printed to the iostream
+									};
 
 	public:
 
@@ -57,16 +102,6 @@ namespace joy {
 	protected:
 
 		/**
-		* string list of all defined symbols
-		*/
-		virtual std::string help() override;
-
-		/**
-		* string list of all private defined symbols
-		*/
-		std::string _help();
-
-		/**
 		* executes Joy operators defined as Joy operators
 		* operator matching function and execute if match return true otherwise return false
 		*/
@@ -81,25 +116,31 @@ namespace joy {
 
 	private:
 
-		joy_state_t joy_state{ joy_state_t::parse };
-		autoput_state_t autoput_state{ autoput_state_t::top };
+		joy_state_t joy_state{ joy_state_t::parse }; /// start out in parse state
+		autoput_state_t autoput_state{ autoput_state_t::top }; /// default Joy is to autoput top of stack
 
 		bool abort{ false };
 		bool private_access{ false };
 
-		std::string command;
-		std::string definition;
-		std::string module_name;
+		std::string command;		/// current keyword 
+		std::string definition;		/// current definition for keyword
+		std::string module_name;	/// current module name (if any)
 
 		joy_stack tokenize_joy_commands(joy_stack&& tokens);
 
 		bool validate_tokens(joy_stack&& tokens);
 
+		/* Joy Keyword primitives C++ definitions */
+
 		void include(std::string&& path);
 
 		void autoput(joy_stack& S);
-		
-		//TODO: override definitions
+
+		virtual std::string help() override;
+
+		std::string _help();
+
+		/* Joy Keyword C++ lambda definitions */
 
 		dictionary_t joy_lambda_map{
 			{"help", [&](joy_stack& S) {

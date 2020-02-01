@@ -1,5 +1,23 @@
 #include "joy_overloads.h"
 
+/**
+* preprocessor macros are not ideal but on occasion are the only solution
+*/
+#define BIN_RELATION(op) \
+        switch (b.second) { \
+            case joy::joy_t::char_t: \
+                return make_token((c op std::any_cast<char>(b.first)) ? true : false, joy_t::bool_t); \
+            case joy::joy_t::int_t: \
+                return make_token((c op std::any_cast<int>(b.first)) ? true : false, joy_t::bool_t); \
+            case joy::joy_t::double_t: \
+                return make_token((c op std::any_cast<double>(b.first)) ? true : false, joy_t::bool_t); \
+            default: \
+                return make_token("", joy_t::undef_t); \
+                break; \
+        } 
+
+#define BIN_OP(op) \
+
 namespace joy {
    
     token_t ord(token_t token) {
@@ -14,7 +32,7 @@ namespace joy {
         return token_t((token.second == joy_t::char_t) ? true : false, joy_t::bool_t);
     }
 
-    token_t operator+(const token_t& a, const token_t& b) {
+    token_t operator + (const token_t& a, const token_t& b) {
         switch (a.second) { //switch through all of the Joy03 numeric types for the first argument
         case joy::joy_t::char_t: {
             auto c = std::any_cast<char>(a.first); //cast the first argument
@@ -73,7 +91,7 @@ namespace joy {
         }
     }
 
-    token_t operator-(const token_t& a, const token_t& b) {
+    token_t operator - (const token_t& a, const token_t& b) {
         switch (a.second) {
         case joy::joy_t::char_t: {
             auto c = std::any_cast<char>(a.first);
@@ -132,7 +150,7 @@ namespace joy {
         }
     }
 
-    token_t operator*(const token_t& a, const token_t& b) {
+    token_t operator * (const token_t& a, const token_t& b) {
         switch (a.second) {
         case joy::joy_t::char_t: {
             auto c = std::any_cast<char>(a.first);
@@ -191,7 +209,7 @@ namespace joy {
         }
     }
 
-    token_t operator/(const token_t& a, const token_t& b) {
+    token_t operator / (const token_t& a, const token_t& b) {
         switch (a.second) {
         case joy::joy_t::char_t: {
             auto c = std::any_cast<char>(a.first);
@@ -250,49 +268,119 @@ namespace joy {
         }
     }
 
-	token_t operator==(const token_t& a, const token_t& b) {
+    token_t operator < (const token_t& a, const const token_t& b) {
         switch (a.second) {
         case joy::joy_t::char_t: {
             auto c = std::any_cast<char>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                return make_token((c == std::any_cast<char>(b.first)) ?true :false, joy_t::bool_t);
-            case joy::joy_t::int_t:
-                return make_token((c == std::any_cast<int>(b.first)) ? true : false, joy_t::bool_t);
-            case joy::joy_t::double_t:
-                return make_token((c == std::any_cast<double>(b.first)) ? true : false, joy_t::bool_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
+            BIN_RELATION(<)
         }
         case joy::joy_t::int_t: {
             auto c = std::any_cast<int>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                return make_token((c == std::any_cast<char>(b.first)) ? true : false, joy_t::bool_t);
-            case joy::joy_t::int_t:
-                return make_token((c == std::any_cast<int>(b.first)) ? true : false, joy_t::bool_t);
-            case joy::joy_t::double_t:
-                return make_token((c == std::any_cast<double>(b.first)) ? true : false, joy_t::bool_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
+            BIN_RELATION(<)
         }
         case joy::joy_t::double_t: {
             auto c = std::any_cast<double_t>(a.first);
-            switch (b.second) {
-            case joy::joy_t::char_t:
-                return make_token((c == std::any_cast<char>(b.first)) ? true : false, joy_t::bool_t);
-            case joy::joy_t::int_t:
-                return make_token((c == std::any_cast<int>(b.first)) ? true : false, joy_t::bool_t);
-            case joy::joy_t::double_t:
-                return make_token((c == std::any_cast<double>(b.first)) ? true : false, joy_t::bool_t);
-            default:
-                return make_token("", joy_t::undef_t);
-                break;
-            }
+            BIN_RELATION(<)
+        }
+        default:
+            return make_token("", joy_t::undef_t);
+            break;
+        }
+    }
+
+    token_t operator <= (const token_t& a, const token_t& b) {
+        switch (a.second) {
+        case joy::joy_t::char_t: {
+            auto c = std::any_cast<char>(a.first);
+            BIN_RELATION(<=)
+        }
+        case joy::joy_t::int_t: {
+            auto c = std::any_cast<int>(a.first);
+            BIN_RELATION(<=)
+        }
+        case joy::joy_t::double_t: {
+            auto c = std::any_cast<double_t>(a.first);
+            BIN_RELATION(<=)
+        }
+        default:
+            return make_token("", joy_t::undef_t);
+            break;
+        }
+    }
+
+    token_t operator > (const token_t& a, const token_t& b) {
+        switch (a.second) {
+        case joy::joy_t::char_t: {
+            auto c = std::any_cast<char>(a.first);
+            BIN_RELATION(>)
+        }
+        case joy::joy_t::int_t: {
+            auto c = std::any_cast<int>(a.first);
+            BIN_RELATION(>)
+        }
+        case joy::joy_t::double_t: {
+            auto c = std::any_cast<double_t>(a.first);
+            BIN_RELATION(>)
+        }
+        default:
+            return make_token("", joy_t::undef_t);
+            break;
+        }
+    }
+
+    token_t operator >= (const token_t& a, const token_t& b) {
+        switch (a.second) {
+        case joy::joy_t::char_t: {
+            auto c = std::any_cast<char>(a.first);
+            BIN_RELATION(>=)
+        }
+        case joy::joy_t::int_t: {
+            auto c = std::any_cast<int>(a.first);
+            BIN_RELATION(>=)
+        }
+        case joy::joy_t::double_t: {
+            auto c = std::any_cast<double_t>(a.first);
+            BIN_RELATION(>=)
+        }
+        default:
+            return make_token("", joy_t::undef_t);
+            break;
+        }
+    }
+
+    token_t operator != (const token_t& a, const token_t& b) {
+        switch (a.second) {
+        case joy::joy_t::char_t: {
+            auto c = std::any_cast<char>(a.first);
+            BIN_RELATION(!=)
+        }
+        case joy::joy_t::int_t: {
+            auto c = std::any_cast<int>(a.first);
+            BIN_RELATION(!=)
+        }
+        case joy::joy_t::double_t: {
+            auto c = std::any_cast<double_t>(a.first);
+            BIN_RELATION(!=)
+        }
+        default:
+            return make_token("", joy_t::undef_t);
+            break;
+        }
+    }
+
+	token_t operator == (const token_t& a, const token_t& b) {
+        switch (a.second) {
+        case joy::joy_t::char_t: {
+            auto c = std::any_cast<char>(a.first);
+            BIN_RELATION(==)
+        }
+        case joy::joy_t::int_t: {
+            auto c = std::any_cast<int>(a.first);
+            BIN_RELATION(==)
+        }
+        case joy::joy_t::double_t: {
+            auto c = std::any_cast<double_t>(a.first);
+            BIN_RELATION(==)
         }
         default:
             return make_token("", joy_t::undef_t);
@@ -300,7 +388,7 @@ namespace joy {
         }
 	}
 
-	bool operator==(const token_t& a, const std::string& b) {
+	bool operator == (const token_t& a, const std::string& b) {
         if (a.second == joy_t::lambda_t || a.second == joy_t::undef_t || a.second == joy_t::cmd_t ) {
             return std::any_cast<std::string>(a.first) == b;
         }

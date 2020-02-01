@@ -14,26 +14,59 @@
 namespace joy {
 
 	/**
-	* Converts an input line string into a list (vector) of tokens <any, type> split by wrapped in quotes then split by whitespace
+	* The tokenizer class is the first layer of the joycpp interpreter providing:
+	* + conversion input line string into a Joy stack (vector) of tokens <any, type> 
+	* + tokenize Joy reserved characters [ ] { } ; . (note: the . reserved character is handled as a special case)
+	* + recursively split wrapped in quotes " " and assign string_t (these will need converting to a stack of characters later)
+	* + split remainder into tokens delineated by whitespace and assigning any_t 
+	* + strip any Joy comments either single line # delineated or multi-line (* *) delineated as per Joy language
+	* + special case tokenize the . reserved character to avoid floating point mis-tokenizing 
+	* + tokenize the simple types: boolean, char, integer, double
+	* + convert the string_t from a std::string into a stack of characters
+	*
+	* joycpp uses an OOP hierarchy to add layers of functionality:
+	* + tokenizer class
+	* + regular grammar parser Joy primitives to core C++ implementations
+	* + context free grammar parser Joy primitives to core C++ implementations
+	* + context free grammar parser Joy to Joy primitives
+	*
+	* The Joy language can be concatenate built from a very minimal set of Joy primitives expressed in C++.
+	* joycpp extends that minimal set of C++ primitives where it makes sense from a performance and OS perspective.
+	*
 	*/
 	class tokenizer {
+
+	protected:
+	
+		/**
+		* If input does not come from the keyboard but from an include file, it is often useful to see the current input on the screen. 
+		* Normally the Joy system does not echo keyboard or other input on the screen or output file, but it can be made to do so. 
+		* Joy has an internal echo flag with values 0, 1, 2 or 3
+		* The initial default value is 0, and then no echo occurs. 
+		* If the value is 1, then input lines are echoed to the output without change.
+		* If the value is 2, then each line is preceded by a tab (ASCII 9) -- this can help to distinguish echoed lines in the output from others. 
+		* If the value is 3, then each tab is preceded by a line number specific to the current input file. 
+		* When input reverts to an earlier file, the earlier line numbering is resumed. 
+		* The value of the echo flag can be set by the operator setecho. 
+		* Typically the value will be set by something like:
+		*
+        *	2  setecho.
+		*/
+		enum class echo_state_t {	none,	/// (default) nothing is echoed 
+									echo,	/// input lines are echoed
+									tab,	/// preceded by a tab (ASCII 9)
+									linenumber	/// each tab is preceded by a line number
+								};
 	
 	public:
 	
 		tokenizer(io_device& io);
 
-		//TODO: joy_stack tokenize(std::string& line);
-
-		/**
-		* convert user input line into joy_stack of a single undefined token {line, undef_t}
-		*/
 		joy_stack tokenize(std::string& line);
 
 		joy_stack tokenize(std::string&& line);
 		
 	protected:
-
-		enum class echo_state_t { none, echo, tab, linenumber };
 
 		//TODO: fix nested line numbers
 		size_t line_number{ 0 };

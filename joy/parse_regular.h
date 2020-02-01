@@ -11,11 +11,21 @@
 namespace joy {
 
 	/**
-	* Chomsky type 3 regular grammar lexer
-	* i.e. can be decided by a finite state automaton
-	* Uses:
-	* 1. root_stack
-	* 2. map of string Joy operator to lambda function mapping for regular grammar C++ implemented Joy operators
+	* The parse_regular class is the second layer of the joycpp interpreter providing:
+	* + Chomsky type 3 regular grammar parser Joy primitives to C++ implementation.
+	* It uses:
+	* + root_stack
+	* + map of string Joy operator to lambda function mapping for regular grammar C++ implemented Joy operators
+	*
+	* joycpp uses an OOP hierarchy to add layers of functionality:
+	* + tokenizer class
+	* + regular grammar parser Joy primitives to core C++ implementations
+	* + context free grammar parser Joy primitives to core C++ implementations
+	* + context free grammar parser Joy to Joy primitives
+	*
+	* The Joy language can be concatenate built from a very minimal set of Joy primitives expressed in C++.
+	* joycpp extends that minimal set of C++ primitives where it makes sense from a performance and OS perspective.
+	*
 	*/
 	class parse_regular : public tokenizer {
 
@@ -33,6 +43,7 @@ namespace joy {
 		typedef std::map<std::string, function_t> dictionary_t;
 
 		/**
+		* Joy 'help' primitive C++ implementation is virtual as it will need to work for each layer
 		* string list of all defined symbols
 		*/
 		virtual std::string help();
@@ -48,9 +59,8 @@ namespace joy {
 		*/
 		joy_t root_type{ joy_t::quote_t };
 
-		using tokenizer::tokenize;
-
 		/**
+		* override base class to provide additional regular grammar tokenization
 		* cascade tokens to tokenizer type id the simple type
 		* then regular grammar type id
 		*/
@@ -98,8 +108,6 @@ namespace joy {
 		* 2. offer performance benefit as c++ lambda equivalent
 		*/
 		dictionary_t regular_lambda_map{
-		//non-standard
-		{"helpdetail", [&](joy_stack& S) { if (S.has("helpdetail", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
 		//stack commands
 		{".s", [&](joy_stack& S) { print_stack(S, io); }},
 		{"put", [&](joy_stack& S) { if (S.has("put", {joy_t::any_t})) { print_top(S, io); S.pop(); } }},
@@ -148,21 +156,25 @@ namespace joy {
 				S.pop();
 			}
 		}},
-		{"=", [&](joy_stack& S) { 
-			if (S.has("==", {joy_t::numeric_t, joy_t::numeric_t})) {
-				S.push(S.sat(1) == S.top());
-			}
-		}},
+		{"=", [&](joy_stack& S) { if (S.has("=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) == S.top()); } }},
+		{"<", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) < S.top()); } }},
+		{"<=", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) <= S.top()); } }},
+		{">", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) > S.top()); } }},
+		{">=", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) >= S.top()); } }},
+		{"!=", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) != S.top()); } }},
 		//aggregates
 		// size  ==  [ pop 1 ]  map  sum
 		{"size", [&](joy_stack& S) { size(S); }},
 		//environment
+		{"helpdetail", [&](joy_stack& S) { if (S.has("helpdetail", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
 		{"manual", [&](joy_stack& S) { manual(joy_manual, io); }},
 		{"quit", [&](joy_stack& S) { quit(); io << ". . ."; }},
 		};
 
 		/**
-		* Joy Manual loaded from file at construction
+		* Joy03 Manual as per Thun 2003 loaded from file at construction
+		* N.B. it is incomplete - many of the keywords presented later in "Atomic Programs of Joy" by Manfred von Thun - do not appear in the Joy manual
+		* However, those later described keywords are considered to be part of the Joy03 core language
 		*/
 		std::map<std::string, std::string> joy_manual;
 

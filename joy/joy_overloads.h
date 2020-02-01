@@ -24,6 +24,10 @@
 */
 namespace joy {
 
+    //typedef std::function<bool (const token_t&, const token_t& )> binop_t;
+
+
+
     //unary token overloads
 
     /**
@@ -56,23 +60,27 @@ namespace joy {
 
     token_t operator/(const token_t& a, const token_t& b);
 
-    // rem  #include <math.h>
+    // rem  
 
-    // div #include <math.h>
+    // div 
 
     // relational token operators
 
-    // <
-    // <=
-    // >
-    // >=
+    token_t operator < (const token_t& a, const token_t& b);
 
-    token_t operator==(const token_t& a, const token_t& b);
+    token_t operator <= (const token_t& a, const token_t& b);
 
-    bool operator==(const token_t& a, const std::string& b);
+    token_t operator > (const token_t& a, const token_t& b);
 
-    // !=
+    token_t operator >= (const token_t& a, const token_t& b);
 
+    token_t operator != (const token_t& a, const token_t& b);
 
+    token_t operator == (const token_t& a, const token_t& b);
+
+    /**
+    * syntactic sugar compare a string to the pattern part of a token 
+    */
+    bool operator == (const token_t& a, const std::string& b);
 
 }

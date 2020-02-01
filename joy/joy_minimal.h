@@ -106,7 +106,4 @@ namespace joy {
 		S.push(M.top()); //return [N] as the result
 	}
 
-    
-
-
 }

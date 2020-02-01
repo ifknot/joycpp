@@ -29,6 +29,7 @@
 * performance operators ──┐
 *       top of stack ───┐ │
 *                       ↓ ↓
+*                   a [b]│cons     →              [a b]│
 *			   	  [a b c]│reverse  →            [c b a]│
 *                 [a ...]│size     →                 ≢⍵│
 *
@@ -89,6 +90,9 @@ namespace joy {
     */
     void print_stack(const joy_stack& S, io_device& io);
 
+    /**
+    * Joy get operator
+    */
     void input_stack(joy_stack& S, io_device& io);
 
     /**
@@ -99,7 +103,6 @@ namespace joy {
 
     /**
     * helpdetail: [ S1 S2 .. ]
-    * @note joycpp uses ? as a synonym convenience
     * Gives brief help on each symbol S in the list.
     */
     void helpdetail(const joy_stack& S, std::map<std::string, std::string>& joy_manual, io_device& io);

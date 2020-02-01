@@ -9,6 +9,11 @@
 namespace joy {
 
 	/**
+	* Joy is a concatenative functional stack language and, therefore, the joy_stack class is central 
+	* to the implementation of the interpreter.
+	* The joy_stack class does most of the heavy lifting and as such nearly all of the Joy stack 
+	* primitives are implemented for performance.
+	*
 	* A Joy stack is not simply a sequence of values but also contains operators and combinators.
 	* So, strictly speaking the stack is always a quotation and can contain all of the Joy types.
 	* The stack is also central to argument conformance checking with the has(...) member function
@@ -95,7 +100,7 @@ namespace joy {
 		void stack();
 
 		/**
-		* ..[a b]│unstack  →                b a│
+		* ..[a b]│unstack  →	b a│
 		* expects a quotation on the stack and makes that the new stack
 		*/
 		void unstack();
@@ -113,7 +118,7 @@ namespace joy {
 		void dupd();
 
 		/**
-		* ba| pop ->		b|
+		* ba| pop ->	b|
 		* Removes topmost item from stack
 		*/
 		void pop();

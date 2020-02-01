@@ -9,6 +9,7 @@
 #include "joy_minimal.h"
 #include "joy_combinators.h"
 
+// context free test cases:
 // 2 3 4 [ + ] dip
 // [ 1 2 3 ] [ dup * ] step
 // [ 1 2 3 4 ] [ + * ] infra
@@ -25,12 +26,46 @@ namespace joy {
 	* 3. root stack and temporary stacks
 	* 4. map of string Joy operator to lambda function mapping for context free C++ implemented Joy operators
 	*/
+	/**
+	* The parse_context_free class is the third layer of the joycpp interpreter providing:
+	* + Chomsky type 2 context free grammar parser Joy primitives to C++ implementation.
+	* It uses:
+	* + state stack
+	* + nesting depth counter
+	* + root stack and temporary stacks
+	* + map of string Joy operator to lambda function mapping for context free C++ implemented Joy operators
+	*
+	* joycpp uses an OOP hierarchy to add layers of functionality:
+	* + tokenizer class
+	* + regular grammar parser Joy primitives to core C++ implementations
+	* + context free grammar parser Joy primitives to core C++ implementations
+	* + context free grammar parser Joy to Joy primitives
+	*
+	* The Joy language can be concatenate built from a very minimal set of Joy primitives expressed in C++.
+	* joycpp extends that minimal set of C++ primitives where it makes sense from a performance and OS perspective.
+	*
+	*/
 	class parse_context_free : public parse_regular {
 
 		/**
-		* joycpp context free parser states
+		* The Joy programming language is a concatenation functional stack language and by these virtues
+		* does not need to employ a parse tree for its execution - rather it can be parsed using stacks.
+		* Joy consists of parts with different rules of parsing:
+		* + keywords like PUBLIC or include don’t make sense inside strings
+		* + strings may contain backslash-escaped symbols like \n
+		* + comments usually don’t contain anything interesting except the end of the comment
+		*
+		* In joycpp such parts are represented as states where each state consists of:
+		* + starting condition
+		* + state actions
+		* + state changing condition
+		* + ending condition
 		*/
-		enum class state_t { parse, quote, list, set };
+		enum class state_t {	parse,	/// map context free Joy keywords to their C++ implementations
+								quote,	/// build a quote type of both simple types and/or keyword types
+								list,	/// build a list of simple types
+								set		/// build a set of numeric types
+							};
 
 		using state_stack_t = std::stack<state_t>;
 
@@ -174,7 +209,7 @@ namespace joy {
 		};
 
 		/**
-		* map parser states to text
+		* map context free parser states to text
 		*/
 		std::map<state_t, std::string> state_to_string = {
 			{state_t::parse, " ready"},
