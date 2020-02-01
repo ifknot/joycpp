@@ -163,7 +163,6 @@ namespace joy {
 		{">=", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) >= S.top()); } }},
 		{"!=", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) != S.top()); } }},
 		//aggregates
-		// size  ==  [ pop 1 ]  map  sum
 		{"size", [&](joy_stack& S) { size(S); }},
 		//environment
 		{"helpdetail", [&](joy_stack& S) { if (S.has("helpdetail", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
