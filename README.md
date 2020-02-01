@@ -3,6 +3,10 @@ Joy Interpreter written in C++ and Joy
 
 Please see the [Wiki](https://github.com/ifknot/joycpp/wiki)
 
+## 31/01/20
+
+It works! testlib.joy and tests work! 
+
 ## 30/01/20
 
 inilib.joy works!
