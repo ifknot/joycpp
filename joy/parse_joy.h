@@ -45,7 +45,8 @@ namespace joy {
 		* + state changing condition
 		* + ending condition
 		*/
-		enum class joy_state_t{ parse,	/// map Joy keywords to Joy and C++ implementations
+		enum class joy_state_t{ abort,
+								parse,	/// map Joy keywords to Joy and C++ implementations
 								in,		/// build public definition
 								hide,	/// build private definition
 								candidate,	/// potential keyword 
@@ -119,9 +120,8 @@ namespace joy {
 		joy_state_t joy_state{ joy_state_t::parse }; /// start out in parse state
 		autoput_state_t autoput_state{ autoput_state_t::top }; /// default Joy is to autoput top of stack
 
-		bool abort{ false };
 		bool private_access{ false };
-
+		
 		std::string command;		/// current keyword 
 		std::string definition;		/// current definition for keyword
 		std::string module_name;	/// current module name (if any)
@@ -143,6 +143,13 @@ namespace joy {
 		/* Joy Keyword C++ lambda definitions */
 
 		dictionary_t joy_lambda_map{
+			{"abort", [&](joy_stack& S) {
+				if (S.has("abort", {joy_t::bool_t})) {
+					if (!std::any_cast<bool>(S.top().first)) {
+						joy_state = joy_state_t::abort;
+					}
+				}
+			}},
 			{"help", [&](joy_stack& S) {
 				io.colour(YELLOW);
 				io << help();			

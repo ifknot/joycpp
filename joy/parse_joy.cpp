@@ -5,6 +5,7 @@ namespace joy {
 	parse_joy::parse_joy(joy_stack& stack, io_device& io, std::string path_to_manual) :
 		parse_context_free(stack, io, path_to_manual)
 	{
+		echo_state = echo_state_t::linenumber;
 		include("joy_libs/usrlib.joy");
 		io.ok();
 		io.colour(BOLDWHITE);
@@ -59,6 +60,8 @@ namespace joy {
 
 	bool parse_joy::parse(token_t& token, joy_stack& S) {
 		switch (joy_state) {
+		case joy_state_t::abort:
+			return false;
 		case joy_state_t::parse: 
 			switch (token.second) {
 			case joy_t::undef_t:
@@ -115,14 +118,15 @@ namespace joy {
 	}
 
 	bool parse_joy::parse(joy_stack& P, joy_stack& S) {
-		abort = false;
 		for (auto& token : P) {
 			if (!parse(token, S)) {
-				no_conversion(P);
-				return false;
-			}
-			if (abort) { //breaks out of the parsing loop
-				break;
+				if (joy_state == joy_state_t::abort) {
+					return false;
+				}
+				else {
+					no_conversion(P);
+					return false;
+				}
 			}
 		}
 		return true;
@@ -166,19 +170,26 @@ namespace joy {
 
 	void parse_joy::include(std::string&& path) {
 		std::ifstream f(path);
+		echo(0, path);
 		auto prior_state = autoput_state;
 		autoput_state = autoput_state_t::none;
-		size_t line_number{ 1 };
+		line_number_stack.push(line_number);
+		line_number = 1;
 		if (f) {
 			for (std::string line; std::getline(f, line); ) {
 				auto tokens = tokenize(line);
-				root_parse(tokens);
+				if (!root_parse(tokens)) {
+					error(XABORT, path + " at line " + std::to_string(line_number - 1));
+					break;
+				}
 			}
 		}
 		else {
 			error(XNOFILE, "include " + path);
 		}
 		autoput_state = prior_state;
+		line_number = line_number_stack.top();
+		line_number_stack.pop();
 	}
 
 	void parse_joy::autoput(joy_stack& S) {

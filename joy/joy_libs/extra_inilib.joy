@@ -4,6 +4,8 @@
  *
  *)
 
+_inilib abort
+
 PUBLIC
 
 _extra_inilib == true;

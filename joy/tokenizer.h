@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <regex>
+#include <stack>
 
 #include "io_device.h"
 #include "error.h"
@@ -70,6 +71,7 @@ namespace joy {
 
 		//TODO: fix nested line numbers
 		size_t line_number{ 0 };
+		std::stack<size_t> line_number_stack;
 
 		echo_state_t echo_state{ echo_state_t::none };
 

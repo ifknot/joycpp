@@ -9,8 +9,6 @@
  * + might contain more or less definitions
  *)
 
- #3 setecho
-
 "joy_libs/joy03_inilib.joy" include.
 
 PUBLIC
@@ -24,6 +22,3 @@ END
 "tests/testlib.joy" include.
 
 #"tests/test_primitives.joy" include.
-
-#0 setecho
-
