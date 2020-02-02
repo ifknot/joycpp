@@ -1,6 +1,19 @@
+(* 
+ * test_primitives.joy -- modified from inicheck.joy by Eric Bavier
+ * inicheck.joy -- primitive unit test combinators.
+ *
+ *   Test routines that make use of only Joy primitives, so that the
+ *   standard library routines may be tested.
+ *
+ *   Copyright Eric Bavier <address@hidden>
+ *
+ *   This source is released under the terms of the GNU General Public
+ *  License, version 3, or at your option any later version.
+ *)
+
 "test Joy03 primitives" putchars newline
 
-3 1 = "=" test.primitive
+3 3 = "=" test.primitive
 1 3 + 4 = "+" test.primitive
 1 3 - -2 = "-" test.primitive
 # 2 4 < "<"  test.primitive
@@ -8,5 +21,3 @@
 2 dup + 4 = "dup" test.primitive
 2 4 pop 2 = "pop" test.primitive
 [3 1] dup [+] infra uncons pop 4 = "dup-list" test.primitive
-
-"first " [[1 2 3] first] test.satisfies [1 =] test.?

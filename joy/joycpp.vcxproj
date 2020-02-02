@@ -181,6 +181,7 @@
     <ClInclude Include="joy_types.h" />
     <ClInclude Include="parse_joy.h" />
     <ClInclude Include="parse_regular.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="tokenizer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +193,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="tests\test_primitives.joy" />
+    <Text Include="test_base.joy" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="joycpp.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

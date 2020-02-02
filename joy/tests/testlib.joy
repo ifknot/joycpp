@@ -5,7 +5,7 @@
  *   Test routines that make use of only Joy primitives, so that the
  *   standard library routines may be tested.
  *
- *   Copyright © Eric Bavier <address@hidden>
+ *   Copyright Eric Bavier <address@hidden>
  *
  *   This source is released under the terms of the GNU General Public
  *  License, version 3, or at your option any later version.
@@ -23,11 +23,15 @@ satisfies == swap putchars [] swap infra;
 		["pass" putchars newline] ["fail" putchars newline]
 		choice [] swap infra pop;
 
-primitives-check == "test_primitives.joy" include;
+primitives-check == "tests/test_primitives.joy" include;
 
-base-check == "test_base.joy" include;
+base-check == "tests/test_base.joy" include;
+
+joy-check == test.primitives-check test.base-check;
 
 END
 
 "testlib is loaded"  putchars newline.
+
+
 

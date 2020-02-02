@@ -98,6 +98,9 @@
     <ClInclude Include="parse_joy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="joy_libs\extra_inilib.joy">
@@ -120,5 +123,13 @@
     <Text Include="tests\test_primitives.joy">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="test_base.joy">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="joycpp.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
