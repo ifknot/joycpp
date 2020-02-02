@@ -5,7 +5,7 @@ namespace joy {
 	parse_joy::parse_joy(joy_stack& stack, io_device& io, std::string path_to_manual) :
 		parse_context_free(stack, io, path_to_manual)
 	{
-		echo_state = echo_state_t::linenumber;
+		//echo_state = echo_state_t::linenumber;
 		include("joy_libs/usrlib.joy");
 		io.ok();
 		io.colour(BOLDWHITE);

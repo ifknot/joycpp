@@ -11,6 +11,9 @@
 
 "joy_libs/joy03_inilib.joy" include.
 
+_inilib abort
+_extra_inilib abort
+
 PUBLIC
 
      _usrlib == true;

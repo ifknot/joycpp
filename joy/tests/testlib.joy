@@ -1,3 +1,16 @@
+(* 
+ * testlib.joy -- modified from inicheck.joy by Eric Bavier
+ * inicheck.joy -- primitive unit test combinators.
+ *
+ *   Test routines that make use of only Joy primitives, so that the
+ *   standard library routines may be tested.
+ *
+ *   Copyright © Eric Bavier <address@hidden>
+ *
+ *   This source is released under the terms of the GNU General Public
+ *  License, version 3, or at your option any later version.
+ *)
+
 MODULE test
 
 PUBLIC
@@ -10,6 +23,11 @@ satisfies == swap putchars [] swap infra;
 		["pass" putchars newline] ["fail" putchars newline]
 		choice [] swap infra pop;
 
+primitives-check == "test_primitives.joy" include;
+
+base-check == "test_base.joy" include;
+
 END
 
 "testlib is loaded"  putchars newline.
+
