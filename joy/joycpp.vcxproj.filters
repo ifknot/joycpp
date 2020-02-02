@@ -118,12 +118,12 @@
     <None Include="tests\testlib.joy">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="tests\test_base.joy">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="tests\test_primitives.joy">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="test_base.joy">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

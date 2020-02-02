@@ -21,10 +21,6 @@ _extra_inilib == true;
 (* - - - - - General Combinators  - - - - *)
 
     i2 == [dip] dip i;
-    #shunt == [swons] step;   # [a b] [f] g|shunt   ->  |a f g b f g
-    # k
-    # w
-    # c
 
 (* - - - - - List Operators  - - - - *)
 
@@ -48,13 +44,9 @@ _extra_inilib == true;
     
 (* - - - - - List Operators  - - - - *)
 
-    second  == rest first;
-    third   == rest second;
-    quote   == [] cons;    
+      
 
-    sum == 0.0 swap [+] step;
-    product == 1.0 swap [*] step;
-    #destructive size == 0.0 swap [pop succ] step;
+    
 
 (* - - - - - IO Operators  - - - - *)
     

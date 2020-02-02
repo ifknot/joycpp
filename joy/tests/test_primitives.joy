@@ -11,13 +11,27 @@
  *  License, version 3, or at your option any later version.
  *)
 
+ _testlib
+
 "test Joy03 primitives" putchars newline
 
-3 3 = "=" test.primitive
-1 3 + 4 = "+" test.primitive
-1 3 - -2 = "-" test.primitive
-# 2 4 < "<"  test.primitive
-# 4 2 > ">"  test.primitive
-2 dup + 4 = "dup" test.primitive
-2 4 pop 2 = "pop" test.primitive
-[3 1] dup [+] infra uncons pop 4 = "dup-list" test.primitive
+ 3 setecho
+
+[true] uncons pop "choice" test.primitive.
+3 3 = "=" test.primitive.
+1 3 + 4 = "+" test.primitive.
+4 2 - 2 = "=" test.primitive.
+2 4 < "<" test.primitive.
+4 2 > ">" test.primitive.
+2 dup + 4 = "dup" test.primitive.
+2 4 pop 2 = "pop" test.primitive.
+[3 1] dup [+] infra uncons pop 4 = "dup list" test.primitive.
+[true]  uncons pop logical "logical" test.primitive.
+[false] uncons pop logical "logical false" test.primitive.
+'b char "char" test.primitive. 
+# 2 integer "integer" test.primitive.
+# "foo" string "string" test.primitive.
+# [2] list "list" test.primitive.
+# [] null "null" test.primitive.
+
+newstack.

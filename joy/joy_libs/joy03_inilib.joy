@@ -44,11 +44,18 @@ _inilib == true;
     first   == uncons pop;  # A -> F where F is the first member of the non-empty aggregate A.
     rest    == unswons pop; # A -> R where R is the non-empty aggregate A with its first member removed.
 
-    # shunt is actually extra to joy03 but useful here
+    (*
+     * presented in "Programming In Joy" By Manfred von Thun - but not in joy03 manual
+     * The shunt operator takes two sequences as parameters and, starting at the front of the topmost parameter, moves all items onto the front of the second parameter.
+     *)
     shunt == [swons] step;   # [a b] [f] g|shunt   ->  |a f g b f g
-    # presented in "Atomic Programs of Joy" by Manfred von Thun - but not in joy03 manual
-    swoncat == reverse shunt; # concatenates two sequences of the same type, it appends the second parameter to the top parameter.
-    concat  == swap swoncat; # does the same except that it executes a swap first.
+    (*
+     * presented in "Atomic Programs of Joy" by Manfred von Thun - but not in joy03 manual
+     * swoncat concatenates two sequences of the same type, it appends the second parameter to the top parameter.
+     * concat  does the same except that it executes a swap first.
+     *) 
+    swoncat == reverse shunt; 
+    concat  == swap swoncat;
 
 (* - - - - - General Combinators  - - - - *)
 
@@ -64,8 +71,11 @@ _inilib == true;
     unary == stack rest swap infra first popd; # X [P] -> R Executes P, which leaves R on top of the stack. No matter how many parameters this consumes, exactly one is removed from the stack
     branch == choice i; # B [T] [F] -> T/F If B is true, then executes T else executes F.
 
-    # presented in "Atomic Programs of Joy" by Manfred von Thun - but not in joy03 manual
-    # The dipd and the dipddcombinator are similar. They expect two or three elements, (X) and (Y), or (X), (Y) and (Z) below the quotation. The two or three elements are saved and restored after the execution of the quotation.
+
+    (*
+     * presented in "Atomic Programs of Joy" by Manfred von Thun - but not in joy03 manual
+     * The dipd and the dipddcombinator are similar. They expect two or three elements, (X) and (Y), or (X), (Y) and (Z) below the quotation. The two or three elements are saved and restored after the execution of the quotation.
+     *)    
     dipd    == [dip] cons dip;
     dipdd   == [dipd] cons dip;
     b == [i] dip i; # The b combinator expects two quotations [P] and [Q], with [Q] on top. It removes the two quotations and executes first [P] and then [Q].
@@ -75,7 +85,14 @@ _inilib == true;
     # take
     # at
     # of
-    
+
+    (* 
+     * presented in "Mathematical foundations of Joy" by Manfred von Thun - but not in joy03 manual
+     * The names of these combinators have been chosen because of their similarity to the K combinator, W combinator and the C combinator in combinatory logic.
+     *)
+        k   ==   [pop]  dip  i;
+        w   ==   [dup]  dip  i;
+        c   ==   [swap] dip  i;
     
     # joy03
     ifte == [ [stack] dip infra first ] dipd branch; #[B] [T] [F] -> ... Executes B. If that yields true, then executes T else executes F.
@@ -88,6 +105,18 @@ _inilib == true;
 (* - - - - - List Operators  needing Combinators above- - - - *)
 
     # null ( TODO: need list op ) 
+
+    (*
+     * presented in "Atomic Programs of Joy" by Manfred von Thun - but not in joy03 manual
+     * The dipd and the dipddcombinator are similar. They expect two or three elements, (X) and (Y), or (X), (Y) and (Z) below the quotation. The two or three elements are saved and restored after the execution of the quotation.
+     *)  
+    # zip
+    sum == 0.0 swap [+] step;
+    product == 1.0 swap [*] step;
+    #destructive size == 0.0 swap [pop succ] step;
+    second  == rest first;
+    third   == rest second;
+    quote   == [] cons;  
 
 
 (* - - - - - IO Operators  - - - - *)

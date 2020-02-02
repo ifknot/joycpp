@@ -190,10 +190,10 @@
     <None Include="joy_libs\usrlib.joy" />
     <None Include="joy_manuals\joy03.man" />
     <None Include="tests\testlib.joy" />
+    <None Include="tests\test_base.joy" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="tests\test_primitives.joy" />
-    <Text Include="test_base.joy" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="joycpp.rc" />

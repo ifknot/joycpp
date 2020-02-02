@@ -23,5 +23,3 @@ END
 "usrlib is loaded"  putchars newline.
 
 "tests/testlib.joy" include.
-
-#"tests/test_primitives.joy" include.

@@ -1,0 +1,201 @@
+(* 
+ * test_base.joy -- modified from inicheck.joy by Eric Bavier
+ * inicheck.joy -- primitive unit test combinators.
+ *
+ *   Test routines that make use of only Joy primitives, so that the
+ *   standard library routines may be tested.
+ *
+ *   Copyright Eric Bavier <address@hidden>
+ *
+ *   This source is released under the terms of the GNU General Public
+ *  License, version 3, or at your option any later version.
+ *)
+
+ "test Joy03 base" putchars newline
+
+ _testlib
+
+ 3 setecho
+
+  test-swons == "swons" [[3] 2 swons first] test.satisfies [2 =] test.? ;
+  test-unswons == "unswons" [[2 3] unswons] test.satisfies [2 =] test.? ;
+
+  test-first ==
+    "first" [[1 2 3] first] test.satisfies [1 =] test.? ;
+  test-second ==
+    "second" [[1 2 3] second] test.satisfies [2 =] test.? ;
+  test-third ==
+    "third" [[1 2 3] third] test.satisfies [3 =] test.? ;
+
+  test-booleans ==
+    "true" [true] test.satisfies [1 0 choice 1 =] test.?
+    "false" [false] test.satisfies [1 0 choice 0 =] test.? ;
+
+  test-leaf ==
+    "numeric leaf" [2 leaf] test.satisfies [true =] test.?
+    "char leaf"    ['b leaf] test.satisfies [true =] test.?
+    "string leaf"  ["foo" leaf] test.satisfies [true =] test.?
+    "list leaf"    [[1 2] leaf] test.satisfies [false =] test.? ;
+  test-null ==
+    "numeric null(0)"  [0 null]   test.satisfies [true =] test.?
+    "numeric non-null" [1 null]   test.satisfies [false =] test.?
+    "null list"        [[] null]  test.satisfies [true =] test.?
+    "non-null list"    [[1] null] test.satisfies [false =] test.? ;
+  test-nulld ==
+    "numeric nulld"     [0 1 nulld] test.satisfies [pop true =] test.?
+    "numeric non-nulld" [1 0 nulld] test.satisfies [pop false =] test.?
+    "list nulld"        [[] [1] nulld] test.satisfies [pop true =] test.?
+    "list non-nulld"    [[1] [] nulld] test.satisfies [pop false =] test.? ;
+
+  test-newstack ==
+    "newstack" [newstack] test.satisfies [stack null] test.? ;
+
+  test-i ==
+    "i id" [1 [] i] test.satisfies [1 =] test.?
+    "i atom" [[1] i] test.satisfies [1 =] test.?
+    "i pop" [1 2 [pop] i] test.satisfies [1 =] test.?
+    "i +" [1 2 [+] i] test.satisfies [3 =] test.?
+    "i2 id" [1 2 [] [] i2] test.satisfies [2 =] test.?
+    "i2 +" [1 2 [3 +] [2 +] i2] test.satisfies [=] test.? ;
+    ;
+
+  test-dip ==
+    "dip id" [1 2 [] dip] test.satisfies [pop 1 =] test.?
+    "dip atom" [2 [1] dip] test.satisfies [pop 1 =] test.?
+    "dip pop" [1 2 3 [pop] dip] test.satisfies [3 =] test.?
+    "dip pop 2" [1 2 3 [pop] dip] test.satisfies [pop 1 =] test.? ;
+
+  test-b ==
+    "b +" [1 2 3 [+] [+] b] test.satisfies [6 =] test.?
+    "b" [4 [2 +] [3 -] b] test.satisfies [3 =] test.? ;
+
+  test-cleave ==
+    "cleave" [2 [1 +] [4 +] cleave] test.satisfies [[3 =] [6 =] i2 and] test.? ;
+
+  test-branch ==
+    "branch true" [true [1] [0] branch] test.satisfies [1 =] test.?
+    "branch false" [false [1] [0] branch] test.satisfies [0 =] test.?
+    "ifte true" [1 [0 >] [1] [0] ifte] test.satisfies [1 =] test.?
+    "ifte false" [0 [0 >] [1] [0] ifte] test.satisfies [0 =] test.?
+    "ifte restore" [2 [pop true] [2 +] [] ifte] test.satisfies [4 =] test.? ;
+
+  test-logic ==
+    "not true"  [true not]  test.satisfies [false =] test.?
+    "not false" [false not]test.satisfies [true =] test.?
+    "or tt"  [true true]   test.satisfies [or] test.?
+    "or tf"  [true false]  test.satisfies [or] test.?
+    "or ft"  [false true]  test.satisfies [or] test.?
+    "or ff"  [false false] test.satisfies [or not] test.?
+    "and tt" [true true]   test.satisfies [and] test.?
+    "and tf" [true false]  test.satisfies [and not] test.?
+    "and ft" [false true]  test.satisfies [and not] test.?
+    "and ff" [false false] test.satisfies [and not] test.?
+    "xor tt" [true true]   test.satisfies [xor not] test.?
+    "xor tf" [true false]  test.satisfies [xor] test.?
+    "xor ft" [false true]  test.satisfies [xor] test.?
+    "xor ff" [false false] test.satisfies [xor not] test.? ;
+
+  test-pop ==
+    "pop2"   [1 2 3 pop2] test.satisfies [1 =] test.?
+    "popop"  [1 2 3 pop2] test.satisfies [1 =] test.?
+    "popd"   [1 2 3 popd] test.satisfies [3 =] test.?
+    "popd 2" [1 2 3 popd] test.satisfies [pop 1 =] test.? ;
+
+  test-dup ==
+    "dup2"   [2 3 dup2] test.satisfies [[2 =] dip 3 = and] test.?
+    "dupd"   [2 3 dupd] test.satisfies [[2 =] dip 3 = and] test.? ;
+
+  test-roll ==
+    "rollup"   [1 2 3 rollup] test.satisfies [2 = [1 =] dip and
+                                         [3 =] dip and] test.?
+    "rolldown" [1 2 3 rolldown] test.satisfies [1 = [3 =] dip and
+                                           [2 =] dip and] test.?
+    "rotate"   [1 2 3 rotate] test.satisfies [1 = [2 =] dip and
+                                         [3 =] dip and] test.? ;
+
+  test-app ==
+    "app2" [1 3 [1 +] app2] test.satisfies [4 = [2 =] dip and] test.?
+    "app3" [1 3 5 [2 >] app3] test.satisfies [and [true =]
+                                             [false =] i2] test.? ;
+
+  test-maxima ==
+    ">="  [2 3 >= 3 3 >= 4 3 >=] test.satisfies [and swap not and] test.?
+    "<="  [2 3 <= 3 3 <= 4 3 <=] test.satisfies [not and and] test.?
+    "!="  [2 3 != 3 3 !=]        test.satisfies [not and] test.?
+   #"max" [2 3 max -2 3 max]     test.satisfies [[3 =] app2 and] test.? ;
+
+  test-arithmetic ==
+    "*" [3 7 * 0 5 *] test.satisfies [[21 =] [null] i2 and] test.?
+    #"divmod" [11 3 divmod] test.satisfies [[3 =] [2 =] i2 and] test.?
+    "/" [21 5 / 25 25 /] test.satisfies [[4 =] [1 =] i2 and] test.?
+    #"%" [21 2 % 37 5 %] test.satisfies [[1 =] [2 =] i2 and] test.?
+    #"exp"  [2 3 exp 3 0 exp] test.satisfies [[8 =] [1 =] i2 and] test.?
+    ;
+
+
+ test-linrec ==
+   (* We test * and divmod here because they are currently
+      implemented in joy itself using linear recursion. *)
+   "fact" [0 fact 4 fact] test.satisfies [[1 =] [24 =] i2 and] test.?
+   "sum-up-to" [6 sum-up-to] test.satisfies [21 =] test.? ;
+
+ test-aggregates ==
+   "step" [[1 2 3] [] step]
+          test.satisfies [[2 =] [3 =] i2 and [1 =] dip and] test.?
+   "step +" [[1 3] [5 +] step] test.satisfies [[6 =] [8 =] i2 and] test.?
+   "reverse" [[1 2] reverse]
+             test.satisfies [[[1 =] [2 =] i2 and] infra first] test.?
+   "fold +" [[1 4 5] 0 [+] fold] test.satisfies [10 =] test.?
+   "fold swons" [[1 4 5] [] [swons] fold]
+                test.satisfies [unstack 5 = swap 4 = and [1 =] dip and] test.?
+                (*
+   "fold or" [[false true false] false [or] fold]
+             test.satisfies [true =] test.?
+   "fold and" [[true true false] true [and] fold]
+              test.satisfies [false =] test.?
+   "sum" [[1 2 8 9] sum] test.satisfies [20 =] test.?
+   "product" [[1 2 8 9] product] test.satisfies [144 =] test.?
+   "size" [[] size [1 4 8 9] size] test.satisfies [[0 =] [4 =] i2 and] test.?
+   "map id" [[1 2] [] map]
+            test.satisfies [[[2 =] [1 =] i2 and] infra first] test.?
+   "map +" [[1 2] [10 +] map]
+           test.satisfies [[[12 =] [11 =] i2 and] infra first] test.?
+   "map >" [[3 7] [4 >] map]
+           test.satisfies [[[true =] [false =] i2 and] infra first] test.?
+           (*
+   "drop" [[1 2 3] [1 drop first] [2 drop first] cleave]
+          test.satisfies [[2 =] [3 =] i2 and] test.?
+   "take" [[1 2 3] [2 take i] [1 take i] cleave]
+          test.satisfies [[2 =] [1 =] i2 and] test.?
+   "at"   [[1 2 3 4] [2 at] [1 at] cleave]
+          test.satisfies [[3 =] [2 =] i2 and] test.?
+   "of"   [[1 2 3 4] [2 swap of] [1 swap of] cleave]
+          test.satisfies [[3 =] [2 =] i2 and] test.?
+   ;
+
+ run-base-tests ==
+   test-swons
+   test-unswons
+   test-first
+   test-second
+   test-third
+   #test-booleans
+   #test-leaf
+   #test-null
+   #test-nulld
+   test-newstack
+   test-i
+   test-dip
+   #test-b
+   test-cleave
+   test-branch
+   #test-logic
+   test-pop
+   test-dup
+   test-roll
+   test-maxima
+   test-arithmetic
+   #test-linrec
+   test-aggregates
+
+END
