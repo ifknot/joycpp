@@ -127,10 +127,9 @@ namespace joy {
 		{"rotate", [&](joy_stack& S) { S.rotate(); }},
 		{"rollup", [&](joy_stack& S) { S.rollup(); }},
 		{"rolldown", [&](joy_stack& S) { S.rolldown(); }},
-		//char
-		{"ord", [&](joy_stack& S) { if (S.has("ord", {joy_t::char_t})) { S.push(ord(S.top())); } }},
-		{"chr", [&](joy_stack& S) { if (S.has("chr", {joy_t::int_t})) { S.push(chr(S.top())); } }},
-		{"char", [&](joy_stack& S) { if (S.has("char", {joy_t::any_t})) { S.push(is_char(S.top())); } }},
+		//ascii
+		{"ord", [&](joy_stack& S) { if (S.has("ord", {joy_t::char_t})) { S.push(token_t(static_cast<int>(std::any_cast<char>(S.top().first)), joy_t::int_t)); } }},
+		{"chr", [&](joy_stack& S) { if (S.has("chr", {joy_t::int_t})) { S.push(token_t(static_cast<char>(std::any_cast<int>(S.top().first)), joy_t::char_t)); } }},
 		//math
 		{"+", [&](joy_stack& S) {
 			if (S.has("+", {joy_t::numeric_t, joy_t::numeric_t})) {
@@ -162,6 +161,11 @@ namespace joy {
 		{">", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) > S.top()); } }},
 		{">=", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) >= S.top()); } }},
 		{"!=", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) != S.top()); } }},
+		//type tests
+		{"int", [&](joy_stack& S) { if (S.has("int", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::int_t) ? true : false, joy_t::bool_t)); } }},
+		{"char", [&](joy_stack& S) { if (S.has("char", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::char_t) ? true : false, joy_t::bool_t)); } }},
+		{"logical", [&](joy_stack& S) { if (S.has("logical", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::bool_t) ? true : false, joy_t::bool_t)); } }},
+		{"set", [&](joy_stack& S) { if (S.has("set", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::set_t) ? true : false, joy_t::bool_t)); } }},
 		//aggregates
 		{"size", [&](joy_stack& S) { size(S); }},
 		//environment

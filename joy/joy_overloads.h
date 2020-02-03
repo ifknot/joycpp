@@ -24,32 +24,6 @@
 */
 namespace joy {
 
-    //typedef std::function<bool (const token_t&, const token_t& )> binop_t;
-
-
-
-    //unary token overloads
-
-    /**
-    * ord : C -> I
-    * Integer I is the ASCII value of character C( or logical or integer).
-    * TODO: logical [] integer []
-    */
-    token_t ord(token_t token);
-
-    /**
-    * chr : I -> C
-    * C is the character whose ASCII value is integer I( or logical or character).
-    * TODO: logical [] integer []
-    */
-    token_t chr(token_t token);
-
-    /**
-    * char : X -> B
-    * Tests whether X is a character.
-    */
-    token_t is_char(token_t token);
-
     //arithmetic token overloads
 
     token_t operator+(const token_t& a, const token_t& b);
