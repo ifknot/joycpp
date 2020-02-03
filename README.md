@@ -17,9 +17,10 @@ Nested map works!
 
 map a quoted cube function quote to a list of lists:
 
-```
+```forth
+(* comment *)
 ok
-[ [ 1 2 3 ] [ 4 5 6 ] ] [ [ dup dup * * ] map ] map
+[ [ 1 2 3 ] [ 4 5 6 ] ] [ [ dup dup * * ] map ] map    # comment
 ok
 .
 [ [ 1 8 27 ] [ 64 125 216 ] ]
