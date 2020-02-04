@@ -71,7 +71,7 @@ _inilib == true;
 
     (*
      * presented in "Atomic Programs of Joy" by Manfred von Thun - but not in joy03 manual
-     * The dipd and the dipddcombinator are similar. They expect two or three elements, (X) and (Y), or (X), (Y) and (Z) below the quotation. The two or three elements are saved and restored after the execution of the quotation.
+     * The dipd and the dipdd combinator are similar. They expect two or three elements, (X) and (Y), or (X), (Y) and (Z) below the quotation. The two or three elements are saved and restored after the execution of the quotation.
      *)    
     dipd    == [dip] cons dip;
     dipdd   == [dipd] cons dip;
@@ -112,10 +112,6 @@ _inilib == true;
 
 (* -----List Operators  needing Combinators above ---- *)
 
-    (*
-     * presented in "Atomic Programs of Joy" by Manfred von Thun - but not in joy03 manual
-     * The dipd and the dipddcombinator are similar.They expect two or three elements, (X) and (Y), or (X), (Y) and (Z)below the quotation.The two or three elements are saved and restored after the execution of the quotation.
-     *)
     # zip
     sum == 0.0 swap[+] step;
     product == 1.0 swap[*] step;
