@@ -39,11 +39,11 @@ F == [false] first;
 
 END
 
-"tests/test_base.joy" include.
-
 "testlib is loaded"  putchars newline.
 
-test-primitives == "tests/test_primitives.joy" include.
+"tests/test_primitives.joy" include.
+
+"tests/test_base.joy" include.
 
 run-base-tests
 

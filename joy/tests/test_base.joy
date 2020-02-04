@@ -77,23 +77,23 @@
     "ifte false" [0 [0 >] [1] [0] ifte] satisfies [0 =] ?
     "ifte restore" [2 [pop true] [2 +] [] ifte] satisfies [4 =] ? 
       ;
-(*
+
   test-logic ==
     "not true"  [true not]  satisfies [false =] ?
     "not false" [false not]satisfies [true =] ?
-    "or tt"  [true true]   satisfies [or] ?
-    "or tf"  [true false]  satisfies [or] ?
-    "or ft"  [false true]  satisfies [or] ?
-    "or ff"  [false false] satisfies [or not] ?
-    "and tt" [true true]   satisfies [and] ?
-    "and tf" [true false]  satisfies [and not] ?
-    "and ft" [false true]  satisfies [and not] ?
-    "and ff" [false false] satisfies [and not] ?
-    "xor tt" [true true]   satisfies [xor not] ?
-    "xor tf" [true false]  satisfies [xor] ?
-    "xor ft" [false true]  satisfies [xor] ?
-    "xor ff" [false false] satisfies [xor not] ? ;
-*)
+    "or tt"  [T T]   satisfies [or] ?
+    "or tf"  [T F]  satisfies [or] ?
+    "or ft"  [F T]  satisfies [or] ?
+    "or ff"  [F F] satisfies [or not] ?
+    "and tt" [T T]   satisfies [and] ?
+    "and tf" [T F]  satisfies [and not] ?
+    "and ft" [F T]  satisfies [and not] ?
+    "and ff" [F F] satisfies [and not] ?
+    "xor tt" [T T]   satisfies [xor not] ?
+    "xor tf" [T F]  satisfies [xor] ?
+    "xor ft" [F T]  satisfies [xor] ?
+    "xor ff" [F F] satisfies [xor not] ? ;
+
   test-pop ==
     "pop2"   [1 2 3 pop2] satisfies [1 =] ?
     "popop"  [1 2 3 pop2] satisfies [1 =] ?
@@ -105,12 +105,10 @@
     "dupd"   [2 3 dupd] satisfies [[2 =] dip 3 = and] ? ;
 
   test-roll ==
-    "rollup"   [1 2 3 rollup] satisfies [2 = [1 =] dip and
-                                         [3 =] dip and] ?
-    "rolldown" [1 2 3 rolldown] satisfies [1 = [3 =] dip and
-                                           [2 =] dip and] ?
-    "rotate"   [1 2 3 rotate] satisfies [1 = [2 =] dip and
-                                         [3 =] dip and] ? ;
+    "rollup"   [1 2 3 rollup] satisfies [2 = [1 =] dip and [3 =] dip and] ?
+    "rolldown" [1 2 3 rolldown] satisfies [1 = [3 =] dip and [2 =] dip and] ?
+    "rotate"   [1 2 3 rotate] satisfies [1 = [2 =] dip and [3 =] dip and] ? ;
+
   test-app ==
     "app2" [1 3 [1 +] app2] satisfies [4 = [2 =] dip and] ?
     "app3" [1 3 5 [2 >] app3] satisfies [and [true =] [false =] i2] ? ;
@@ -182,14 +180,14 @@
    test-i
    test-dip
    test-b
-     #test-cleave
+   test-cleave
    test-branch
-     #test-logic
+   test-logic
    test-pop
-     #test-dup
-     #test-roll
-     #test-maxima
-     #test-arithmetic
+   test-dup
+   test-roll
+   test-maxima
+   test-arithmetic
      #test-linrec
      #test-aggregates;
 

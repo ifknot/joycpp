@@ -159,15 +159,15 @@ namespace joy {
 		//predicates - numeric - unary
 			//odd    even    positive    negative
 		//predicates - numeric - binary
-		{"=", [&](joy_stack& S) { if (S.has("=", {joy_t::any_t, joy_t::any_t})) { S.push(S.sat(1) == S.top()); } }},
-		{"<", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) < S.top()); } }},
-		{"<=", [&](joy_stack& S) { if (S.has("<=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) <= S.top()); } }},
-		{">", [&](joy_stack& S) { if (S.has(">", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) > S.top()); } }},
-		{">=", [&](joy_stack& S) { if (S.has(">=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) >= S.top()); } }},
-		{"!=", [&](joy_stack& S) { if (S.has("!=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) != S.top()); } }},
+		{"=", [&](joy_stack& S) { if (S.has("=", {joy_t::any_t, joy_t::any_t})) { S.push(S.sat(1) == S.top()); S.popd(); S.popd();} }},
+		{"<", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) < S.top());  S.popd(); S.popd();} }},
+		{"<=", [&](joy_stack& S) { if (S.has("<=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) <= S.top());  S.popd(); S.popd();} }},
+		{">", [&](joy_stack& S) { if (S.has(">", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) > S.top());  S.popd(); S.popd();} }},
+		{">=", [&](joy_stack& S) { if (S.has(">=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) >= S.top());  S.popd(); S.popd();} }},
+		{"!=", [&](joy_stack& S) { if (S.has("!=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) != S.top());  S.popd(); S.popd();} }},
 		//predicate - any - unary
 			//small
-		{"null", [&](joy_stack& S) { if (S.has("null", {joy_t::nullable_t})) { S.push(token_t(null(S.top()), joy_t::bool_t)); } }},
+		{"null", [&](joy_stack& S) { if (S.has("null", {joy_t::nullable_t})) { S.push(token_t(null(S.top()), joy_t::bool_t)); S.popd(); } }},
 		//type tests
 		{"integer", [&](joy_stack& S) { if (S.has("integer", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::int_t) ? true : false, joy_t::bool_t)); } }},
 		{"char", [&](joy_stack& S) { if (S.has("char", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::char_t) ? true : false, joy_t::bool_t)); } }},
