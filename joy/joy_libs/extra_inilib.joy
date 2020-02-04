@@ -15,7 +15,6 @@ _extra_inilib == true;
 
 (* - - - - - Stack Manipulation Operators  - - - - *)
 
-    # dup2
     popop == pop2;
 
 (* - - - - - General Combinators  - - - - *)
@@ -24,28 +23,15 @@ _extra_inilib == true;
 
 (* - - - - - List Operators  - - - - *)
 
-    # nulld
-    # unpair
-    # pairlist
-    # nulld
-    # consd
-    # swonsd
-    # unconsd
-    # unswonsd 
-    # null2
-    # cons2
-    # uncons2
-    # swons2
-    # zip
-    # sum
-    # product
-    # size
-    # size2
-    
-(* - - - - - List Operators  - - - - *)
-
-      
-
+    nulld == [null] dip;
+    consd == [cons] dip;
+    swonsd == [swons] dip;
+    unconsd == [uncons] dip;
+    unswonsd == [unswons] dip unswons swapd;
+    null2 == nulld null or ;
+    cons2 == swapd cons consd;
+    uncons2 == unconsd uncons swapd;
+    swons2 == swapd swons swonsd;
     
 
 (* - - - - - IO Operators  - - - - *)

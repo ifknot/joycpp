@@ -108,6 +108,7 @@ namespace joy {
 		* 2. offer performance benefit as c++ lambda equivalent
 		*/
 		dictionary_t regular_lambda_map{
+		{"id", [&](joy_stack& S) { }},
 		//stack commands
 		{".s", [&](joy_stack& S) { print_stack(S, io); }},
 		{"put", [&](joy_stack& S) { if (S.has("put", {joy_t::any_t})) { print_top(S, io); S.pop(); } }},
@@ -155,17 +156,25 @@ namespace joy {
 				S.pop();
 			}
 		}},
-		{"=", [&](joy_stack& S) { if (S.has("=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) == S.top()); } }},
+		//predicates - numeric - unary
+			//odd    even    positive    negative
+		//predicates - numeric - binary
+		{"=", [&](joy_stack& S) { if (S.has("=", {joy_t::any_t, joy_t::any_t})) { S.push(S.sat(1) == S.top()); } }},
 		{"<", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) < S.top()); } }},
-		{"<=", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) <= S.top()); } }},
-		{">", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) > S.top()); } }},
-		{">=", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) >= S.top()); } }},
-		{"!=", [&](joy_stack& S) { if (S.has("<", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) != S.top()); } }},
+		{"<=", [&](joy_stack& S) { if (S.has("<=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) <= S.top()); } }},
+		{">", [&](joy_stack& S) { if (S.has(">", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) > S.top()); } }},
+		{">=", [&](joy_stack& S) { if (S.has(">=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) >= S.top()); } }},
+		{"!=", [&](joy_stack& S) { if (S.has("!=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) != S.top()); } }},
+		//predicate - any - unary
+			//small
+		{"null", [&](joy_stack& S) { if (S.has("null", {joy_t::nullable_t})) { S.push(token_t(null(S.top()), joy_t::bool_t)); } }},
 		//type tests
-		{"int", [&](joy_stack& S) { if (S.has("int", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::int_t) ? true : false, joy_t::bool_t)); } }},
+		{"integer", [&](joy_stack& S) { if (S.has("integer", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::int_t) ? true : false, joy_t::bool_t)); } }},
 		{"char", [&](joy_stack& S) { if (S.has("char", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::char_t) ? true : false, joy_t::bool_t)); } }},
 		{"logical", [&](joy_stack& S) { if (S.has("logical", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::bool_t) ? true : false, joy_t::bool_t)); } }},
 		{"set", [&](joy_stack& S) { if (S.has("set", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::set_t) ? true : false, joy_t::bool_t)); } }},
+		{"string", [&](joy_stack& S) { if (S.has("string", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::string_t) ? true : false, joy_t::bool_t)); } }},
+		{"list", [&](joy_stack& S) { if (S.has("list", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::list_t) ? true : false, joy_t::bool_t)); } }},
 		//aggregates
 		{"size", [&](joy_stack& S) { size(S); }},
 		//environment

@@ -42,7 +42,8 @@ namespace joy {
         group_t,        // quote_t, list_t
         sequence_t,     // quote, list, string
         aggregate_t,    // quote, list, string & set
-        lambda_t,        // joy-lambda command 
+        nullable_t,     // mumeric_t aggregate_t
+        lambda_t,       // joy-lambda command 
         cmd_t,          // joy-joy command
         //aggregate types NB all implemented as a joy_stack
         quote_t,        // aggregate of any joy type and any joy command
@@ -219,6 +220,10 @@ namespace joy {
 
     inline bool jaggregate(const token_t& token) {
         return jsequence(token) || jset(token);
+    }
+
+    inline bool jnullable(const token_t& token) {
+        return jaggregate(token) || jnumeric(token);
     }
 
     inline bool jleaf(const token_t& token) {

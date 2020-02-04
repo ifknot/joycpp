@@ -21,7 +21,26 @@ namespace joy {
         }
     }
 
-    void putch(joy_stack& S, io_device& io) {
+	bool null(token_t& token) {
+        const auto& [pattern, type] = token;
+        switch (type) {
+        case joy_t::char_t:
+            return std::any_cast<char>(pattern) == 0;
+        case joy_t::int_t:
+            return std::any_cast<int>(pattern) == 0;
+        case joy_t::double_t:
+            return std::any_cast<double>(pattern) == 0;
+        case joy_t::list_t:
+            return std::any_cast<joy_stack>(pattern).size() == 0;
+        case joy_t::quote_t:
+            return std::any_cast<joy_stack>(pattern).size() == 0;
+        default:
+            return false;
+            break;
+        }
+	}
+
+	void putch(joy_stack& S, io_device& io) {
         auto ch = static_cast<char>(std::any_cast<char>(S.top().first));
         auto s = std::string{ ch };
         io.put_string(s);

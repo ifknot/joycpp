@@ -155,7 +155,6 @@ namespace joy {
 					else {
 						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
 					}
-					return false;
 				case joy_t::group_t:
 					if (jgroup(sat(i))) {
 						break;
@@ -163,7 +162,6 @@ namespace joy {
 					else {
 						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
 					}
-					return false;
 				case joy_t::sequence_t:
 					if (jsequence(sat(i))) {
 						break;
@@ -171,7 +169,6 @@ namespace joy {
 					else {
 						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
 					}
-					return false;
 				case joy_t::aggregate_t:
 					if (jaggregate(sat(i))) {
 						break;
@@ -179,13 +176,18 @@ namespace joy {
 					else {
 						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
 					}
-					return false;
+				case joy_t::nullable_t:
+					if (jnullable(sat(i))) {
+						break;
+					}
+					else {
+						return error(XTYPEMISMATCH, op + " argument at stack[" + std::to_string(i) + "] expected: " + joy::to_string(t) + " found: " + joy::to_string(sat(i).second));
+					}
 				case joy_t::any_t:
 					break;
 				case joy_t::undef_t:
 				default:
-					error(XNOCONVERSION, op + " argument conformance checking");
-					return false;
+					return error(XNOCONVERSION, op + " argument conformance checking");
 				}
 				++i;
 			}

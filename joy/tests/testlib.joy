@@ -13,27 +13,40 @@
 
  _testlib == true;
 
-MODULE test
-
 PUBLIC
+
+(* Use these combinators in the following way :
+ *
+ *  "foo" [P] satisfies [P'] ? 
+ *
+ * P is executed, immediately followed by a predicate P', which should leave true or false on the
+ * top of the stack to indicate success or failure of the test.
+ * 
+ * If succesful, "foo pass" is printed to stdout, otherwise "foo fail".
+ *)
 
 primitive == putchars " " putchars ["pass" putchars newline] ["fail" putchars newline] branch;
 
 satisfies == swap putchars [] swap infra;
 
 ?	==	infra uncons pop 
-		["pass" putchars newline] ["fail" putchars newline]
+		[" pass" putchars newline] [" fail" putchars newline]
 		choice [] swap infra pop;
 
-primitives-check == "tests/test_primitives.joy" include;
+T == [true] first;
 
-base-check == "tests/test_base.joy" include;
-
-joy-check == test.primitives-check test.base-check;
+F == [false] first;
 
 END
 
+"tests/test_base.joy" include.
+
 "testlib is loaded"  putchars newline.
+
+test-primitives == "tests/test_primitives.joy" include.
+
+run-base-tests
+
 
 
 

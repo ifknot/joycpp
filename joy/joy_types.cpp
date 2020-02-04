@@ -13,6 +13,7 @@ namespace joy {
 		{joy_t::group_t, "group"},
 		{joy_t::sequence_t, "sequence"},
 		{joy_t::aggregate_t, "aggregate"},
+		{joy_t::nullable_t, "nullable"},
 		{joy_t::lambda_t, "c++ lambda"},
 		{joy_t::cmd_t, "joy command"},
 		//simple types

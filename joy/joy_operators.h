@@ -70,6 +70,12 @@ namespace joy {
         return static_cast<int>(std::any_cast<joy_stack>(token.first).size());
     }
 
+    /** 
+     * X->B
+     * Tests for empty aggregate X or zero numeric.
+     */
+    bool null(token_t& token);
+
     // IO operators core C++ performance 
 
     /**

@@ -12,11 +12,6 @@ PUBLIC
 
 _inilib == true;
 
-(* - - - - -  Boolean and Mathematic Operators  - - - - *)
-
-    pred == 1 -;
-    succ == 1 +;
-
 
 (* - - - - - Stack Manipulation Operators  - - - - *)
 
@@ -33,6 +28,8 @@ _inilib == true;
     # rotate
     # rollup
     # rolldown
+
+    dup2 == dup [[dup]dip swap] dip;
 
 
 (* - - - - - List Operators  - - - - *)
@@ -102,32 +99,42 @@ _inilib == true;
 
     fold == swapd step; # [a b ...] i [f]|fold  ->   [f/i,a b ...]|
 
-(* - - - - - List Operators  needing Combinators above- - - - *)
+(* -----Boolean and Mathematic Operators ---- *)
 
-    # null ( TODO: need list op ) 
+    pred == 1 - ;
+    succ == 1 + ;
+    or   ==[pop true][id] branch;
+    and == [id][pop false] branch;
+    not == false true choice;
+    xor == dup2 or rollup and not and;
+    max == dup2 > rollup choice;
+    min == dup2 < rollup choice;
+
+(* -----List Operators  needing Combinators above ---- *)
 
     (*
      * presented in "Atomic Programs of Joy" by Manfred von Thun - but not in joy03 manual
-     * The dipd and the dipddcombinator are similar. They expect two or three elements, (X) and (Y), or (X), (Y) and (Z) below the quotation. The two or three elements are saved and restored after the execution of the quotation.
-     *)  
+     * The dipd and the dipddcombinator are similar.They expect two or three elements, (X) and (Y), or (X), (Y) and (Z)below the quotation.The two or three elements are saved and restored after the execution of the quotation.
+     *)
     # zip
-    sum == 0.0 swap [+] step;
-    product == 1.0 swap [*] step;
-    #destructive size == 0.0 swap [pop succ] step;
-    second  == rest first;
-    third   == rest second;
-    quote   == [] cons;  
-
+    sum == 0.0 swap[+] step;
+    product == 1.0 swap[*] step;
+    #destructive size == 0.0 swap[pop succ] step;
+    second == rest first;
+    third == rest second;
+    quote == [] cons;
+    leaf == list not;
+    # null
 
 (* - - - - - IO Operators  - - - - *)
 
     BEL == '\007;   # bell
-    BS == BEL succ; # backspace [\b]
-    HT == BS succ;  # horizontal tab [\t]
-    LF == HT succ;  # line feed [\n]
-    VT == LF succ;  # vertical tab
-    FF == VT succ;  # form feed [\f]
-    CR == FF succ;  # carriage return [\r]
+    BS == '\008;    # backspace [\b]
+    HT == 9 chr;  # horizontal tab [\t]
+    LF == 10 chr;  # line feed [\n]
+    VT == 11 chr;  # vertical tab
+    FF == 12 chr;  # form feed [\f]
+    CR == 13 chr;  # carriage return [\r]
     
     putchars == [putch] step;
 
