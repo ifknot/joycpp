@@ -61,8 +61,16 @@ namespace joy {
 	* times : N[P] ->...
 	* N times executes P.
 	*/
-	//template<typename parser_t>
-	//void times(joy_stack& S, parser_t& parse) {
+	template<typename parser_t>
+	void times(joy_stack& S, parser_t& parse) {
+		auto P = std::any_cast<joy_stack&>(S.top().first); //get the program
+		S.pop();
+		auto n = std::any_cast<int>(S.top().first); //get n
+		S.pop();
+		while (n--) {
+			parse(P, S);
+		}
+	}
 
 	/**
 	* The step combinator can be used to access all elements of an aggregate in sequence.

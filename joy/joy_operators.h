@@ -32,6 +32,7 @@
 *                   a [b]│cons     →              [a b]│
 *			   	  [a b c]│reverse  →            [c b a]│
 *                 [a ...]│size     →                 ≢⍵│
+*                       a│null     →              a∊0[]│
 *
 */
 namespace joy {
@@ -69,6 +70,14 @@ namespace joy {
     inline int size(token_t& token) {
         return static_cast<int>(std::any_cast<joy_stack>(token.first).size());
     }
+
+    // Math operators core C++ performance 
+
+    /**
+     * pow : F G -> H
+     * H is F raised to the Gth power
+     */
+    void pow(joy_stack& S);
 
     /** 
      * X->B

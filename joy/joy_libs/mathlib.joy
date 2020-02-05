@@ -1,0 +1,17 @@
+MODULE math
+
+_mathlib == true;
+
+PUBLIC
+
+(*
+ * Newton Raphson approx. method square root
+ * 24 iterations should get you good enough approximation - TODO: check the abs difference
+ *)
+
+sqrt ==	24 [dup] times
+		24 [dup swapd dup dup * swap 2.0 * rotate - swap / -] times;
+
+END
+
+"mathlib is loaded"  putchars newline.

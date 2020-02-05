@@ -15,7 +15,7 @@
 
  _testlib
 
-  test-swons == "swons" [[3] 2 swons first] satisfies [2 =] ? ;
+  test-swons == "swons" [[3] 2 swons first] satisfies [2 =] ? ;b
   test-unswons == "unswons" [[2 3] unswons] satisfies [2 =] ? ;
 
   test-first ==

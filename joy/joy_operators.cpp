@@ -21,7 +21,60 @@ namespace joy {
         }
     }
 
-	bool null(token_t& token) {
+    void pow(joy_stack& S) {
+        double base{ 0 }, exponent{ 0 };
+        token_t H;
+        auto G = S.top();
+        S.pop();
+        auto F = S.top();
+        S.pop();
+        switch (G.second) {
+        case joy_t::char_t: 
+            exponent = std::any_cast<char>(G.first);
+            break;
+        case joy_t::int_t: 
+            exponent = std::any_cast<int>(G.first);
+            break;
+        case joy_t::double_t: 
+            exponent = std::any_cast<double>(G.first);
+            break;
+        default:
+            break;
+        }
+        switch (F.second) {
+        case joy_t::char_t: 
+            base = std::any_cast<char>(F.first);
+            break;
+        case joy_t::int_t: 
+            base = std::any_cast<int>(F.first);
+            break;
+        case joy_t::double_t: 
+            base = std::any_cast<double>(F.first);
+            break;
+        default:
+            break;
+        }
+        auto result = std::pow(base, exponent);
+        switch (F.second) {
+        case joy_t::char_t:
+            H.first = static_cast<char>(result);
+            H.second = joy_t::char_t;
+            break;
+        case joy_t::int_t:
+            H.first = static_cast<int>(result);
+            H.second = joy_t::int_t;
+            break;
+        case joy_t::double_t:
+            H.first = static_cast<double>(result);
+            H.second = joy_t::double_t;
+            break;
+        default:
+            break;
+        }
+        S.push(H);
+    }
+
+    bool null(token_t& token) {
         const auto& [pattern, type] = token;
         switch (type) {
         case joy_t::char_t:

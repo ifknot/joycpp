@@ -8,6 +8,11 @@
 #include "joy_overloads.h"
 #include "joy_operators.h"
 
+// Newton Raphson method square root
+// 24 iterations should get you good enough approximation - TODO: check the abs difference
+// 24 [ dup ] times
+// 24 [ dup swapd dup dup * swap 2.0 * rotate - swap / - ] times
+
 namespace joy {
 
 	/**
@@ -154,6 +159,11 @@ namespace joy {
 			if (S.has("/", {joy_t::numeric_t, joy_t::numeric_t})) {
 				S.sat(1) = (S.sat(1) / S.top());
 				S.pop();
+			}
+		}},
+		{"pow", [&](joy_stack& S) {
+			if (S.has("-", {joy_t::numeric_t, joy_t::numeric_t})) {
+				pow(S);
 			}
 		}},
 		//predicates - numeric - unary
