@@ -6,7 +6,7 @@ PUBLIC
 
 (*
  * Newton Raphson approx. method square root
- * 24 iterations should get you good enough approximation - TODO: check the abs difference
+ * 24 iterations should get good enough approximation - TODO: check the abs difference
  *)
 
 sqrt ==	24 [dup] times
