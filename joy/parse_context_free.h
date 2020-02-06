@@ -109,6 +109,10 @@ namespace joy {
 		*/
 		std::string to_colour(const state_t match);
 
+		inline void dump() {
+			print_stack(root_stack, io);
+		}
+
 	protected:
 
 		/**
@@ -206,7 +210,9 @@ namespace joy {
 		{"reverse", [&](joy_stack& S) { if (S.has("reverse", {joy_t::aggregate_t})) { reverse(S); } }},
 		{"step", [&](joy_stack& S) { if (S.has("step", {joy_t::quote_t, joy_t::aggregate_t})) { step(S, *this); } }},
 		{"dip", [&](joy_stack& S) {if (S.has("dip", {joy_t::quote_t, joy_t::any_t})) { dip(S, *this); }}},
-		{"i", [&](joy_stack& S) { if (S.has("i", {joy_t::group_t})) { i(S, *this); } }}
+		{"i", [&](joy_stack& S) { if (S.has("i", {joy_t::group_t})) { i(S, *this); } }},
+		// recursive definitions.
+		{"genrec", [&](joy_stack& S) { if (S.has("genrec", {joy_t::quote_t, joy_t::quote_t, joy_t::quote_t, joy_t::quote_t})) { genrec(S, *this); } }},
 		};
 
 		/**

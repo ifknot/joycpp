@@ -176,8 +176,8 @@ namespace joy {
 		{">=", [&](joy_stack& S) { if (S.has(">=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) >= S.top());  S.popd(); S.popd();} }},
 		{"!=", [&](joy_stack& S) { if (S.has("!=", {joy_t::numeric_t, joy_t::numeric_t})) { S.push(S.sat(1) != S.top());  S.popd(); S.popd();} }},
 		//predicate - any - unary
-			//small
-		{"null", [&](joy_stack& S) { if (S.has("null", {joy_t::nullable_t})) { S.push(token_t(null(S.top()), joy_t::bool_t)); S.popd(); } }},
+		{"small", [&](joy_stack& S) { if (S.has("small", {joy_t::nullable_t})) { small(S); } }},
+		{"null", [&](joy_stack& S) { if (S.has("null", {joy_t::nullable_t})) { S.push(token_t(null(S.top()), joy_t::bool_t)); } }},
 		//type tests
 		{"integer", [&](joy_stack& S) { if (S.has("integer", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::int_t) ? true : false, joy_t::bool_t)); } }},
 		{"char", [&](joy_stack& S) { if (S.has("char", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::char_t) ? true : false, joy_t::bool_t)); } }},

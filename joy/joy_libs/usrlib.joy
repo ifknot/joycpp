@@ -24,4 +24,6 @@ END
 
 # "tests/testlib.joy" include.
 
-"joy_libs/mathlib.joy" include
+"joy_libs/mathlib.joy" include.
+
+newstack.

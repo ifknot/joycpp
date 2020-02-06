@@ -74,6 +74,12 @@ namespace joy {
     // Math operators core C++ performance 
 
     /**
+    * small : X -> B
+    * Tests whether aggregate X has 0 or 1 members, or numeric 0 or 1.
+    */
+    void small(joy_stack& S);
+
+    /**
      * pow : F G -> H
      * H is F raised to the Gth power
      */

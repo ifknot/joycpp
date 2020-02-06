@@ -1,4 +1,4 @@
-MODULE math
+#MODULE math
 
 _mathlib == true;
 
@@ -11,6 +11,9 @@ PUBLIC
 
 sqrt ==	24 [dup] times
 		24 [dup swapd dup dup * swap 2.0 * rotate - swap / -] times;
+
+#factorial
+! == [null][succ][dup pred][i *] genrec;
 
 END
 

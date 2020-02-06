@@ -21,6 +21,27 @@ namespace joy {
         }
     }
 
+    void small(joy_stack& S) {
+        const auto [lexeme, type] = S.top();
+        switch (type) {
+        case joy_t::char_t: 
+            S.push(token_t{ std::any_cast<char>(lexeme) == 0 || std::any_cast<char>(lexeme) == 1, joy_t::bool_t });
+            break;
+        case joy_t::int_t:
+            S.push(token_t{ std::any_cast<int>(lexeme) == 0 || std::any_cast<int>(lexeme) == 1, joy_t::bool_t });
+            break;
+        case joy_t::double_t:
+            S.push(token_t{ std::any_cast<double>(lexeme) == 0 || std::any_cast<double>(lexeme) == 1, joy_t::bool_t });
+            break;
+        case joy_t::quote_t:
+        case joy_t::list_t:
+            S.push(token_t{ std::any_cast<joy_stack>(lexeme).size() == 0 || std::any_cast<joy_stack>(lexeme).size() == 1, joy_t::bool_t });
+            break;
+        default:
+            break;
+        }
+    }
+
     void pow(joy_stack& S) {
         double base{ 0 }, exponent{ 0 };
         token_t H;

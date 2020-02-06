@@ -78,7 +78,7 @@ namespace joy {
 	* The following will step through the members of the second list and swons them into the initially empty first list.
 	* []  [2 8 3 6 5]  [swons]  step
 	* The effect is to reverse the non-empty list, yielding [5 6 3 8 2].
-	*
+	* 
 	* [a b ...] [p]│step     →     │a p b p ...
 	* step: A [P] -> ...
 	* Sequentially putting members of aggregate A onto a stack M
@@ -122,4 +122,54 @@ namespace joy {
 		S.push(M.top());  //push [N] as the result
 	}
 
+	/**
+	* The genrec combinator takes four program parameters in addition to whatever data parameters it needs. 
+	* Fourth from the top is an if-part, followed by a then-part. 
+	* If the if-part yields true, then the then-part is executed and the combinator terminates. 
+	* The other two parameters are the rec1-part and the rec2part. 
+	* If the if-part yields false, the rec1-part is executed. 
+	* Following that the four program parameters and the combinator are again pushed onto the stack bundled up in a quoted form. 
+	* Then the rec2-part is executed, where it will find the bundled form. 
+	* Typically it will then execute the bundled form, either with i or with app2, or some other combinator.
+	*
+	* genrec : [B][T][R1][R2] ->...
+	* Executes B, if that yields true executes T.Else executes R1 and then[[B][T][R1][R2] genrec] R2.
+	*/
+	template<typename parser_t>
+	void genrec(joy_stack& S, parser_t& parse) {
+		auto R2 = S.top();
+		S.pop();
+		auto R1 = S.top();
+		S.pop();
+		auto T = S.top();
+		S.pop();
+		auto B = S.top();
+		i(S, parse); // execute the B quote
+		assert(S.top().second == joy_t::bool_t);
+		if (!std::any_cast<bool>((S.top().first))) {
+			S.pop();
+			S.push(R1);
+			i(S, parse);  // If the if-part yields false, the rec1-part is executed.
+			{ // push the 4 program parameters and genrec
+				
+				joy_stack M;  // temporary stack
+				M.push(make_token(std::string("genrec"), joy_t::cmd_t));
+				M.push(R2);
+				M.push(R1);
+				M.push(T);
+				M.push(B);
+				M.stack(); 
+				S.push(M.top()); // push quoted form
+			}
+			S.push(R2);
+			i(S, parse);
+		}
+		else { //If the if-part yields true, then the then-part is executed and the combinator terminates. 
+			S.pop();
+			S.push(T);
+			//parse.dump();
+			i(S, parse); // execute the T quote
+		}
+	}
+	
 }
