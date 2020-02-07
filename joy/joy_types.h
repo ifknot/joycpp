@@ -91,7 +91,10 @@ namespace joy {
         }
         catch (const std::bad_any_cast & e) {
             std::cerr << BOLDRED
-                << "joy_cast - the typeid of the requested T does not match the token lexeme!\n";
+                << "joy_cast - the typeid of the requested type T does not match the token lexeme type_id!\n"
+                << "(possible std::literals::string_literals::operator\"\"s omission?)"
+                << RESET;
+            throw e;
         }
     }
 
