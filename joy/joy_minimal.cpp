@@ -4,7 +4,7 @@
 namespace joy {
 
     void uncons(joy_stack& S) {
-        auto A = std::any_cast<joy_stack>(S.top().first);
+        auto A = joy_cast<joy_stack>(S.top());
         if (A.size()) {
             auto t = S.top().second;
             S.pop();
@@ -22,7 +22,7 @@ namespace joy {
         S.pop();
         auto B = S.top();
         S.pop();
-        if (std::any_cast<bool>(B.first)) {
+        if (std::any_cast<bool>(B)) {
             S.push(T);
         }
         else {

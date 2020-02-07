@@ -7,6 +7,15 @@
 #include <stdexcept>
 #include <regex>
 #include <cassert>
+#include <iostream>
+
+#include "colour_codes.h"
+
+/**
+* access std::literals::string_literals::operator""s
+* to ensure correct std:;string type in make_token
+*/
+using namespace std::string_literals;
 
 /**
 * Joy is a functional programming language which is not based on the application of functions to arguments but on the composition of functions.
@@ -64,6 +73,8 @@ namespace joy {
 
     /**
     * Constructs a token object from a type T
+    * @note ensure std::string literals are specified using the ""s operator
+    * e.g. make_token("genrec"s, joy_t::cmd_t));
     */
     template<typename T>
     inline token_t make_token(T arg, joy_t type) {
@@ -71,11 +82,31 @@ namespace joy {
     }
 
     /**
-    * Constructs a token object from a std::any cast to type T
+    * cast a token pair's first to a specific type
     */
     template<typename T>
-    inline token_t make_token(std::any arg, joy_t type) {
-        return std::make_pair(std::any_cast<T>(arg, type));
+    T joy_cast(token_t& token) {
+        try {
+            return std::any_cast<T>(token.first);
+        }
+        catch (const std::bad_any_cast & e) {
+            std::cerr << BOLDRED
+                << "joy_cast - the typeid of the requested T does not match the token lexeme!\n";
+        }
+    }
+
+    /**
+    * cast a token pair's first to a specific type
+    */
+    template<typename T>
+    T joy_cast(const token_t& token) {
+        try {
+            return std::any_cast<T>(token.first);
+        }
+        catch (const std::bad_any_cast & e) {
+            std::cerr << BOLDRED
+                << "joy_cast - the typeid of the requested T does not match the token lexeme!\n";
+        }
     }
 
     /**

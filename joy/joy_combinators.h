@@ -29,7 +29,7 @@ namespace joy {
 	*/
 	template<typename parser_t>
 	void i(joy_stack& S, parser_t& parse) {
-		auto P = std::any_cast<joy_stack&>(S.top().first);
+		auto P = joy_cast<joy_stack&>(S.top());
 		S.pop();
 		parse(P, S);
 	}
@@ -63,9 +63,9 @@ namespace joy {
 	*/
 	template<typename parser_t>
 	void times(joy_stack& S, parser_t& parse) {
-		auto P = std::any_cast<joy_stack&>(S.top().first); //get the program
+		auto P = joy_cast<joy_stack&>(S.top()); //get the program
 		S.pop();
-		auto n = std::any_cast<int>(S.top().first); //get n
+		auto n = joy_cast<int>(S.top()); //get n
 		S.pop();
 		while (n--) {
 			parse(P, S);
@@ -86,9 +86,9 @@ namespace joy {
 	*/
 	template<typename parser_t>
 	void step(joy_stack& S, parser_t& parse) {
-		auto P = std::any_cast<joy_stack&>(S.top().first); //get the program
+		auto P = joy_cast<joy_stack&>(S.top()); //get the program
 		S.pop();
-		auto A = std::any_cast<joy_stack&>(S.top().first); //get the aggregate
+		auto A = joy_cast<joy_stack&>(S.top()); //get the aggregate
 		S.pop();
 		joy_stack M;
 		for (auto a : A) {
@@ -146,14 +146,14 @@ namespace joy {
 		auto B = S.top();
 		i(S, parse); // execute the B quote
 		assert(S.top().second == joy_t::bool_t);
-		if (!std::any_cast<bool>((S.top().first))) {
+		if (!joy_cast<bool>((S.top()))) {
 			S.pop();
 			S.push(R1);
 			i(S, parse);  // If the if-part yields false, the rec1-part is executed.
 			{ // push the 4 program parameters and genrec
 				
 				joy_stack M;  // temporary stack
-				M.push(make_token(std::string("genrec"), joy_t::cmd_t));
+				M.push(make_token("genrec"s, joy_t::cmd_t));
 				M.push(R2);
 				M.push(R1);
 				M.push(T);

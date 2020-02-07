@@ -59,7 +59,7 @@ namespace joy {
 	}
 
 	bool parse_regular::call(token_t& token, joy_stack& S) {
-		auto it = regular_lambda_map.find(std::any_cast<std::string>(token.first));
+		auto it = regular_lambda_map.find(joy_cast<std::string>(token));
 		if (it != regular_lambda_map.end()) {
 			(it->second)(S);
 			return true;

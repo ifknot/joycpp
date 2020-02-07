@@ -134,8 +134,8 @@ namespace joy {
 		{"rollup", [&](joy_stack& S) { S.rollup(); }},
 		{"rolldown", [&](joy_stack& S) { S.rolldown(); }},
 		//ascii
-		{"ord", [&](joy_stack& S) { if (S.has("ord", {joy_t::char_t})) { S.push(token_t(static_cast<int>(std::any_cast<char>(S.top().first)), joy_t::int_t)); } }},
-		{"chr", [&](joy_stack& S) { if (S.has("chr", {joy_t::int_t})) { S.push(token_t(static_cast<char>(std::any_cast<int>(S.top().first)), joy_t::char_t)); } }},
+		{"ord", [&](joy_stack& S) { if (S.has("ord", {joy_t::char_t})) { S.push(token_t(static_cast<int>(joy_cast<char>(S.top())), joy_t::int_t)); } }},
+		{"chr", [&](joy_stack& S) { if (S.has("chr", {joy_t::int_t})) { S.push(token_t(static_cast<char>(joy_cast<int>(S.top())), joy_t::char_t)); } }},
 		//math
 		{"+", [&](joy_stack& S) {
 			if (S.has("+", {joy_t::numeric_t, joy_t::numeric_t})) {
@@ -188,7 +188,7 @@ namespace joy {
 		//aggregates
 		{"size", [&](joy_stack& S) { size(S); }},
 		//environment
-		{"helpdetail", [&](joy_stack& S) { if (S.has("helpdetail", {joy_t::quote_t})) { helpdetail(std::any_cast<joy_stack&>(S.top().first), joy_manual, io); } }},
+		{"helpdetail", [&](joy_stack& S) { if (S.has("helpdetail", {joy_t::quote_t})) { helpdetail(joy_cast<joy_stack&>(S.top()), joy_manual, io); } }},
 		{"manual", [&](joy_stack& S) { manual(joy_manual, io); }},
 		{"quit", [&](joy_stack& S) { quit(); io << ". . ."; }},
 		};

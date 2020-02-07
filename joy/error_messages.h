@@ -40,6 +40,7 @@ namespace joy {
 		{XTYPEMISMATCH, "correct type "},
 		{XNOCONVERSION, "Joy03 syntax "},
 		{XNOOPENSIGIL, "opening sigil "},
+		{XBADCAST, "matching type "},
 		{XJOYERROR, "run time error: "},
 		{0, "needed for "}
 	};

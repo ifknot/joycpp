@@ -197,17 +197,17 @@ namespace joy {
 
 		void push(value_type&& val);
 
-		/**
-		* Converts a joy token's std::any to std::string as defined by the tokens joy type for all joy types
-		* May throw std::bad_alloc from the std::string constructor.
-		*/
-		static std::string to_string(const token_t& token);
-
-		/**
-		* Converts a joy stack to std::string as defined by its tokens joy type for all joy types
-		* May throw std::bad_alloc from the std::string constructor.
-		*/
-		static std::string to_string(const joy_stack& stack);
-
 	};
+
+	/**
+   * Converts a joy token's std::any to std::string as defined by the tokens joy type for all joy types
+   * May throw std::bad_alloc from the std::string constructor.
+   */
+	std::string to_string(const token_t& token);
+
+	/**
+	* Converts a joy stack to std::string as defined by its tokens joy type for all joy types
+	* May throw std::bad_alloc from the std::string constructor.
+	*/
+	std::string to_string(const joy_stack& stack);
 }

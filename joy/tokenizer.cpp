@@ -99,7 +99,7 @@ namespace joy {
 	joy_stack tokenizer::tokenize_period(joy_stack&& tokens) {
 		joy_stack result;
 		for (const auto& token : tokens) {
-			auto lexeme = std::any_cast<std::string>(token.first);
+			auto lexeme = joy_cast<std::string>(token);
 			if (lexeme.size() > 1 && lexeme[0] != '\'' && lexeme[lexeme.size() - 1] == '.') { 
 				//split into 2 tokens - lexeme and its trailing '.'
 				result.push_back(make_token(lexeme.substr(0, lexeme.size() - 1), joy_t::undef_t));
@@ -114,7 +114,7 @@ namespace joy {
 
 	void tokenizer::rec_char_split(token_t token, joy_stack& tokens, char ch, joy_t char_type) {
 		if (jundef(token)) {
-			auto lexeme = std::any_cast<std::string>(token.first);
+			auto lexeme = joy_cast<std::string>(token);
 			auto i = lexeme.find(ch);
 			if (i < lexeme.size()) { 
 				tokens.push_back(make_token(lexeme.substr(0, i), joy_t::undef_t));
@@ -136,7 +136,7 @@ namespace joy {
 		auto k1 = open_sigil.size();
 		auto k2 = close_sigil.size();
 		if (jundef(token)) {
-			auto lexeme = std::any_cast<std::string>(token.first);
+			auto lexeme = joy_cast<std::string>(token);
 			auto i = lexeme.find(open_sigil);
 			if (i < lexeme.size()) { //found an opening sigil
 				auto j = lexeme.find(close_sigil, i + k1);
@@ -199,7 +199,7 @@ namespace joy {
 		joy_stack result;
 		for (const auto& t : tokens) { //examine all the tokens
 			if (t.second == joy_t::undef_t) { //check only undef tokens 
-				std::stringstream ss(std::any_cast<std::string>(t.first));
+				std::stringstream ss(joy_cast<std::string>(t));
 				std::string lexeme;
 				while (ss >> lexeme) { //current token has lexemes separated by white space
 					result.push_back(make_token(lexeme, joy_t::undef_t));
@@ -215,7 +215,7 @@ namespace joy {
 	joy_stack tokenizer::tokenize_simple_types(joy_stack&& tokens) {
 		for (auto& token : tokens) {
 			auto& [pattern, type] = token;
-			auto match = std::any_cast<std::string>(pattern);
+			auto match = joy_cast<std::string>(token);
 			if (type == joy_t::string_t) { //convert std::string into a joy_stack of char tokens
 				joy_stack s;
 				for (auto c : match) {

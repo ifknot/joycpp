@@ -37,7 +37,7 @@ namespace joy {
 	}
 
 	bool parse_context_free::call(token_t& token, joy_stack& S) {
-		auto it = context_free_lambda_map.find(std::any_cast<std::string>(token.first));
+		auto it = context_free_lambda_map.find(joy_cast<std::string>(token));
 		if (it != context_free_lambda_map.end()) {
 			(it->second)(S);
 			return true;
@@ -70,7 +70,7 @@ namespace joy {
 			return false;
 			break;
 		default:
-			throw std::runtime_error("unrecognized state " + to_string(state_stack.top()));
+			throw std::runtime_error("unrecognized state " + state_to_string(state_stack.top()));
 			return false; 
 		}
 	}
@@ -83,14 +83,16 @@ namespace joy {
 		parse_regular::no_conversion(tokens);
 	}
 
-	std::string parse_context_free::to_string(const state_t match) {
-		assert(state_to_string.count(match));
-		return state_to_string[match];
+	
+
+	std::string parse_context_free::state_to_string(const state_t match) {
+		assert(state_map_string.count(match));
+		return state_map_string[match];
 	}
 
-	std::string parse_context_free::to_colour(const state_t match) {
-		assert(state_to_colour.count(match));
-		return state_to_colour[match];
+	std::string parse_context_free::state_to_colour(const state_t match) {
+		assert(state_map_colour.count(match));
+		return state_map_colour[match];
 	}
 
 	joy_stack parse_context_free::tokenize_context_free_types(joy_stack&& tokens) {
@@ -112,7 +114,7 @@ namespace joy {
 		}
 		else {
 			assert(jgroup(S.top()));
-			nest_list(std::any_cast<joy_stack&>(S.top().first), depth - 1);
+			nest_list(joy_cast<joy_stack&>(S.top()), depth - 1);
 		}
 	}
 
@@ -127,7 +129,7 @@ namespace joy {
 		}
 		else {
 			assert(jgroup(S.top())); 
-			nest_token(token, std::any_cast<joy_stack&>(S.top().first), S.top().second, depth - 1);
+			nest_token(token, joy_cast<joy_stack&>(S.top()), S.top().second, depth - 1);
 		}
 	}
 

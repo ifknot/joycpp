@@ -102,12 +102,12 @@ namespace joy {
 		* Converts a parser state type to its string name ( parse, quote, list, set, string)
 		* May throw std::bad_alloc from the std::string constructor.
 		*/
-		std::string to_string(const state_t match);
+		std::string state_to_string(const state_t match);
 
 		/**
 		* convert a state to its colour code
 		*/
-		std::string to_colour(const state_t match);
+		std::string state_to_colour(const state_t match);
 
 		inline void dump() {
 			print_stack(root_stack, io);
@@ -218,7 +218,7 @@ namespace joy {
 		/**
 		* map context free parser states to text
 		*/
-		std::map<state_t, std::string> state_to_string = {
+		std::map<state_t, std::string> state_map_string = {
 			{state_t::parse, " ready"},
 			{state_t::quote, " quote"},
 			{state_t::list, " list"},
@@ -228,7 +228,7 @@ namespace joy {
 		/**
 		* map states to colour code
 		*/
-		std::map<state_t, std::string> state_to_colour = {
+		std::map<state_t, std::string> state_map_colour = {
 			{state_t::parse, BOLDWHITE},
 			{state_t::quote, BOLDYELLOW},
 			{state_t::list, BOLDCYAN},

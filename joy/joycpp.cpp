@@ -19,13 +19,13 @@ void run() { // exec loop
 
         if (parser.root_parse(parser.tokenize(io.readline()))) {
             io.ok();
-            io.colour(parser.to_colour(parser.state()));
-            io << parser.to_string(parser.state());
+            io.colour(parser.state_to_colour(parser.state()));
+            io << parser.state_to_string(parser.state());
         }
         else {
             io.ok();
-            io.colour(parser.to_colour(parser.state()));
-            io << parser.to_string(parser.state());
+            io.colour(parser.state_to_colour(parser.state()));
+            io << parser.state_to_string(parser.state());
         }
         
     }

@@ -69,7 +69,6 @@ namespace joy {
 		
 	protected:
 
-		//TODO: fix nested line numbers
 		size_t line_number{ 0 };
 		std::stack<size_t> line_number_stack;
 

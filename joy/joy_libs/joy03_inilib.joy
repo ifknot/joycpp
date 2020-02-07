@@ -94,8 +94,8 @@ _inilib == true;
     # joy03
     ifte == [ [stack] dip infra first ] dipd branch; #[B] [T] [F] -> ... Executes B. If that yields true, then executes T else executes F.
     app1 == i; # 	X [P] -> R Executes P, pushes result R on stack without X.
-    app2 == dup rollup i [i] dip; # Obsolescent. == unary2
-    app3 == dup rollup i [app2] dip; # Obsolescent. == unary3
+        #app2 == dup rollup i [i] dip; # Obsolescent. == unary2
+        #app3 == dup rollup i [app2] dip; # Obsolescent. == unary3
 
     fold == swapd step; # [a b ...] i [f]|fold  ->   [f/i,a b ...]|
 

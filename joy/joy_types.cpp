@@ -35,7 +35,7 @@ namespace joy {
 
 	void convert_simple(token_t& token) {
 		auto& [pattern, type] = token;
-		auto match = std::any_cast<std::string>(pattern);	
+		auto match = joy_cast<std::string>(token);	
 		if (jlogical(match)) {
 			pattern = (match == "true") ? true : false;
 			type = joy_t::bool_t;

@@ -6,12 +6,12 @@ namespace joy {
         S.swap();
         auto X = S.top();
         S.pop();
-        auto& A = std::any_cast<joy_stack&>(S.top().first);
+        auto& A = joy_cast<joy_stack&>(S.top());
         A.insert(A.begin(), X);
     }
 
     void reverse(joy_stack& stack) {
-        auto& A = std::any_cast<joy_stack&>(stack.top().first);
+        auto& A = joy_cast<joy_stack&>(stack.top());
         std::reverse(A.begin(), A.end());
     }
 
@@ -51,26 +51,26 @@ namespace joy {
         S.pop();
         switch (G.second) {
         case joy_t::char_t: 
-            exponent = std::any_cast<char>(G.first);
+            exponent = joy_cast<char>(G);
             break;
         case joy_t::int_t: 
-            exponent = std::any_cast<int>(G.first);
+            exponent = joy_cast<int>(G);
             break;
         case joy_t::double_t: 
-            exponent = std::any_cast<double>(G.first);
+            exponent = joy_cast<double>(G);
             break;
         default:
             break;
         }
         switch (F.second) {
         case joy_t::char_t: 
-            base = std::any_cast<char>(F.first);
+            base = joy_cast<char>(F);
             break;
         case joy_t::int_t: 
-            base = std::any_cast<int>(F.first);
+            base = joy_cast<int>(F);
             break;
         case joy_t::double_t: 
-            base = std::any_cast<double>(F.first);
+            base = joy_cast<double>(F);
             break;
         default:
             break;
@@ -115,14 +115,14 @@ namespace joy {
 	}
 
 	void putch(joy_stack& S, io_device& io) {
-        auto ch = static_cast<char>(std::any_cast<char>(S.top().first));
+        auto ch = static_cast<char>(joy_cast<char>(S.top()));
         auto s = std::string{ ch };
         io.put_string(s);
     }
 
     void print_top(const joy_stack& S, io_device& io) {
         io.colour(GREEN);
-        io << joy_stack::to_string(S.top());
+        io << to_string(S.top());
     }
 
     void print_stack(const joy_stack& S, io_device& io) {
@@ -130,7 +130,7 @@ namespace joy {
         std::string dump{ ">" + std::to_string(S.size()) + "<\n" };
         for (size_t i{ 0 }; i < S.size(); ++i) {
             const auto& t = S.sat(i);
-            dump += joy_stack::to_string(t) + "\n";
+            dump += to_string(t) + "\n";
         }
         io << dump;
     }
@@ -150,7 +150,7 @@ namespace joy {
 
     void helpdetail(const joy_stack& S, std::map<std::string, std::string>& joy_manual, io_device& io) {
         io.colour(YELLOW);
-        for (const auto [command, type] : S) {
+        for (const auto& [command, type] : S) {
             assert(type == joy_t::lambda_t);
             auto match = std::any_cast<std::string>(command);
             auto it = joy_manual.find(match);

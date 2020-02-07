@@ -15,7 +15,7 @@ namespace joy {
 
 	void joy_stack::unstack() {
 		if(has("unstack", { joy_t::sequence_t })) {
-		auto S = std::any_cast<joy_stack>(top().first);
+		auto S = joy_cast<joy_stack>(top());
 		std::reverse(S.begin(), S.end());
 		*this = S;
 	}
@@ -198,44 +198,44 @@ namespace joy {
 		}
 	}
 
-	std::string joy_stack::to_string(const token_t& token) {
+	std::string to_string(const token_t& token) {
 		std::string result;
 		switch (token.second) {
 		case joy::joy_t::list_t:
 		case joy::joy_t::quote_t:
-			result += "[ " + joy_stack::to_string(std::any_cast<joy_stack>(token.first)) + "]";
+			result += "[ " + to_string(joy_cast<joy_stack>(token)) + "]";
 			break;
 		case joy::joy_t::set_t:
 			break;
 		case joy::joy_t::string_t: {
 			result += "\"";
-			const auto tokens = std::any_cast<joy_stack>(token.first);
+			const auto tokens = joy_cast<joy_stack>(token);
 			for (auto t : tokens) {
-				result.push_back(std::any_cast<char>(t.first));
+				result.push_back(joy_cast<char>(t));
 			}
 			result += "\"";
 			break;
 		}
 		case joy::joy_t::bool_t:
-			result += (std::any_cast<bool>(token.first)) ? "true" : "false";
+			result += (joy_cast<bool>(token)) ? "true" : "false";
 			break;
 		case joy::joy_t::char_t:
-			result += "'" + std::string{ std::any_cast<char>(token.first) };
+			result += "'" + std::string{ joy_cast<char>(token) };
 			break;
 		case joy::joy_t::int_t:
-			result += std::to_string(std::any_cast<int>(token.first));
+			result += std::to_string(joy_cast<int>(token));
 			break;
 		case joy::joy_t::double_t:
-			result += std::to_string(std::any_cast<double>(token.first));
+			result += std::to_string(joy_cast<double>(token));
 			break;
 		default:
-			result += std::any_cast<std::string>(token.first);
+			result += joy_cast<std::string>(token);
 			break;
 		}
 		return result;// +" " + joy::to_string(token.second);
 	}
 
-	std::string joy_stack::to_string(const joy_stack& stack) {
+	std::string to_string(const joy_stack& stack) {
 		std::string result;
 		for (const auto& token : stack) {
 			result += to_string(token) + " ";

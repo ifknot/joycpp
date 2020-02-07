@@ -145,7 +145,7 @@ namespace joy {
 		dictionary_t joy_lambda_map{
 			{"abort", [&](joy_stack& S) {
 				if (S.has("abort", {joy_t::bool_t})) {
-					if (!std::any_cast<bool>(S.top().first)) {
+					if (!joy_cast<bool>(S.top())) {
 						joy_state = joy_state_t::abort;
 					}
 				}
@@ -156,7 +156,7 @@ namespace joy {
 			}},
 			{"include", [&](joy_stack& S) { 
 				if (S.has("include", {joy_t::string_t})) {
-					auto path = joy_stack::to_string(S.top());
+					auto path = to_string(S.top());
 					S.pop();
 					include(path.substr(1, path.size() - 2));
 				}
@@ -175,7 +175,7 @@ namespace joy {
 				}
 			}},
 			{"body", [&](joy_stack& S) {
-				auto match = joy_stack::to_string(S.top());
+				auto match = to_string(S.top());
 				match = match.substr(1, match.size() - 2);
 				S.pop();
 				auto jt = public_joy_joy_map.find(match);
@@ -205,7 +205,7 @@ namespace joy {
 			}},
 			{"setautoput", [&](joy_stack& S) { 
 				if (S.has("setautoput", {joy_t::int_t})) { 
-					auto state = std::any_cast<int>(S.top().first);
+					auto state = joy_cast<int>(S.top());
 					S.pop();
 					switch (state) {
 					case 0:
@@ -224,7 +224,7 @@ namespace joy {
 			}},
 			{"setecho", [&](joy_stack& S) { 
 				if (S.has("setecho", {joy_t::int_t})) {
-					auto state = std::any_cast<int>(S.top().first);
+					auto state = joy_cast<int>(S.top());
 					S.pop();
 					switch (state) {
 					case 0:

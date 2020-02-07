@@ -38,18 +38,18 @@ namespace joy {
 	}
 
 	bool parse_joy::call(token_t& token, joy_stack& S) {
-		auto it = joy_lambda_map.find(std::any_cast<std::string>(token.first));
+		auto it = joy_lambda_map.find(joy_cast<std::string>(token));
 		if (it != joy_lambda_map.end()) {
 			(it->second)(S);
 			return true;
 		}
-		auto jt = public_joy_joy_map.find(std::any_cast<std::string>(token.first));
+		auto jt = public_joy_joy_map.find(joy_cast<std::string>(token));
 		if (jt != public_joy_joy_map.end()) {
 			joy_stack tokens;
 			tokens = tokenize(jt->second);
 			return parse_context_free::parse(tokens, S);
 		}
-		jt = private_joy_joy_map.find(std::any_cast<std::string>(token.first));
+		jt = private_joy_joy_map.find(joy_cast<std::string>(token));
 		if (jt != private_joy_joy_map.end()) {
 			joy_stack tokens;
 			tokens = tokenize(jt->second);
@@ -65,7 +65,7 @@ namespace joy {
 		case joy_state_t::parse: 
 			switch (token.second) {
 			case joy_t::undef_t:
-				command = module_name + std::any_cast<std::string>(token.first);
+				command = module_name + joy_cast<std::string>(token);
 				joy_state = joy_state_t::candidate;
 				return true;
 			case joy_t::cmd_t:
@@ -103,12 +103,12 @@ namespace joy {
 				joy_state = joy_state_t::parse;
 			}
 			else {
-				definition += " " + joy_stack::to_string(token);
+				definition += " " + to_string(token);
 			}
 			return true;
 		case joy_state_t::module:
 			assert(jundef(token));
-			module_name = std::any_cast<std::string>(token.first) + ".";
+			module_name = joy_cast<std::string>(token) + ".";
 			joy_state = joy_state_t::parse;
 			return true;
 		default:
@@ -161,7 +161,7 @@ namespace joy {
 		for (const auto& t : tokens) {
 			if (t.second == joy_t::undef_t) {
 				valid = false;
-				auto culprit = std::any_cast<std::string>(t.first);
+				auto culprit = joy_cast<std::string>(t);
 				error(XNOCONVERSION, "command lookup >" + culprit + "< is not recognized");
 			}
 		}
