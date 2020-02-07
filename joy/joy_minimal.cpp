@@ -22,7 +22,7 @@ namespace joy {
         S.pop();
         auto B = S.top();
         S.pop();
-        if (std::any_cast<bool>(B)) {
+        if (joy_cast<bool>(B)) {
             S.push(T);
         }
         else {

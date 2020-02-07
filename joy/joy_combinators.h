@@ -54,6 +54,13 @@ namespace joy {
 	}
 
 	/**
+	* The unary2 combinator expects a program on top of the stack and below that two values. 
+	* It applies the program to the two values.
+	* unary2 : X1 X2[P] -> R1 R2
+	* Executes P twice, with X1 and X2 on top of the stack .Returns the two values R1 and R2.
+	*/
+
+	/**
 	* The times unary combinator expects a numeric value below its quotation parameter and executes its quotation parameter as many times as indicated by the numeric value.
 	* If the value is zero or less, then the quotation is not executed at all.
 	*
