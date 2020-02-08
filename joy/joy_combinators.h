@@ -54,13 +54,6 @@ namespace joy {
 	}
 
 	/**
-	* The unary2 combinator expects a program on top of the stack and below that two values. 
-	* It applies the program to the two values.
-	* unary2 : X1 X2[P] -> R1 R2
-	* Executes P twice, with X1 and X2 on top of the stack .Returns the two values R1 and R2.
-	*/
-
-	/**
 	* The times unary combinator expects a numeric value below its quotation parameter and executes its quotation parameter as many times as indicated by the numeric value.
 	* If the value is zero or less, then the quotation is not executed at all.
 	*
@@ -140,7 +133,7 @@ namespace joy {
 	* Typically it will then execute the bundled form, either with i or with app2, or some other combinator.
 	*
 	* genrec : [B][T][R1][R2] ->...
-	* Executes B, if that yields true executes T.Else executes R1 and then[[B][T][R1][R2] genrec] R2.
+	* Executes B, if that yields true executes T. Else executes R1 and then [[B][T][R1][R2] genrec] R2.
 	*/
 	template<typename parser_t>
 	void genrec(joy_stack& S, parser_t& parse) {
@@ -151,15 +144,14 @@ namespace joy {
 		auto T = S.top();
 		S.pop();
 		auto B = S.top();
-		i(S, parse); // execute the B quote
+		i(S, parse);			// Executes B,
 		assert(S.top().second == joy_t::bool_t);
 		if (!joy_cast<bool>((S.top()))) {
 			S.pop();
-			S.push(R1);
-			i(S, parse);  // If the if-part yields false, the rec1-part is executed.
-			{ // push the 4 program parameters and genrec
-				
-				joy_stack M;  // temporary stack
+			S.push(R1);			// Else executes R1 and then...
+			i(S, parse);  
+			{					// [[B][T][R1][R2] genrec]
+				joy_stack M;	// temporary stack to build [[B][T][R1][R2] genrec]
 				M.push(make_token("genrec"s, joy_t::cmd_t));
 				M.push(R2);
 				M.push(R1);
@@ -169,13 +161,50 @@ namespace joy {
 				S.push(M.top()); // push quoted form
 			}
 			S.push(R2);
-			i(S, parse);
+			i(S, parse);		// R2
 		}
-		else { //If the if-part yields true, then the then-part is executed and the combinator terminates. 
+		else {					// If B yields true,  
+			S.pop();			//
+			S.push(T);			//
+			i(S, parse);		// executes T and terminates.
+		}
+	}
+
+	/**
+	* The linrec combinator also takes four program parameters and is otherwise very similar to the genrec combinator. 
+	* The essential difference is that the bundled up quotation is immediately called before the rec2-part. 
+	* Consequently it can only be used for linear recursion. 
+	*
+	* linrec : [B][T][R1][R2] ->...
+	* Executes B. If that yields true, executes T. Else executes R1, recurses, executes R2.
+	*/
+	template<typename parser_t>
+	void linrec(joy_stack& S, parser_t& parse) {
+		auto R2 = S.top();
+		S.pop();
+		auto R1 = S.top();
+		S.pop();
+		auto T = S.top();
+		S.pop();
+		auto B = S.top();
+		i(S, parse);			// Executes B.
+		assert(S.top().second == joy_t::bool_t);
+		if (!joy_cast<bool>((S.top()))) {
 			S.pop();
+			S.push(R1);
+			i(S, parse);		// Else executes R1,
+			S.push(B);
 			S.push(T);
-			//parse.dump();
-			i(S, parse); // execute the T quote
+			S.push(R1);
+			S.push(R2);
+			linrec(S, parse);	// recurses,
+			S.push(R2);			//
+			i(S, parse);		// executes R2
+		}
+		else {					// If B yields true,   
+			S.pop();			//
+			S.push(T);			//
+			i(S, parse);		// executes T and terminates.
 		}
 	}
 	

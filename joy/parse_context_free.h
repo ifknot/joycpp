@@ -213,6 +213,7 @@ namespace joy {
 		{"i", [&](joy_stack& S) { if (S.has("i", {joy_t::group_t})) { i(S, *this); } }},
 		// recursive definitions.
 		{"genrec", [&](joy_stack& S) { if (S.has("genrec", {joy_t::quote_t, joy_t::quote_t, joy_t::quote_t, joy_t::quote_t})) { genrec(S, *this); } }},
+		{"linrec", [&](joy_stack& S) { if (S.has("linrec", {joy_t::quote_t, joy_t::quote_t, joy_t::quote_t, joy_t::quote_t})) { linrec(S, *this); } }},
 		};
 
 		/**

@@ -16,8 +16,11 @@ PUBLIC
 
 sqrt == [float][_sqrt]["sqrt expects float" putchars newline] ifte;
 
-# factorial
+# factorial using genrec
 ! == [null][succ][dup pred][i *] genrec;
+
+# factorial using genrec
+l - fac == [null][succ][dup pred][*] linrec;
 
 # calculate the nth fibonacci value
 fib == [small][id][pred dup pred][app2 + ] genrec;
