@@ -14,18 +14,31 @@ _sqrt == 24 [dup] times
 
 PUBLIC
 
-sqrt == [float][_sqrt]["sqrt expects float" putchars newline] ifte;
+    # constants
+    
+    e == 2.718281828;
+    pi == 3.14159265359;
 
-# factorial using genrec
-! == [null][succ][dup pred][i *] genrec;
+    # functions
+    
+    sqrt == [float][_sqrt]["sqrt expects float" putchars newline] ifte;
 
-#b-qsort == [small][id][uncons[> ] split][swapd cons concat] binrec;
+    # factorial using genrec
+    ! == [null][succ][dup pred][i *] genrec;
 
+    exp ==
+        e swap
+        [null]
+        [pop pop 1]
+        [pred dupd]
+        [*]
+        linrec;
 
-
-# calculate the nth fibonacci value
-fib == [small][id][pred dup pred][app2 + ] genrec;
+    # calculate the nth fibonacci value
+    fib == [small][id][pred dup pred][app2 + ] genrec;
 
 END
 
 "mathlib is loaded"  putchars newline.
+
+#b - qsort == [small][id][uncons[> ] split][swapd cons concat] binrec;

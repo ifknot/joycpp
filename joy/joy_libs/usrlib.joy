@@ -22,7 +22,7 @@ END
 
 "usrlib is loaded"  putchars newline.
 
-"tests/testlib.joy" include.
+# "tests/testlib.joy" include.
 
 "joy_libs/mathlib.joy" include.
 
