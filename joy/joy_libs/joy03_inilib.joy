@@ -120,6 +120,8 @@ _inilib == true;
     third == rest second;
     quote == [] cons;
     leaf == list not;
+
+    # c++ core performance built - ins:
     # null
 
 (* - - - - - IO Operators  - - - - *)

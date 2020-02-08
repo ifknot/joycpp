@@ -2,15 +2,19 @@
 
 _mathlib == true;
 
-PUBLIC
+# PRIVATE - todo: fix: enable public to use private 
 
 (*
  * Newton Raphson approx. method square root
  * 24 iterations should get good enough approximation - TODO: check the abs difference
  *)
 
-sqrt ==	24 [dup] times
-		24 [dup swapd dup dup * swap 2.0 * rotate - swap / -] times;
+_sqrt == 24 [dup] times
+		 24 [dup swapd dup dup * swap 2.0 * rotate - swap / -] times.
+
+PUBLIC
+
+sqrt == [float][_sqrt]["sqrt expects float" putchars newline] ifte;
 
 # factorial
 ! == [null][succ][dup pred][i *] genrec;

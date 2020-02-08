@@ -36,7 +36,7 @@ _extra_inilib == true;
 
 (* - - - - - IO Operators  - - - - *)
     
-    newline == LF putch;
+    newline == LF putch pop;
     putln == put newline;
     space == '\032 putch;
     bell == BEL putch;

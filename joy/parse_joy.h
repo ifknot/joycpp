@@ -143,7 +143,7 @@ namespace joy {
 		/* Joy Keyword C++ lambda definitions */
 
 		dictionary_t joy_lambda_map {
-			//{"END", [&](joy_stack& S) { module_name.clear(); }},
+			{"END", [&](joy_stack& S) { module_name.clear(); }},
 			{"abort", [&](joy_stack& S) {
 				if (S.has("abort", {joy_t::bool_t})) {
 					if (!joy_cast<bool>(S.top())) {
@@ -260,7 +260,6 @@ namespace joy {
 		};
 
 		std::map<std::string, std::string> public_joy_joy_map {
-			{"END", " ."},
 			//for backwards compatibility
 			{"HIDE", " PRIVATE"},
 			{"IN", " PUBLIC"},
