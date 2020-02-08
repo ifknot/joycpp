@@ -1,33 +1,20 @@
 (* 
- * This initial library contains a collection of Joy03 operators and combinators that are widely useful. 
- * Most are not dependent on particular types. 
- * Contents
- 
+ * inilib.joy - Joy language core as defined in: (where not implemented in C++)
+ * 
+ * [1] JOY manual - compiled at 16 : 57 : 51 on Mar 17 2003(BDW) Copyright 2001 by Manfred von Thun
+ * [2] "Programming In Joy" By Manfred von Thun
+ * [3] "Atomic Programs of Joy" by Manfred von Thun
+ * [4] "Mathematical foundations of Joy" by Manfred von Thun
  *
+ * Thus defined and termed the 'Joy Language core 2003' aka 'joy03'
  * N.B. All other libraries will ensure that this library is also loaded.
- *
  *)
 
 PUBLIC
 
 _inilib == true;
 
-
 (* - - - - - Stack Manipulation Operators  - - - - *)
-
-
-    # c++ core performance built-ins:
-    # dup
-    # dupd
-    # pop
-    # popd
-    # pop2
-    # unit
-    # swap
-    # swapd
-    # rotate
-    # rollup
-    # rolldown
 
     dup2 == dup [[dup]dip swap] dip;
 
@@ -56,18 +43,10 @@ _inilib == true;
 
 (* - - - - - General Combinators  - - - - *)
 
-    # c++ core performance built-ins:
-    # i == stack rest swap infra unstack
-    # dip == stack rest rest swap infra cons unstack
-    # step
-    # times
-    # reverse
-
     # joy03
     nullary == stack rest swap infra first; # [P] -> R Executes P, which leaves R on top of the stack. No matter how many parameters this consumes, none are removed from the stack.b
     unary == stack rest swap infra first popd; # X [P] -> R Executes P, which leaves R on top of the stack. No matter how many parameters this consumes, exactly one is removed from the stack
     branch == choice i; # B [T] [F] -> T/F If B is true, then executes T else executes F.
-
 
     (*
      * presented in "Atomic Programs of Joy" by Manfred von Thun - but not in joy03 manual
@@ -102,16 +81,8 @@ _inilib == true;
     and == [id][pop false] branch;
     not == false true choice;
     xor == dup2 or rollup and not and;
-    max == dup2 > rollup choice;
-    min == dup2 < rollup choice;
-    sign == [0 > ][1] [[0 < ][-1][0] ifte] ifte;
-
 
 (* -----List Operators  needing Combinators above ---- *)
-
-# c++ core performance built - ins:
-# null
-# equal
 
     # TODO: zip
     sum == 0.0 swap[+] step;
@@ -156,6 +127,5 @@ _inilib == true;
     
     putchars == [putch] step;
 
-"joy03_inilib is loaded" putchars LF putch.
+"inilib is loaded" putchars LF putch.
 
-"joy_libs/extra_inilib.joy" include.

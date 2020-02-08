@@ -185,8 +185,7 @@
     <ClInclude Include="tokenizer.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="joy_libs\extra_inilib.joy" />
-    <None Include="joy_libs\joy03_inilib.joy" />
+    <None Include="joy_libs\inilib.joy" />
     <None Include="joy_libs\mathlib.joy" />
     <None Include="joy_libs\usrlib.joy" />
     <None Include="joy_manuals\joy03.man" />

@@ -103,12 +103,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="joy_libs\extra_inilib.joy">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="joy_libs\joy03_inilib.joy">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="joy_libs\usrlib.joy">
       <Filter>Resource Files</Filter>
     </None>
@@ -122,6 +116,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="joy_libs\mathlib.joy">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="joy_libs\inilib.joy">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -20,10 +20,11 @@ PUBLIC
     pi == 3.14159265359;
 
     # functions
-    
-    sqrt == [float][_sqrt]["sqrt expects float" putchars newline] ifte;
 
-    # factorial using genrec
+    max == dup2 > rollup choice;
+    min == dup2 < rollup choice;
+    sign == [0 > ][1] [[0 < ][-1][0] ifte] ifte;
+    sqrt == [float][_sqrt]["sqrt expects float" putchars newline] ifte;
     ! == [null][succ][dup pred][i *] genrec;
 
     exp ==
@@ -34,7 +35,6 @@ PUBLIC
         [*]
         linrec;
 
-    # calculate the nth fibonacci value
     fib == [small][id][pred dup pred][app2 + ] genrec;
 
 END
