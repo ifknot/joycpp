@@ -19,8 +19,12 @@ sqrt == [float][_sqrt]["sqrt expects float" putchars newline] ifte;
 # factorial using genrec
 ! == [null][succ][dup pred][i *] genrec;
 
-# factorial using genrec
-l - fac == [null][succ][dup pred][*] linrec;
+# factorial using linrec
+l-fac == [null][succ][dup pred][*] linrec;
+
+b-fib == [small][id][pred dup pred][+] binrec;
+
+#b-qsort == [small][id][uncons[> ] split][swapd cons concat] binrec;
 
 # calculate the nth fibonacci value
 fib == [small][id][pred dup pred][app2 + ] genrec;

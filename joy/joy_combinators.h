@@ -207,5 +207,53 @@ namespace joy {
 			i(S, parse);		// executes T and terminates.
 		}
 	}
+
+	/**
+	* The binrec combinator is again similar, but it applies the bundled quotation twice.
+	* Once to each of the two top values which the R1 part has left on the stack. 
+	* It implements binary recursion. 
+	*
+	* binrec : [B][T][R1][R2] ->...
+	* Executes B. If that yields true, executes T. 
+	* Else uses R1 to produce two intermediates, recurses on both, 
+	* then executes R2 to combine their results.
+	*/
+	template<typename parser_t>
+	void binrec(joy_stack& S, parser_t& parse) {
+		auto R2 = S.top();
+		S.pop();
+		auto R1 = S.top();
+		S.pop();
+		auto T = S.top();
+		S.pop();
+		auto B = S.top();
+		i(S, parse);			// Executes B.
+		assert(S.top().second == joy_t::bool_t);
+		if (!joy_cast<bool>((S.top()))) {
+			S.pop();
+			S.push(R1);
+			i(S, parse);		// Else uses R1 to produce two intermediates,
+			S.swap();
+			S.push(B);
+			S.push(T);
+			S.push(R1);
+			S.push(R2);
+			binrec(S, parse);	// recurse on first item left by R1
+			S.swap();
+			S.push(B);
+			S.push(T);
+			S.push(R1);
+			S.push(R2);
+			binrec(S, parse);	// recurse on second item left by R1
+			S.swap();
+			S.push(R2);			
+			i(S, parse);		// then executes R2 to combine their results.
+		}
+		else {					// If B yields true,   
+			S.pop();			//
+			S.push(T);			//
+			i(S, parse);		// executes T and terminates.
+		}
+	}
 	
 }

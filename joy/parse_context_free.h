@@ -214,6 +214,7 @@ namespace joy {
 		// recursive definitions.
 		{"genrec", [&](joy_stack& S) { if (S.has("genrec", {joy_t::quote_t, joy_t::quote_t, joy_t::quote_t, joy_t::quote_t})) { genrec(S, *this); } }},
 		{"linrec", [&](joy_stack& S) { if (S.has("linrec", {joy_t::quote_t, joy_t::quote_t, joy_t::quote_t, joy_t::quote_t})) { linrec(S, *this); } }},
+		{"binrec", [&](joy_stack& S) { if (S.has("binrec", {joy_t::quote_t, joy_t::quote_t, joy_t::quote_t, joy_t::quote_t})) { binrec(S, *this); } }},
 		};
 
 		/**
