@@ -173,7 +173,9 @@ namespace joy {
 	/**
 	* The linrec combinator also takes four program parameters and is otherwise very similar to the genrec combinator. 
 	* The essential difference is that the bundled up quotation is immediately called before the rec2-part. 
-	* Consequently it can only be used for linear recursion. 
+	* Consequently it can only be used for linear recursion e.g.
+	*
+	* l-fac == [null][succ][dup pred][*] linrec;
 	*
 	* linrec : [B][T][R1][R2] ->...
 	* Executes B. If that yields true, executes T. Else executes R1, recurses, executes R2.
@@ -211,7 +213,9 @@ namespace joy {
 	/**
 	* The binrec combinator is again similar, but it applies the bundled quotation twice.
 	* Once to each of the two top values which the R1 part has left on the stack. 
-	* It implements binary recursion. 
+	* It implements binary recursion e.g.
+	*
+	* b-fib == [small][id][pred dup pred][+] binrec;
 	*
 	* binrec : [B][T][R1][R2] ->...
 	* Executes B. If that yields true, executes T. 
@@ -255,5 +259,38 @@ namespace joy {
 			i(S, parse);		// executes T and terminates.
 		}
 	}
-	
+
+	/**
+	* The tailrec combinator is similar to the linrec combinator, except that it does not have an R2 part. 
+	* It can only be used for tail recursion, such as in the program below which returns the last element of an aggregate.
+    * 
+	* t-last == [small] [first] [rest] tailrec;
+	*
+	* tailrec : [B][T][R1] ->...
+	* Executes B. If that yields true, executes T. Else executes R1, recurses.
+	*/
+	template<typename parser_t>
+	void tailrec(joy_stack& S, parser_t& parse) {
+		auto R1 = S.top();
+		S.pop();
+		auto T = S.top();
+		S.pop();
+		auto B = S.top();
+		i(S, parse);			// Executes B.
+		assert(S.top().second == joy_t::bool_t);
+		if (!joy_cast<bool>((S.top()))) {
+			S.pop();
+			S.push(R1);
+			i(S, parse);		// Else uses R1,
+			S.push(B);
+			S.push(T);
+			S.push(R1);
+			tailrec(S, parse);	// recurse.
+		}
+		else {					// If B yields true,   
+			S.pop();			//
+			S.push(T);			//
+			i(S, parse);		// executes T and terminates.
+		}
+	}
 }

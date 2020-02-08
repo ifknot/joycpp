@@ -32,7 +32,8 @@ _extra_inilib == true;
     cons2 == swapd cons consd;
     uncons2 == unconsd uncons swapd;
     swons2 == swapd swons swonsd;
-    
+
+    last == [small][first][rest] tailrec;
 
 (* - - - - - IO Operators  - - - - *)
     
