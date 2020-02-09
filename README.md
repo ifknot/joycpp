@@ -42,6 +42,13 @@ Joy Interpreter written in C++ and Joy (Please see the [Wiki](https://github.com
 | [ ] abs  	| [ ] ceil  	| [ ] log   	| [ ] sinh 	| [x] max   	|          	|
 | [ ] acos 	| [ ] cos   	| [ ] log10 	| [x] sqrt 	| [x] min   	|          	|
 
+### filelib.joy
+|	|	|	|	|	|	|
+|------------	|------------	|------------	|-------------	|----------------	|-----------	|
+| [ ] fclose 	| [ ] fflush 	| [ ] fopen  	| [ ] fremove 	| [ ] fputch     	| [ ] fseek 	|
+| [ ] feof   	| [ ] fgetch 	| [ ] fread  	| [ ] frename 	| [ ] fputchars  	| [ ] ftell 	|
+| [ ] ferror 	| [ ] fgets  	| [ ] fwrite 	| [ ] fput    	| [ ] fputstring 	|           	|
+
 ## 08/02/20
 
 TODO:
