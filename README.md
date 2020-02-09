@@ -33,6 +33,14 @@ Joy Interpreter written in C++ and Joy (Please see the [Wiki](https://github.com
 | [x] dupd       	| [x] pred      	| [x] <        	| [ ] unary3    	| [x] step       	| [x] quit          	|
 | [x] swapd      	| [x] succ      	| [x] !=       	| [ ] unary4    	| [x] fold       	|                   	|
 
+### mathlib.joy
+|	|	|	|	|	|	|
+|----------	|-----------	|-----------	|----------	|-----------	|----------	|
+| [ ] rem  	| [ ] asin  	| [ ] cosh  	| [ ] modf 	| [ ] tan   	| [x] sign 	|
+| [ ] div  	| [ ] atan  	| [ ] exp   	| [x] pow  	| [ ] tanh  	| [x] exp  	|
+| [ ] neg  	| [ ] atan2 	| [ ] floor 	| [ ] sin  	| [ ] trunc 	| [x] fib  	|
+| [ ] abs  	| [ ] ceil  	| [ ] log   	| [ ] sinh 	| [x] max   	|          	|
+| [ ] acos 	| [ ] cos   	| [ ] log10 	| [x] sqrt 	| [x] min   	|          	|
 
 ## 08/02/20
 
