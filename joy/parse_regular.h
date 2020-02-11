@@ -187,7 +187,7 @@ namespace joy {
 		{"list", [&](joy_stack& S) { if (S.has("list", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::list_t) ? true : false, joy_t::bool_t)); } }},
 		{"float", [&](joy_stack& S) { if (S.has("float", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::double_t) ? true : false, joy_t::bool_t)); } }},
 		//aggregates
-		{"size", [&](joy_stack& S) { size(S); }},
+		{"size", [&](joy_stack& S) { size(S); S.popd(); }},
 		//environment
 		{"helpdetail", [&](joy_stack& S) { if (S.has("helpdetail", {joy_t::quote_t})) { helpdetail(joy_cast<joy_stack&>(S.top()), joy_manual, io); } }},
 		{"manual", [&](joy_stack& S) { manual(joy_manual, io); }},

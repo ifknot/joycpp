@@ -10,6 +10,24 @@
  * N.B. All other libraries will ensure that this library is also loaded.
  *)
 
+(* TODO: - C++
+    
+    [] clock	Pushes the integer value of current CPU usage in hundreds of a second.
+    [] time 	Pushes the current time(in seconds since the Epoch).
+    [] rand 	Pushes random integer.
+    [] srand	Sets the random integer
+    [] localtime 
+    [] gmtime
+    [] mktime
+    [] strftime
+    [] strtol
+    [] strtod
+    [] format
+    [] formatf
+    [] compare   
+    [] equal     
+*)
+
 PUBLIC
 
 _inilib == true;
@@ -17,7 +35,9 @@ _inilib == true;
 (* - - - - - Stack Manipulation Operators  - - - - *)
 
     dup2 == dup [[dup]dip swap] dip;
-
+    rollupd == [rollup] dip;
+    rolldownd == [rolldown] dip;
+    rotated == [rotate] dip;
 
 (* - - - - - List Operators  - - - - *)
 
@@ -40,6 +60,7 @@ _inilib == true;
      *) 
     swoncat == reverse shunt; 
     concat  == swap swoncat;
+    enconcat == swapd cons concat;
 
 (* - - - - - General Combinators  - - - - *)
 

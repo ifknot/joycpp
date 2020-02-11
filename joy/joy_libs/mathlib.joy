@@ -1,3 +1,41 @@
+(*
+    Math library
+
+    [x] e
+    [x] pi
+
+    [] rem 		Pushes remainder of dividing int or float.
+    [] div 		Pushes quotient and remainder of dividision
+    [] neg
+    [] abs
+    [] acos
+    [] asin
+    [] atan
+    [] atan2
+    [] ceil
+    [] cos
+    [] cosh
+    [] exp
+    [] floor
+    [] log
+    [] log10
+    [] modf		fractional & integer parts(but expressed as a float)
+    [x] pow
+    [] sin
+    [] sinh
+    [x] sqrt
+    [] tan
+    [] tanh
+    [] trunc
+    [x] max
+    [x] min
+    [x] sign
+    [x] exp
+    [x] fib
+
+*)
+
+
 # MODULE math
 
 _mathlib == true;

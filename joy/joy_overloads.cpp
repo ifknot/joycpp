@@ -256,7 +256,7 @@ namespace joy {
         if (a.second == joy_t::lambda_t || a.second == joy_t::undef_t || a.second == joy_t::cmd_t ) {
             return joy_cast<std::string>(a) == b;
         }
-        else {
+        else { // should it throw a runtime error?
             return false;
         }
 	}

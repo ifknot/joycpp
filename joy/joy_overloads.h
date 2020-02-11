@@ -12,15 +12,12 @@
 *                   m n│-        →                m-n│
 *                   m n│*        →                m×n│
 *                   m n│/        →                m÷n│
-*                   m n│rem      →               ⌊m÷n│
-*                   m n│div      →              0 n⊤m│
 *                   m n│<        →                m<n│
 *                   m n│<=       →                m≤n│
 *                   m n│=        →                m=n│
 *                   m n│>=       →                m≥n│
 *                   m n│>        →                m>n│
 *                   m n│!=       →                m≠n│
-*                     b│not      →               {!⍵}│
 */
 namespace joy {
 
@@ -33,10 +30,6 @@ namespace joy {
     token_t operator*(const token_t& a, const token_t& b);
 
     token_t operator/(const token_t& a, const token_t& b);
-
-    // rem  
-
-    // div 
 
     // relational token operators
 
