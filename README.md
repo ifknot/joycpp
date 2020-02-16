@@ -16,7 +16,7 @@ Joy Interpreter written in C++ and Joy (Please see the [Wiki](https://github.com
 | [ ] undefs     	| [x] and       	| [x] size     	| [ ] set       	| [x] ifte       	| [x] help          	|
 | [x] echo       	| [x] not       	| [ ] opcase   	| [x] string    	| [ ] ifinteger  	| [x] helpdetail    	|
 | [ ] clock      	| [x] +         	| [ ] case     	| [x] list      	| [ ] ifchar     	| [x] manual        	|
-| [ ] time       	| [x] -         	| [x] uncons   	| [x] leaf      	| [ ] iflogical  	| [x] setautoput    	|
+| [x] time       	| [x] -         	| [x] uncons   	| [x] leaf      	| [ ] iflogical  	| [x] setautoput    	|
 | [ ] rand       	| [x] *         	| [x] unswons  	| [ ] user      	| [ ] ifset      	| [ ] setundeferror 	|
 | [ ] stdin      	| [x] /         	| [x] drop     	| [x] float     	| [ ] ifstring   	| [x] setecho       	|
 | [ ] stdout     	| [x] ord       	| [x] take     	| [ ] file      	| [ ] iflist     	| [ ] gc            	|
