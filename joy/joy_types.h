@@ -13,7 +13,7 @@
 
 /**
 * access std::literals::string_literals::operator""s
-* to ensure correct std:;string type in make_token
+* to ensure correct std::string type in make_token
 */
 using namespace std::string_literals;
 
@@ -41,7 +41,7 @@ namespace joy {
     * - aggregate (list, quote, set, string)
     * - cmd_t   (any Joy command)
     *
-    * joycpp types in order of increasing precision:
+    * joycpp types in order of increasing specificity:
     */
     enum class joy_t { 
         //grouped types

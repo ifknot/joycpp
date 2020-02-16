@@ -44,20 +44,7 @@ namespace joy {
 				)
 			);
 	}
-/*
-	joy_stack tokenizer::tokenize(joy_stack&& tokens) {
-		return 		
-			tokenize_simple_types(
-				strip_comments(
-					split_whitespace(
-						tokenize_strings(
-							tokenize_reserved(std::move(tokens))
-						)
-					)
-				)
-			);
-	}
-*/
+
 	void tokenizer::echo(size_t line_number, const std::string& line) {
 		io.colour(YELLOW);
 		switch (echo_state) {

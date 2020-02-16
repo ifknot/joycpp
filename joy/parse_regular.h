@@ -2,11 +2,7 @@
 
 #include <cassert>
 
-#include "error.h"
-#include "joy_stack.h"
 #include "tokenizer.h"
-#include "joy_overloads.h"
-#include "joy_operators.h"
 
 // Newton Raphson method square root
 // 24 iterations should get you good enough approximation - TODO: check the abs difference

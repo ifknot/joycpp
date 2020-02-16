@@ -6,9 +6,6 @@
 
 #include "parse_regular.h"
 
-#include "joy_minimal.h"
-#include "joy_combinators.h"
-
 // context free test cases:
 // 2 3 4 [ + ] dip
 // [ 1 2 3 ] [ dup * ] step

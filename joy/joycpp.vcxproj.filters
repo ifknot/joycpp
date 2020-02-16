@@ -51,6 +51,15 @@
     <ClCompile Include="parse_joy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="joy_operators_io.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="joy_operators_misc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="joy_operators_math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="joy_types.h">
@@ -99,6 +108,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inilib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="joy_operators_io.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="joy_operators_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="joy_operators_misc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

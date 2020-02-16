@@ -42,59 +42,6 @@ namespace joy {
         }
     }
 
-    void pow(joy_stack& S) {
-        double base{ 0 }, exponent{ 0 };
-        token_t H;
-        auto G = S.top();
-        S.pop();
-        auto F = S.top();
-        S.pop();
-        switch (G.second) {
-        case joy_t::char_t: 
-            exponent = joy_cast<char>(G);
-            break;
-        case joy_t::int_t: 
-            exponent = joy_cast<int>(G);
-            break;
-        case joy_t::double_t: 
-            exponent = joy_cast<double>(G);
-            break;
-        default:
-            break;
-        }
-        switch (F.second) {
-        case joy_t::char_t: 
-            base = joy_cast<char>(F);
-            break;
-        case joy_t::int_t: 
-            base = joy_cast<int>(F);
-            break;
-        case joy_t::double_t: 
-            base = joy_cast<double>(F);
-            break;
-        default:
-            break;
-        }
-        auto result = std::pow(base, exponent);
-        switch (F.second) {
-        case joy_t::char_t:
-            H.first = static_cast<char>(result);
-            H.second = joy_t::char_t;
-            break;
-        case joy_t::int_t:
-            H.first = static_cast<int>(result);
-            H.second = joy_t::int_t;
-            break;
-        case joy_t::double_t:
-            H.first = static_cast<double>(result);
-            H.second = joy_t::double_t;
-            break;
-        default:
-            break;
-        }
-        S.push(H);
-    }
-
     bool null(token_t& token) {
         const auto& [pattern, type] = token;
         switch (type) {
@@ -113,52 +60,5 @@ namespace joy {
             break;
         }
 	}
-
-	void putch(joy_stack& S, io_device& io) {
-        auto ch = static_cast<char>(joy_cast<char>(S.top()));
-        auto s = std::string{ ch };
-        io.put_string(s);
-    }
-
-    void print_top(const joy_stack& S, io_device& io) {
-        io.colour(GREEN);
-        io << to_string(S.top());
-    }
-
-    void print_stack(const joy_stack& S, io_device& io) {
-        io.colour(GREEN);
-        std::string dump{ ">" + std::to_string(S.size()) + "<\n" };
-        for (size_t i{ 0 }; i < S.size(); ++i) {
-            const auto& t = S.sat(i);
-            dump += to_string(t) + "\n";
-        }
-        io << dump;
-    }
-
-	void input_stack(joy_stack& S, io_device& io) {
-        io.colour(BOLDYELLOW);
-        io.put_string("? ");
-        S.push(make_token(io.input(), joy_t::undef_t));
-    }
-
-    void manual(std::map<std::string, std::string>& joy_manual, io_device& io) {
-        io.colour(YELLOW);
-        for (const auto& [cmd, info] : joy_manual) {
-            io << cmd << info;
-        }
-    }
-
-    void helpdetail(const joy_stack& S, std::map<std::string, std::string>& joy_manual, io_device& io) {
-        io.colour(YELLOW);
-        for (const auto& [command, type] : S) {
-            assert(type == joy_t::lambda_t);
-            auto match = std::any_cast<std::string>(command);
-            auto it = joy_manual.find(match);
-            if (it != joy_manual.end()) {
-                io << match + joy_manual[match];
-            }
-        }
-
-    }
 
 }

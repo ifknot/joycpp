@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "joy_stack.h"
-#include "io_device.h"
+//#include "io_device.h"
 
 /**
 * Joy03 Operators Library
@@ -33,6 +33,7 @@
 *			   	  [a b c]│reverse  →            [c b a]│
 *                 [a ...]│size     →                 ≢⍵│
 *                       a│null     →              a∊0[]│
+*                       a│small    →      a∊0 1[][atom]│
 *
 */
 namespace joy {
@@ -79,52 +80,10 @@ namespace joy {
     */
     void small(joy_stack& S);
 
-    /**
-     * pow : F G -> H
-     * H is F raised to the Gth power
-     */
-    void pow(joy_stack& S);
-
     /** 
      * X->B
      * Tests for empty aggregate X or zero numeric.
      */
     bool null(token_t& token);
 
-    // IO operators core C++ performance 
-
-    /**
-    * N ->
-    * N : numeric, writes character whose ASCII is N.
-    */
-    void putch(joy_stack& S, io_device& io);
-
-    /**
-    * Joy . operator
-    * print top of stack S in left:right format to an io device
-    */
-    void print_top(const joy_stack& S, io_device& io);
-
-    /**
-    * Joy .s operator
-    * print stack S size and S contents in top:down format to an io device
-    */
-    void print_stack(const joy_stack& S, io_device& io);
-
-    /**
-    * Joy get operator
-    */
-    void input_stack(joy_stack& S, io_device& io);
-
-    /**
-    * manual: ->
-    * Writes the loaded manual of all Joy primitives to an io device.
-    */
-    void manual(std::map<std::string, std::string>& joy_manual, io_device& io);
-
-    /**
-    * helpdetail: [ S1 S2 .. ]
-    * Gives brief help on each symbol S in the list.
-    */
-    void helpdetail(const joy_stack& S, std::map<std::string, std::string>& joy_manual, io_device& io);
 }

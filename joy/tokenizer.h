@@ -6,10 +6,7 @@
 #include <stack>
 
 #include "io_device.h"
-#include "error.h"
-#include "joy_types.h"
-#include "joy_stack.h"
-#include "joy_overloads.h"
+#include "inilib.h"
 
 
 namespace joy {
