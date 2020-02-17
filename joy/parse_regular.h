@@ -187,6 +187,10 @@ namespace joy {
 		//time
 		{"clock", [&](joy_stack& S) { clock(S); }},
 		{"time", [&](joy_stack& S) { time(S); }},
+		{"localtime", [&](joy_stack& S) { if (S.has("localtime", {joy_t::int_t})) { localtime(S); } }},
+		//random
+		{"rand", [&](joy_stack& S) { joy::rand(S); }},
+		{"srand", [&](joy_stack& S) { if (S.has("srand", {joy_t::int_t})) { joy::srand(S); } }},
 		//environment
 		{"helpdetail", [&](joy_stack& S) { if (S.has("helpdetail", {joy_t::quote_t})) { helpdetail(joy_cast<joy_stack&>(S.top()), joy_manual, io); } }},
 		{"manual", [&](joy_stack& S) { manual(joy_manual, io); }},

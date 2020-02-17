@@ -24,7 +24,7 @@ namespace joy {
 	* Converts a time I into a list T representing local time : [year month day hour minute second isdst yearday weekday] .Month is 1 = January...12 = December; isdst is a Boolean flagging daylight savings / summer time; weekday is 0 = Monday...7 = Sunday.
 	* i.e. equivalent to the std::tm struct from the C-style date and time utilities
 	*/
-	//void localtime(joy_stack& S);
+	void localtime(joy_stack& S);
 
 	/**
 	* gmtime : I->T

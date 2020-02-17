@@ -12,11 +12,8 @@
 
 (* TODO: - C++
     
-    [] clock	Pushes the integer value of current CPU usage in hundreds of a second.
-    [] time 	Pushes the current time(in seconds since the Epoch).
     [] rand 	Pushes random integer.
     [] srand	Sets the random integer
-    [] localtime 
     [] gmtime
     [] mktime
     [] strftime
@@ -147,6 +144,49 @@ _inilib == true;
     CR == 13 chr;  # carriage return [\r]
     
     putchars == [putch] step;
+
+    to-upper == ['a >=] [32 -] [] ifte;
+    to-lower == ['a < ] [32 +] [] ifte;
+
+(* ----- Date & Time ----- *)
+
+    weekdays == ["Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"];
+    months == ["JAN" "FEB" "MAR" "APR" "MAY" "JUN" "JUL" "AUG" "SEP" "OCT" "NOV" "DEC"];
+(*
+    localtime-strings ==
+        time localtime
+        [[ 0 at 'd 4 4 format ]
+        [1 at pred months of]
+        [2 at 'd 2 2 format	]
+        [3 at 'd 2 2 format	]
+        [4 at 'd 2 2 format	]
+        [5 at 'd 2 2 format	]
+        [6 at[]["true"]["false"] ifte]
+        [7 at 'd 5 5 format	]
+        [8 at pred weekdays of]]
+        [i] map
+        popd;
+
+    today ==
+        localtime-strings
+        [[8 at][" "][2 at]["-"][1 at]["-"][0 at rest rest]]
+        [i] map
+        popd
+        ""[concat] fold;
+    
+    now ==
+        localtime-strings
+        3 drop
+        [[0 at][":"][1 at][":"][2 at]]
+        [i] map
+        popd
+        ""[concat] fold;
+    
+   show-todaynow ==
+        today putchars space now putchars newline;
+*)
+
+END
 
 "inilib is loaded" putchars LF putch.
 
