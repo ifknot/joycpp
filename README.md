@@ -1,7 +1,53 @@
 # joycpp
-Joy Interpreter written in C++ and Joy
+Joy Interpreter written in C++ and Joy (Please see the [Wiki](https://github.com/ifknot/joycpp/wiki))
 
-Please see the [Wiki](https://github.com/ifknot/joycpp/wiki)
+### Joy Language 2003 core - joycpp implemention table:
+### inilib.joy
+
+|        |	|	|	|	|	|
+|----------------	|---------------	|--------------	|---------------	|----------------	|-------------------	|
+| [x] false      	| [x] rollupd   	| [x] cons     	| [x] =         	| [x] app2       	| [x] map           	|
+| [x] true       	| [x] rolldownd 	| [x] swons    	| [ ] equal     	| [x] app3       	| [x] times         	|
+| [ ] maxint     	| [x] rotated   	| [x] first    	| [ ] has       	| [ ] app4       	| [x] infra         	|
+| [ ] setsize    	| [x] pop       	| [x] rest     	| [ ] in        	| [ ] binary     	| [ ] filter        	|
+| [ ] conts      	| [x] choice    	| [ ] compare  	| [x] integer   	| [ ] ternary    	| [ ] split         	|
+| [x] autoput    	| [x] or        	| [x] at       	| [x] char      	| [x] cleave     	| [ ] some          	|
+| [ ] undeferror 	| [x] xor       	| [x] of       	| [x] logical   	| [x] branch     	| [ ] all           	|
+| [ ] undefs     	| [x] and       	| [x] size     	| [ ] set       	| [x] ifte       	| [x] help          	|
+| [x] echo       	| [x] not       	| [ ] opcase   	| [x] string    	| [ ] ifinteger  	| [x] helpdetail    	|
+| [ ] clock      	| [x] +         	| [ ] case     	| [x] list      	| [ ] ifchar     	| [x] manual        	|
+| [x] time       	| [x] -         	| [x] uncons   	| [x] leaf      	| [ ] iflogical  	| [x] setautoput    	|
+| [ ] rand       	| [x] *         	| [x] unswons  	| [ ] user      	| [ ] ifset      	| [ ] setundeferror 	|
+| [ ] stdin      	| [x] /         	| [x] drop     	| [x] float     	| [ ] ifstring   	| [x] setecho       	|
+| [ ] stdout     	| [x] ord       	| [x] take     	| [ ] file      	| [ ] iflist     	| [ ] gc            	|
+| [ ] stderr     	| [x] chr       	| [x] concat   	| [x] i         	| [ ] iffloat    	| [ ] system        	|
+| [x] id         	| [ ] localtime 	| [x] enconcat 	| [x] x         	| [ ] iffile     	| [ ] getenv        	|
+| [x] stack      	| [ ] gmtime    	| [ ] name     	| [x] dip       	| [ ] cond       	| [ ] argv          	|
+| [x] unstack    	| [ ] mktime    	| [ ] intern   	| [x] app1      	| [ ] while      	| [ ] argc          	|
+| [x] dup        	| [ ] strftime  	| [x] body     	| [ ] app11     	| [x] primrec    	| [x] get           	|
+| [x] swap       	| [ ] strtol    	| [x] null     	| [ ] app12     	| [x] linrec     	| [x] put           	|
+| [x] rollup     	| [ ] strtod    	| [x] small    	| [ ] construct 	| [x] tailrec    	| [x] putch         	|
+| [x] rolldown   	| [ ] format    	| [x] >=       	| [x] nullary   	| [x] binrec     	| [x] putchars      	|
+| [x] rotate     	| [ ] formatf   	| [x] >        	| [x] unary     	| [x] genrec     	| [x] include       	|
+| [x] popd       	| [ ] srand     	| [x] <=       	| [ ] unary2    	| [ ] condlinrec 	| [x] abort         	|
+| [x] dupd       	| [x] pred      	| [x] <        	| [ ] unary3    	| [x] step       	| [x] quit          	|
+| [x] swapd      	| [x] succ      	| [x] !=       	| [ ] unary4    	| [x] fold       	|                   	|
+
+### mathlib.joy
+|	|	|	|	|	|	|
+|----------	|-----------	|-----------	|----------	|-----------	|----------	|
+| [ ] rem  	| [ ] asin  	| [ ] cosh  	| [ ] modf 	| [ ] tan   	| [x] sign 	|
+| [ ] div  	| [ ] atan  	| [ ] exp   	| [x] pow  	| [ ] tanh  	| [x] exp  	|
+| [ ] neg  	| [ ] atan2 	| [ ] floor 	| [ ] sin  	| [ ] trunc 	| [x] fib  	|
+| [ ] abs  	| [ ] ceil  	| [ ] log   	| [ ] sinh 	| [x] max   	|          	|
+| [ ] acos 	| [ ] cos   	| [ ] log10 	| [x] sqrt 	| [x] min   	|          	|
+
+### filelib.joy
+|	|	|	|	|	|	|
+|------------	|------------	|------------	|-------------	|----------------	|-----------	|
+| [ ] fclose 	| [ ] fflush 	| [ ] fopen  	| [ ] fremove 	| [ ] fputch     	| [ ] fseek 	|
+| [ ] feof   	| [ ] fgetch 	| [ ] fread  	| [ ] frename 	| [ ] fputchars  	| [ ] ftell 	|
+| [ ] ferror 	| [ ] fgets  	| [ ] fwrite 	| [ ] fput    	| [ ] fputstring 	|           	|
 
 ## 08/02/20
 
