@@ -161,6 +161,7 @@
     <ClCompile Include="joy_operators_io.cpp" />
     <ClCompile Include="joy_operators_math.cpp" />
     <ClCompile Include="joy_operators_misc.cpp" />
+    <ClCompile Include="joy_operators_time.cpp" />
     <ClCompile Include="joy_overloads.cpp" />
     <ClCompile Include="joy_stack.cpp" />
     <ClCompile Include="joy_types.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="error.h" />
     <ClInclude Include="error_messages.h" />
     <ClInclude Include="error_numbers.h" />
+    <ClInclude Include="joy_operators_time.h" />
     <ClInclude Include="inilib.h" />
     <ClInclude Include="joy_combinators.h" />
     <ClInclude Include="joy_operators.h" />

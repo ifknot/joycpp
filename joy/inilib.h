@@ -17,6 +17,7 @@
 #include "joy_operators.h"
 #include "joy_operators_io.h"
 #include "joy_operators_math.h"
+#include "joy_operators_time.h"
 #include "joy_operators_misc.h"
 
 #include "joy_minimal.h"
