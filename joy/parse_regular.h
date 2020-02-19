@@ -184,6 +184,7 @@ namespace joy {
 		{"float", [&](joy_stack& S) { if (S.has("float", {joy_t::any_t})) { S.push(token_t((S.top().second == joy_t::double_t) ? true : false, joy_t::bool_t)); } }},
 		//aggregates
 		{"size", [&](joy_stack& S) { size(S); S.popd(); }},
+		{"at", [&](joy_stack& S) { if (S.has("at", {joy_t::int_t, joy_t::aggregate_t})) { at(S); } }},
 		//time
 		{"clock", [&](joy_stack& S) { clock(S); }},
 		{"time", [&](joy_stack& S) { time(S); }},
@@ -191,6 +192,11 @@ namespace joy {
 		//random
 		{"rand", [&](joy_stack& S) { joy::rand(S); }},
 		{"srand", [&](joy_stack& S) { if (S.has("srand", {joy_t::int_t})) { joy::srand(S); } }},
+		//io
+		{"format", [&](joy_stack& S) { if (S.has("format", {joy_t::int_t, joy_t::int_t, joy_t::char_t, joy_t::numeric_t})) { 
+				format(S);
+			} 
+		}},
 		//environment
 		{"helpdetail", [&](joy_stack& S) { if (S.has("helpdetail", {joy_t::quote_t})) { helpdetail(joy_cast<joy_stack&>(S.top()), joy_manual, io); } }},
 		{"manual", [&](joy_stack& S) { manual(joy_manual, io); }},

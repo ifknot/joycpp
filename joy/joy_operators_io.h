@@ -29,7 +29,7 @@ namespace joy {
 	* format : N C I J->S
 	* S is the formatted version of N in mode C('d or ' i = decimal, 'o = octal, ' x or 'X = hex with lower or upper case letters) with maximum width I and minimum width J.
 	*/
-	//void format(joy_stack& S, io_device& io);
+	void format(joy_stack& S);
 
 	/**
 	* formatf : F C I J->S

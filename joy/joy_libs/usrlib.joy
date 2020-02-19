@@ -40,10 +40,6 @@ _usrlib == true;
 
 (* ---- - IO - -- - *)
 
-    newline == LF putch pop;
-    putln == put newline;
-    space == '\032 putch;
-    bell == BEL putch;
     putstrings == [putchars] step;
 
     ask == "Please " putchars putchars space get;

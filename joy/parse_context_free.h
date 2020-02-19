@@ -129,7 +129,6 @@ namespace joy {
 		virtual  bool parse(token_t& token, joy_stack& S);
 
 		/**
-		* TODO: &&
 		* nested parse a quoted program P against a stack S
 		*/
 		virtual bool parse(joy_stack& P, joy_stack& S);
@@ -194,7 +193,7 @@ namespace joy {
 		//combinators of aggregate types
 		//the combinators in this section expect aggregates below their quotation parameters.
 		//the stack is just a list, so any list could serve as the stack, including a list which happens to be on top of the stack.
-		{"infra", [&](joy_stack& S) { if (S.has("infra", {joy_t::quote_t, joy_t::group_t})) { infra(S, *this); } }},
+		{"infra", [&](joy_stack& S) { if (S.has("infra", {joy_t::group_t, joy_t::group_t})) { infra(S, *this); } }},
 		//list operators
 		{"uncons", [&](joy_stack& S) { if (S.has("uncons", {joy_t::aggregate_t}))  { uncons(S); } }},
 		{"cons", [&](joy_stack& S) { if (S.has("cons", {joy_t::aggregate_t, joy_t::any_t})) { cons(S); } }},

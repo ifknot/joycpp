@@ -74,7 +74,7 @@ namespace joy {
 	* . [a b]│unstack  →                b a│
 	* Therefore, a list on the stack, e.g. [1 2 3 4], can be treated temporarily as the stack by a quotation, say [+ *] and the combinator infra, with the result [9 4].
 	*
-	* The infra combinator expects a quotation [P] which will be executed and below that another quotation which normally will be just a list [M].
+	* The infra combinator expects a quotation [P] which will be executed and below that a groupt_t which normally will be just a list [M].
 	* The infra combinator temporarily discards the remainder of the stack and takes the quotation or list [M] to be the stack.
 	* It then executes the top quotation [P] which yields a result stack.
 	* This resulting stack is then pushed as a list [N] onto the original stack replacing the original quotation or list.

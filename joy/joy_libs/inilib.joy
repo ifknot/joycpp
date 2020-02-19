@@ -62,6 +62,7 @@ _inilib == true;
 (* - - - - - General Combinators  - - - - *)
 
     # joy03
+    # i == stack rest swap infra unstack;
     nullary == stack rest swap infra first; # [P] -> R Executes P, which leaves R on top of the stack. No matter how many parameters this consumes, none are removed from the stack.b
     unary == stack rest swap infra first popd; # X [P] -> R Executes P, which leaves R on top of the stack. No matter how many parameters this consumes, exactly one is removed from the stack
     branch == choice i; # B [T] [F] -> T/F If B is true, then executes T else executes F.
@@ -130,8 +131,10 @@ _inilib == true;
         times
         pop reverse;
 
-    at == drop first;
+        # at == drop first;
     of == swap at;
+
+    
 
 (* - - - - - IO Operators  - - - - *)
 
@@ -142,7 +145,11 @@ _inilib == true;
     VT == 11 chr;  # vertical tab
     FF == 12 chr;  # form feed [\f]
     CR == 13 chr;  # carriage return [\r]
-    
+
+    newline == LF putch pop;
+    putln == put newline;
+    space == '\032 putch;
+    bell == BEL putch;
     putchars == [putch] step;
 
     to-upper == ['a >=] [32 -] [] ifte;
@@ -152,7 +159,10 @@ _inilib == true;
 
     weekdays == ["Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"];
     months == ["JAN" "FEB" "MAR" "APR" "MAY" "JUN" "JUL" "AUG" "SEP" "OCT" "NOV" "DEC"];
-(*
+
+    lts ==
+        ['A 'B]  [ [ 0 at] [ 1 at] ] [.s i] map;
+
     localtime-strings ==
         time localtime
         [[ 0 at 'd 4 4 format ]
@@ -184,7 +194,6 @@ _inilib == true;
     
    show-todaynow ==
         today putchars space now putchars newline;
-*)
 
 END
 

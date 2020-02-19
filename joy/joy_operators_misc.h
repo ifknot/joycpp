@@ -5,6 +5,8 @@
 
 namespace joy {
 
+    void at(joy_stack& S);
+
     /**
     * manual: ->
     * Writes the loaded manual of all Joy primitives to an io device.

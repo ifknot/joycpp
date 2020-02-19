@@ -18,16 +18,6 @@ namespace joy {
 		return tokenize_context_free_types(parse_regular::tokenize(tokens));
 	}
 
-	bool parse_context_free::parse(joy_stack& P, joy_stack& S) {
-		for (auto& token : P) {
-			if (!parse(token, S)) {
-				no_conversion(P);
-				return false;
-			}
-		}
-		return true;
-	}
-
 	std::string parse_context_free::help() {
 		std::string result;
 		for (const auto& [key, lamda] : context_free_lambda_map) {
@@ -73,6 +63,16 @@ namespace joy {
 			throw std::runtime_error("unrecognized state " + state_to_string(state_stack.top()));
 			return false; 
 		}
+	}
+
+	bool parse_context_free::parse(joy_stack& P, joy_stack& S) {
+		for (auto& token : P) {
+			if (!parse(token, S)) {
+				no_conversion(P);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	void parse_context_free::no_conversion(joy_stack& tokens) {

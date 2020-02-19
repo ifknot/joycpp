@@ -20,20 +20,23 @@ namespace joy {
 	}
 
 	void localtime(joy_stack& S) {
-		time_t raw_time = std::any_cast<int>(S.top().first);
+		time_t raw_time = joy_cast<int>(S.top());
 		S.pop();
 		struct tm local_time;
 		std::time(&raw_time);
 		localtime_s(&local_time, &raw_time);
 		joy_stack M;
-		M.push(make_token(local_time.tm_year, joy_t::int_t));
-		M.push(make_token(local_time.tm_mon, joy_t::int_t));
+		//year month day hour minute second isdst yearday weekday
+		M.push(make_token(local_time.tm_year + 1900, joy_t::int_t)); // years since 1900
+		M.push(make_token(local_time.tm_mon + 1, joy_t::int_t)); // Joy03 Month is 1 = January...12 = December
+		M.push(make_token(local_time.tm_mday, joy_t::int_t));
 		M.push(make_token(local_time.tm_hour, joy_t::int_t));
 		M.push(make_token(local_time.tm_min, joy_t::int_t));
 		M.push(make_token(local_time.tm_sec, joy_t::int_t));
-		M.push(make_token(local_time.tm_isdst, joy_t::int_t));
+		// Joy03 isdst is a Boolean flagging daylight savings / summer time
+		M.push(make_token((local_time.tm_isdst) ?true :false, joy_t::bool_t)); 
 		M.push(make_token(local_time.tm_yday, joy_t::int_t));
-		M.push(make_token(local_time.tm_wday, joy_t::int_t));
+		M.push(make_token(local_time.tm_wday, joy_t::int_t)); // Joy03 weekday is 0 = Monday...7 = Sunday.
 		S.push(make_token(M, joy_t::list_t));
 	}
 
