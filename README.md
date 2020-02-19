@@ -15,13 +15,13 @@ Joy Interpreter written in C++ and Joy (Please see the [Wiki](https://github.com
 | [ ] undeferror 	| [x] xor       	| [x] of       	| [x] logical   	| [x] branch     	| [ ] all           	|
 | [ ] undefs     	| [x] and       	| [x] size     	| [ ] set       	| [x] ifte       	| [x] help          	|
 | [x] echo       	| [x] not       	| [ ] opcase   	| [x] string    	| [ ] ifinteger  	| [x] helpdetail    	|
-| [ ] clock      	| [x] +         	| [ ] case     	| [x] list      	| [ ] ifchar     	| [x] manual        	|
+| [x] clock      	| [x] +         	| [ ] case     	| [x] list      	| [ ] ifchar     	| [x] manual        	|
 | [x] time       	| [x] -         	| [x] uncons   	| [x] leaf      	| [ ] iflogical  	| [x] setautoput    	|
-| [ ] rand       	| [x] *         	| [x] unswons  	| [ ] user      	| [ ] ifset      	| [ ] setundeferror 	|
+| [x] rand       	| [x] *         	| [x] unswons  	| [ ] user      	| [ ] ifset      	| [ ] setundeferror 	|
 | [ ] stdin      	| [x] /         	| [x] drop     	| [x] float     	| [ ] ifstring   	| [x] setecho       	|
 | [ ] stdout     	| [x] ord       	| [x] take     	| [ ] file      	| [ ] iflist     	| [ ] gc            	|
 | [ ] stderr     	| [x] chr       	| [x] concat   	| [x] i         	| [ ] iffloat    	| [ ] system        	|
-| [x] id         	| [ ] localtime 	| [x] enconcat 	| [x] x         	| [ ] iffile     	| [ ] getenv        	|
+| [x] id         	| [x] localtime 	| [x] enconcat 	| [x] x         	| [ ] iffile     	| [ ] getenv        	|
 | [x] stack      	| [ ] gmtime    	| [ ] name     	| [x] dip       	| [ ] cond       	| [ ] argv          	|
 | [x] unstack    	| [ ] mktime    	| [ ] intern   	| [x] app1      	| [ ] while      	| [ ] argc          	|
 | [x] dup        	| [ ] strftime  	| [x] body     	| [ ] app11     	| [x] primrec    	| [x] get           	|
@@ -29,7 +29,7 @@ Joy Interpreter written in C++ and Joy (Please see the [Wiki](https://github.com
 | [x] rollup     	| [ ] strtod    	| [x] small    	| [ ] construct 	| [x] tailrec    	| [x] putch         	|
 | [x] rolldown   	| [ ] format    	| [x] >=       	| [x] nullary   	| [x] binrec     	| [x] putchars      	|
 | [x] rotate     	| [ ] formatf   	| [x] >        	| [x] unary     	| [x] genrec     	| [x] include       	|
-| [x] popd       	| [ ] srand     	| [x] <=       	| [ ] unary2    	| [ ] condlinrec 	| [x] abort         	|
+| [x] popd       	| [x] srand     	| [x] <=       	| [ ] unary2    	| [ ] condlinrec 	| [x] abort         	|
 | [x] dupd       	| [x] pred      	| [x] <        	| [ ] unary3    	| [x] step       	| [x] quit          	|
 | [x] swapd      	| [x] succ      	| [x] !=       	| [ ] unary4    	| [x] fold       	|                   	|
 
